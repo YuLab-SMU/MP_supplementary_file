@@ -1,0 +1,256 @@
+---
+biblio-style: apalike
+highlight_bw: yes
+output:
+  bookdown::pdf_document2:
+    toc: false
+    includes:
+      in_header: header.tex
+    dev: "cairo_pdf"
+    latex_engine: xelatex
+    fig_caption: yes
+geometry: margin=0.45in
+link-citations: yes
+---
+
+```{r, echo=FALSE, message=FALSE, results='hide'}
+require(kableExtra)
+library(knitr)
+options(knitr.table.fromat = "latex")
+knit_hooks$set(crop = hook_pdfcrop)
+knitr::opts_chunk$set(fig.pos = "!ht", crop = TRUE)
+old.hooks <- fansi::set_knit_hooks(knitr::knit_hooks, split.nl=TRUE)
+#knitr::opts_chunk$set(out.width="90%")
+knitr::opts_chunk$set(fig.align = "center")
+usepackage_latex("float")
+usepackage_latex("makecell")
+usepackage_latex("booktabs")
+```
+
+
+```{r, message=FALSE, echo=FALSE}
+library(MicrobiotaProcess)
+library(ggtree)
+library(ggtreeExtra)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(tibble)
+```
+
+```{r, message = FALSE, warning = FALSE, import_dada2}
+library(MicrobiotaProcess)
+
+colors <- c("#00A087FF", "#3C5488FF")
+
+otuda <- read.table("./IBD_data/ibd_asv_table.txt", header=T, check.names=F, 
+                    comment.char="", row.names=1, sep="\t")
+otuda <- data.frame(t(otuda), check.names=F)
+sampleda <- read.csv("./IBD_data/ibd_meta.csv", row.names=1, comment.char="")
+taxda <- read.table("./IBD_data/ibd_taxa.txt", header=T, 
+                    row.names=1, check.names=F, comment.char="")
+mpse <- mp_import_dada2(seqtab=otuda, taxatab=taxda, sampleda=sampleda)
+mpse
+tree <- treeio::read.iqtree("./IBD_data/iqtree/training_otus.treefile")
+tree
+otutree(mpse) <- tree
+mpse %<>% mp_rrarefy()
+mpse
+```
+
+```{r, message=FALSE, warning = FALSE, fig.width=8, fig.height=3, plotrarecurve}
+mpse %<>% mp_cal_rarecurve(.abundance=RareAbundance, action="add", chunk=400)
+
+p1 <- mpse %>% 
+      mp_plot_rarecurve(
+         .rare = RareAbundanceRarecurve, 
+         .alpha = Observe,
+         show.legend = FALSE
+      )
+
+p2 <- mpse %>% 
+      mp_plot_rarecurve(
+         .rare = RareAbundanceRarecurve,
+         .alpha = Observe,
+         .group = Group
+      ) +
+      scale_color_manual(values=colors) + 
+      scale_fill_manual(values=colors) +
+      theme(legend.position=c(0.2, 0.8),
+            legend.background=element_blank()) 
+p3 <- mpse %>% 
+      mp_plot_rarecurve(
+         .rare = RareAbundanceRarecurve,
+         .alpha = Observe,
+         .group = Group,
+         plot.group = TRUE
+      ) +
+      scale_color_manual(values=colors) +
+      scale_fill_manual(values=colors) +
+      theme(legend.position=c(0.2, 0.8),
+            legend.background=element_blank()
+      )
+p1 + p2 + p3
+```
+
+
+```{r, warning=FALSE, message=FALSE, fig.width=7, fig.height=3.6, plotalpha}
+mpse %<>% mp_cal_alpha(.abundance=RareAbundance, action = "add")
+mpse
+
+p1 <- mpse %>% 
+      mp_plot_alpha(
+        .group = Group,
+        .alpha = c(Observe, ACE, Chao1, Shannon, Simpson, J),
+      ) +
+      scale_fill_manual(values=colors, guide="none") +
+      scale_color_manual(values=colors, guide="none")
+p1
+
+# The result can also be extracted, processed and visualized manually.
+tbl.alpha <- 
+    mpse %>% 
+    mp_extract_sample()
+tbl.alpha
+tbl.alpha %<>% dplyr::select(-c(RareAbundanceRarecurve)) 
+tbl.alpha %<>%
+  tidyr::pivot_longer(cols=!c("Sample", "Group"), names_to="measure", values_to="alpha") %>%
+  dplyr::mutate(measure=forcats::fct_relevel(measure, c("Observe", "Chao1", "ACE", "Simpson", "Shannon", "J")))
+
+library(ggplot2)
+library(ggsignif)
+library(gghalves)
+p2 <- ggplot(data=tbl.alpha, aes(x=Group, y=alpha, fill=Group)) +
+     geom_half_violin(color=NA, side="l", trim=FALSE) +
+     geom_boxplot(aes(color=Group), fill=NA, position=position_nudge(x=.22), width=0.2) +
+     geom_half_point(side="r", shape=21) +
+     geom_signif(comparisons=list(c("CD", "Control")), test="wilcox.test", textsize=2, margin_top=0.1) +
+     facet_wrap(facet=vars(measure), scales="free_y", nrow=1) +
+     scale_fill_manual(values=colors, guide="none") +
+     scale_color_manual(values=colors, guide="none")
+p2
+```
+
+
+```{r, fig.width=7, fig.height=7, upsetVenn}
+library(ggupset)
+library(ggVennDiagram)
+mpse %<>% 
+      mp_cal_venn(.abundance=RareAbundance, .group=Group) %>%
+      mp_cal_upset(.abundance=RareAbundance, .group=Group)
+
+p1 <- mpse %>% 
+      mp_plot_venn(
+        .group=Group, 
+        .venn=vennOfGroup
+      ) +
+      scale_color_manual(values=colors) +
+      scale_fill_viridis_b(guide="none", option = "plasma")
+
+p2 <- mpse %>% 
+      mp_plot_upset(
+        .group=Group, 
+        .upset=ggupsetOfGroup  
+      )
+
+dat <- tibble::tibble(x=1, y=0.8, label=list(p1))
+
+f <- p2 + 
+     ggpp::geom_plot_npc(
+        data = dat,
+        mapping = aes(label=label, npcx=x, npcy=y),
+        vp.width = 0.6,
+        vp.height = 0.3,
+        hjust=0.8
+     )
+f
+
+# visualized the result manually.
+tbl.upset <- mpse %>% mp_extract_feature 
+p1 <- tbl.upset %>% 
+      dplyr::filter(vapply(ggupsetOfGroup, length, numeric(1))>0) %>% 
+      ggplot(aes(x=ggupsetOfGroup)) +
+      geom_bar() +
+      ggupset::scale_x_upset() +
+      ggupset::theme_combmatrix(combmatrix.label.extra_spacing=40)
+
+tbl.venn <- mpse %>% 
+            mp_extract_sample() %>%
+            dplyr::select(c(Group, vennOfGroup)) %>%
+            dplyr::distinct()
+tbl.venn 
+p2 <- tbl.venn %>%
+      dplyr::pull(var=vennOfGroup, name=Group) %>%
+      ggVennDiagram(edge_size=2) +
+      scale_color_manual(values=colors) +
+      scale_fill_viridis_b(guide="none", option = "plasma")
+
+dat <- tibble::tibble(x=1, y=0.8, label=list(p2))
+dat
+p <- p1 + ggpp::geom_plot_npc(data = dat, 
+                              mapping = aes(label=label, npcx=x, npcy=y), 
+                              vp.width = 0.6, 
+                              vp.height = 0.3, 
+                              hjust=0.8)
+p
+```
+
+
+```{r, warning=FALSE, fig.width=9, fig.height=6}
+mpse %<>% 
+      mp_decostand(
+        .abundance = Abundance, 
+        method = 'hellinger'
+      )
+mpse
+mpse %<>% mp_cal_dist(.abundance=hellinger, distmethod="bray")
+mpse
+
+p1 <- mpse %>% 
+      mp_plot_dist(
+        .distmethod = bray, 
+        .group = Group
+      )
+
+p2 <- mpse %>%
+      mp_plot_dist(
+        .distmethod = bray,
+        .group = Group,
+        group.test = TRUE
+      ) +
+      scale_color_brewer(palette="Dark2",guide="none")
+
+aplot::plot_list(p1, p2, widths=c(3, 1))
+```
+
+```{r, warning=FALSE, fig.width=7, fig.height=3}
+# visualized the result manually
+tbl <- mpse %>%
+       mp_extract_dist(distmethod="bray", .group=Group)
+tbl
+library(ggridges)
+p <- tbl %>% 
+     ggplot(aes(x = bray, 
+                y = GroupsComparison, 
+                fill = GroupsComparison)
+     ) +
+     geom_density_ridges(jittered_points = TRUE, 
+                         position = "points_sina", 
+                         alpha = 0.8, 
+                         point_shape = 23,
+                         point_size = 1,
+                         point_color = "black",
+                         color = "grey50"
+     ) +
+     geom_signif(comparisons=utils::combn(unique(tbl$GroupsComparison), 2) %>% 
+                             apply(2, list) %>% 
+                             unlist(recursive = FALSE),
+                 orientation="y",
+                 margin_top = 0.2,
+                 step_increase = 0.1,
+     ) +
+     labs(x="bray distance", y=NULL) + 
+     scale_fill_brewer(palette="Dark2",guide="none") 
+p
+```
+

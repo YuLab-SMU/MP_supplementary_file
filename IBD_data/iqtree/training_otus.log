@@ -1,0 +1,2495 @@
+IQ-TREE multicore version 1.6.12 for Linux 64-bit built Aug 15 2019
+Developed by Bui Quang Minh, Nguyen Lam Tung, Olga Chernomor,
+Heiko Schmidt, Dominik Schrempf, Michael Woodhams.
+
+Host:    DESKTOP-2CJ8UN3 (AVX2, FMA3, 15 GB RAM)
+Command: iqtree -s otus_aligned_trimed.fa -bb 1000 -redo -alrt 1000 -m MFP -nt AUTO -pre iqtree/training_otus
+Seed:    820104 (Using SPRNG - Scalable Parallel Random Number Generator)
+Time:    Wed Jul 14 10:37:54 2021
+Kernel:  AVX+FMA - auto-detect threads (12 CPU cores detected)
+
+Reading alignment file otus_aligned_trimed.fa ... Fasta format detected
+Alignment most likely contains DNA/RNA sequences
+Alignment has 1681 sequences with 203 columns, 202 distinct patterns
+194 parsimony-informative, 7 singleton sites, 2 constant sites
+          Gap/Ambiguity  Composition  p-value
+   1  OTU_878    17.73%    failed      0.13%
+   2  OTU_728    17.73%    failed      0.26%
+   3  OTU_417    18.23%    failed      0.25%
+   4  OTU_749    17.73%    failed      0.13%
+   5  OTU_996    18.23%    failed      0.47%
+   6  OTU_1551   18.23%    failed      0.48%
+   7  OTU_1455   17.73%    failed      0.17%
+   8  OTU_860    18.23%    failed      0.16%
+   9  OTU_759    17.73%    failed      0.17%
+  10  OTU_970    17.73%    failed      0.26%
+  11  OTU_813    17.73%    failed      0.26%
+  12  OTU_776    18.23%    failed      0.25%
+  13  OTU_1093   18.23%    failed      0.30%
+  14  OTU_875    17.73%    failed      0.33%
+  15  OTU_843    17.73%    failed      0.17%
+  16  OTU_1122   17.73%    failed      0.17%
+  17  OTU_1021   17.73%    failed      0.33%
+  18  OTU_764    18.23%    failed      0.30%
+  19  OTU_1180   17.73%    failed      0.25%
+  20  OTU_545    18.23%    failed      0.25%
+  21  OTU_722    18.23%    failed      0.13%
+  22  OTU_717    17.73%    failed      0.17%
+  23  OTU_604    17.73%    failed      0.09%
+  24  OTU_315    17.73%    failed      0.17%
+  25  OTU_1051   18.23%    failed      0.25%
+  26  OTU_1173   17.73%    failed      0.17%
+  27  OTU_910    17.73%    failed      0.17%
+  28  OTU_689    18.23%    failed      0.08%
+  29  OTU_696    18.23%    failed      0.55%
+  30  OTU_732    18.23%    failed      0.52%
+  31  OTU_1538   17.73%    failed      0.56%
+  32  OTU_1633    1.97%    failed      0.04%
+  33  OTU_1270    0.49%    failed      0.26%
+  34  OTU_505     0.00%    failed      0.11%
+  35  OTU_547     0.00%    failed      0.19%
+  36  OTU_566     0.00%    failed      0.21%
+  37  OTU_590     0.00%    failed      0.14%
+  38  OTU_613     0.00%    failed      0.13%
+  39  OTU_701     0.00%    failed      0.25%
+  40  OTU_695     0.00%    failed      0.17%
+  41  OTU_520     0.00%    failed      0.09%
+  42  OTU_456     0.00%    failed      0.16%
+  43  OTU_553     0.00%    failed      0.12%
+  44  OTU_564     0.00%    failed      0.11%
+  45  OTU_588     0.00%    failed      0.21%
+  46  OTU_664     0.00%    failed      0.29%
+  47  OTU_730     0.00%    failed      0.21%
+  48  OTU_602     0.00%    failed      0.17%
+  49  OTU_782     0.00%    failed      0.46%
+  50  OTU_1046    0.00%    failed      0.27%
+  51  OTU_837     0.00%    failed      0.38%
+  52  OTU_738     0.00%    failed      0.21%
+  53  OTU_637     0.00%    failed      0.25%
+  54  OTU_766     0.00%    failed      0.17%
+  55  OTU_791     0.00%    failed      0.12%
+  56  OTU_1075    0.00%    failed      0.18%
+  57  OTU_886     0.00%    failed      0.14%
+  58  OTU_1052    0.00%    failed      0.13%
+  59  OTU_997     0.00%    failed      0.09%
+  60  OTU_616     0.00%    failed      0.09%
+  61  OTU_682     0.00%    failed      0.06%
+  62  OTU_1146    0.00%    failed      0.21%
+  63  OTU_765     0.00%    failed      0.15%
+  64  OTU_648     0.00%    failed      0.08%
+  65  OTU_942     0.00%    failed      0.08%
+  66  OTU_224     0.00%    failed      0.21%
+  67  OTU_437     0.00%    failed      0.12%
+  68  OTU_487     0.00%    failed      0.14%
+  69  OTU_571     0.00%    failed      0.27%
+  70  OTU_714     0.00%    failed      0.27%
+  71  OTU_574     0.00%    failed      0.38%
+  72  OTU_270     0.00%    failed      0.17%
+  73  OTU_413     0.00%    failed      0.12%
+  74  OTU_497     0.00%    failed      0.22%
+  75  OTU_536     0.00%    failed      0.15%
+  76  OTU_560     0.00%    failed      0.31%
+  77  OTU_684     0.00%    failed      0.17%
+  78  OTU_592     0.00%    failed      0.12%
+  79  OTU_453     0.00%    failed      0.09%
+  80  OTU_1095    0.00%    failed      0.22%
+  81  OTU_799     0.00%    failed      0.27%
+  82  OTU_678     0.00%    failed      0.21%
+  83  OTU_880     0.00%    failed      0.18%
+  84  OTU_893     0.00%    failed      0.14%
+  85  OTU_786     0.00%    failed      0.31%
+  86  OTU_824     1.97%    failed      0.10%
+  87  OTU_798     0.00%    failed      0.09%
+  88  OTU_803     0.00%    failed      0.17%
+  89  OTU_380     0.99%    failed      0.13%
+  90  OTU_358     0.99%    failed      0.16%
+  91  OTU_389     0.99%    failed      0.11%
+  92  OTU_402     0.99%    failed      0.09%
+  93  OTU_436     0.99%    failed      0.17%
+  94  OTU_450     0.99%    failed      0.21%
+  95  OTU_452     0.99%    failed      0.12%
+  96  OTU_460     0.99%    failed      0.07%
+  97  OTU_462     0.99%    failed      0.09%
+  98  OTU_492     0.99%    failed      0.10%
+  99  OTU_512     0.99%    failed      0.14%
+ 100  OTU_534     0.99%    failed      0.14%
+ 101  OTU_541     0.99%    failed      0.25%
+ 102  OTU_629     0.99%    failed      0.17%
+ 103  OTU_633     0.99%    failed      0.31%
+ 104  OTU_549     0.99%    failed      0.21%
+ 105  OTU_528     0.99%    failed      0.17%
+ 106  OTU_504     0.00%    failed      0.11%
+ 107  OTU_455     0.00%    failed      0.19%
+ 108  OTU_466     0.00%    failed      0.11%
+ 109  OTU_439     0.00%    failed      0.16%
+ 110  OTU_432     0.00%    failed      0.09%
+ 111  OTU_519     0.00%    failed      0.17%
+ 112  OTU_544     0.00%    failed      0.12%
+ 113  OTU_558     0.00%    failed      0.14%
+ 114  OTU_755     0.00%    failed      0.25%
+ 115  OTU_669     0.00%    failed      0.21%
+ 116  OTU_481     0.00%    failed      0.08%
+ 117  OTU_433     0.00%    failed      0.06%
+ 118  OTU_403     0.00%    failed      0.11%
+ 119  OTU_449     0.00%    failed      0.16%
+ 120  OTU_467     0.00%    failed      0.11%
+ 121  OTU_468     0.00%    failed      0.14%
+ 122  OTU_471     0.00%    failed      0.09%
+ 123  OTU_474     0.00%    failed      0.12%
+ 124  OTU_482     0.00%    failed      0.19%
+ 125  OTU_485     0.00%    failed      0.11%
+ 126  OTU_488     0.00%    failed      0.08%
+ 127  OTU_496     0.00%    failed      0.10%
+ 128  OTU_513     0.00%    failed      0.16%
+ 129  OTU_515     0.00%    failed      0.22%
+ 130  OTU_552     0.00%    failed      0.13%
+ 131  OTU_624     0.00%    failed      0.19%
+ 132  OTU_577     0.00%    failed      0.27%
+ 133  OTU_531     0.00%    failed      0.16%
+ 134  OTU_891     0.00%    failed      0.46%
+ 135  OTU_753     0.00%    failed      0.36%
+ 136  OTU_831     0.00%    failed      0.27%
+ 137  OTU_927     0.00%    failed      0.07%
+ 138  OTU_762     0.00%    failed      0.08%
+ 139  OTU_835     0.00%    failed      0.10%
+ 140  OTU_912     0.00%    failed      0.08%
+ 141  OTU_969     0.00%    failed      0.11%
+ 142  OTU_984     0.00%    failed      0.16%
+ 143  OTU_1030    0.00%    failed      0.09%
+ 144  OTU_993     0.49%    failed      0.15%
+ 145  OTU_856     0.00%    failed      0.06%
+ 146  OTU_751     0.00%    failed      0.14%
+ 147  OTU_657     0.00%    failed      0.11%
+ 148  OTU_740     0.00%    failed      0.27%
+ 149  OTU_1031    0.00%    failed      0.19%
+ 150  OTU_928     0.00%    failed      0.16%
+ 151  OTU_844     1.97%    failed      0.18%
+ 152  OTU_232     0.00%    failed      0.08%
+ 153  OTU_300     0.00%    failed      0.11%
+ 154  OTU_353     0.00%    failed      0.07%
+ 155  OTU_308     0.00%    failed      0.11%
+ 156  OTU_268     0.00%    failed      0.05%
+ 157  OTU_237     0.00%    failed      0.10%
+ 158  OTU_287     0.00%    failed      0.13%
+ 159  OTU_289     0.00%    failed      0.05%
+ 160  OTU_293     0.00%    failed      0.16%
+ 161  OTU_296     0.00%    failed      0.04%
+ 162  OTU_297     0.00%    failed      0.07%
+ 163  OTU_339     0.00%    failed      0.09%
+ 164  OTU_374     0.00%    failed      0.11%
+ 165  OTU_357     0.00%    failed      0.19%
+ 166  OTU_346     0.00%    failed      0.13%
+ 167  OTU_943     0.00%    failed      0.50%
+ 168  OTU_795     0.00%    failed      0.16%
+ 169  OTU_794     0.00%    failed      0.21%
+ 170  OTU_750     0.00%    failed      0.17%
+ 171  OTU_819     0.00%    failed      0.23%
+ 172  OTU_917     0.00%    failed      0.29%
+ 173  OTU_926     0.00%    failed      0.22%
+ 174  OTU_944     0.00%    failed      0.25%
+ 175  OTU_981     0.00%    failed      0.16%
+ 176  OTU_951     0.00%    failed      0.29%
+ 177  OTU_869     0.00%    failed      0.21%
+ 178  OTU_559     0.00%    failed      0.36%
+ 179  OTU_816     0.00%    failed      0.38%
+ 180  OTU_830     0.00%    failed      0.64%
+ 181  OTU_873     0.00%    failed      0.38%
+ 182  OTU_1004    0.00%    failed      0.27%
+ 183  OTU_938     0.00%    failed      0.46%
+ 184  OTU_911     0.00%    failed      0.31%
+ 185  OTU_708     0.00%    failed      0.29%
+ 186  OTU_725     0.00%    failed      0.25%
+ 187  OTU_739     0.00%    failed      0.21%
+ 188  OTU_839     0.00%    failed      0.53%
+ 189  OTU_615     0.00%    failed      0.17%
+ 190  OTU_954     0.00%    failed      0.38%
+ 191  OTU_651     0.00%    failed      0.21%
+ 192  OTU_655     0.00%    failed      0.09%
+ 193  OTU_580     0.00%    failed      0.16%
+ 194  OTU_523     0.00%    failed      0.11%
+ 195  OTU_573     0.00%    failed      0.21%
+ 196  OTU_709     0.00%    failed      0.14%
+ 197  OTU_710     0.00%    failed      0.21%
+ 198  OTU_809     0.00%    failed      0.29%
+ 199  OTU_595     0.00%    failed      0.13%
+ 200  OTU_565     0.00%    failed      0.11%
+ 201  OTU_517     0.00%    failed      0.19%
+ 202  OTU_618     0.00%    failed      0.25%
+ 203  OTU_641     0.00%    failed      0.17%
+ 204  OTU_800     0.00%    failed      0.25%
+ 205  OTU_760     0.00%    failed      0.21%
+ 206  OTU_726     0.00%    failed      0.36%
+ 207  OTU_1038    0.00%    failed      0.36%
+ 208  OTU_707     0.00%    failed      0.22%
+ 209  OTU_1082    0.00%    failed      0.16%
+ 210  OTU_617     0.49%    failed      0.14%
+ 211  OTU_1047    0.49%    failed      0.21%
+ 212  OTU_850     0.49%    failed      0.36%
+ 213  OTU_1108    0.49%    failed      0.29%
+ 214  OTU_1178    0.00%    failed      0.35%
+ 215  OTU_827     0.00%    failed      0.75%
+ 216  OTU_729     0.00%    failed      0.27%
+ 217  OTU_867     0.00%    failed      0.38%
+ 218  OTU_781     0.00%    failed      0.25%
+ 219  OTU_1044    0.00%    failed      0.25%
+ 220  OTU_934     0.00%    failed      0.08%
+ 221  OTU_597     0.00%    failed      0.08%
+ 222  OTU_989     0.00%    failed      0.16%
+ 223  OTU_1045    0.00%    failed      0.11%
+ 224  OTU_976     0.00%    failed      0.12%
+ 225  OTU_807     0.00%    failed      0.64%
+ 226  OTU_1220    0.49%    failed      0.36%
+ 227  OTU_704     0.49%    failed      0.48%
+ 228  OTU_790     0.49%    failed      0.59%
+ 229  OTU_923     0.49%    failed      0.32%
+ 230  OTU_818     0.49%    failed      0.24%
+ 231  OTU_922     0.49%    failed      0.52%
+ 232  OTU_931     0.49%    failed      0.41%
+ 233  OTU_1153    0.00%    failed      0.12%
+ 234  OTU_904     0.00%    failed      0.14%
+ 235  OTU_593     0.00%    failed      0.09%
+ 236  OTU_720     0.00%    failed      0.12%
+ 237  OTU_890     0.00%    failed      0.22%
+ 238  OTU_312     0.00%    failed      0.12%
+ 239  OTU_329     0.00%    failed      0.14%
+ 240  OTU_342     0.00%    failed      0.12%
+ 241  OTU_340     0.00%    failed      0.09%
+ 242  OTU_184     0.00%    failed      0.21%
+ 243  OTU_393     0.00%    failed      0.38%
+ 244  OTU_412     0.00%    failed      0.27%
+ 245  OTU_444     0.00%    failed      0.31%
+ 246  OTU_398     0.00%    failed      0.22%
+ 247  OTU_225     0.00%    failed      0.17%
+ 248  OTU_191     0.00%    failed      0.11%
+ 249  OTU_142     0.00%    failed      0.13%
+ 250  OTU_204     0.00%    failed      0.09%
+ 251  OTU_240     0.00%    failed      0.07%
+ 252  OTU_253     0.00%    failed      0.17%
+ 253  OTU_271     0.00%    failed      0.14%
+ 254  OTU_277     0.00%    failed      0.06%
+ 255  OTU_278     0.00%    failed      0.25%
+ 256  OTU_299     0.00%    failed      0.08%
+ 257  OTU_323     0.00%    failed      0.09%
+ 258  OTU_337     0.00%    failed      0.14%
+ 259  OTU_345     0.00%    failed      0.17%
+ 260  OTU_373     0.00%    failed      0.14%
+ 261  OTU_349     0.00%    failed      0.12%
+ 262  OTU_326     0.00%    failed      0.21%
+ 263  OTU_1037    0.00%    failed      0.15%
+ 264  OTU_767     0.00%    failed      0.08%
+ 265  OTU_640     0.00%    failed      0.12%
+ 266  OTU_621     0.00%    failed      0.14%
+ 267  OTU_713     0.00%    failed      0.09%
+ 268  OTU_796     0.00%    failed      0.15%
+ 269  OTU_822     0.00%    failed      0.08%
+ 270  OTU_888     0.00%    failed      0.06%
+ 271  OTU_848     0.00%    failed      0.08%
+ 272  OTU_1026    0.00%    failed      0.11%
+ 273  OTU_1033    0.00%    failed      0.17%
+ 274  OTU_1062    0.00%    failed      0.31%
+ 275  OTU_646     0.00%    failed      0.12%
+ 276  OTU_647     0.00%    failed      0.22%
+ 277  OTU_758     0.00%    failed      0.18%
+ 278  OTU_965     0.00%    failed      0.18%
+ 279  OTU_836     0.00%    failed      0.15%
+ 280  OTU_909     0.00%    failed      0.29%
+ 281  OTU_1077    0.00%    failed      0.31%
+ 282  OTU_1076    0.00%    failed      0.53%
+ 283  OTU_587     0.00%    failed      0.22%
+ 284  OTU_792     0.00%    failed      0.21%
+ 285  OTU_1137    0.00%    failed      0.46%
+ 286  OTU_936     0.00%    failed      0.36%
+ 287  OTU_712     0.00%    failed      0.46%
+ 288  OTU_706     0.00%    failed      0.27%
+ 289  OTU_567     0.00%    failed      0.19%
+ 290  OTU_832     0.00%    failed      0.29%
+ 291  OTU_691     0.00%    failed      0.16%
+ 292  OTU_335     0.00%    failed      0.27%
+ 293  OTU_638     0.00%    failed      0.16%
+ 294  OTU_804     0.00%    failed      0.29%
+ 295  OTU_715     0.00%    failed      0.50%
+ 296  OTU_490     0.00%    failed      0.22%
+ 297  OTU_631     0.00%    failed      0.36%
+ 298  OTU_745     0.00%    failed      0.12%
+ 299  OTU_863     0.00%    failed      0.17%
+ 300  OTU_779     0.00%    failed      0.21%
+ 301  OTU_524     0.00%    failed      0.36%
+ 302  OTU_421     0.00%    failed      0.42%
+ 303  OTU_352     0.00%    failed      0.22%
+ 304  OTU_276     0.00%    failed      0.32%
+ 305  OTU_589     0.00%    failed      0.42%
+ 306  OTU_489     0.00%    failed      0.59%
+ 307  OTU_392     0.00%    failed      0.19%
+ 308  OTU_478     0.00%    failed      0.16%
+ 309  OTU_445     0.00%    failed      0.19%
+ 310  OTU_379     0.00%    failed      0.27%
+ 311  OTU_562     0.00%    failed      0.29%
+ 312  OTU_495     0.00%    failed      0.21%
+ 313  OTU_518     0.00%    failed      0.36%
+ 314  OTU_609     0.00%    failed      0.38%
+ 315  OTU_721     0.00%    failed      0.31%
+ 316  OTU_727     0.00%    failed      0.38%
+ 317  OTU_852     0.00%    failed      0.53%
+ 318  OTU_742     0.00%    failed      0.64%
+ 319  OTU_643     0.00%    failed      0.17%
+ 320  OTU_586     0.00%    failed      0.25%
+ 321  OTU_674     0.00%    failed      0.27%
+ 322  OTU_686     0.00%    failed      0.46%
+ 323  OTU_747     0.00%    failed      0.31%
+ 324  OTU_752     0.00%    failed      0.22%
+ 325  OTU_789     0.00%    failed      0.38%
+ 326  OTU_772     0.00%    failed      0.27%
+ 327  OTU_635     0.00%    failed      0.21%
+ 328  OTU_636     0.99%    failed      0.16%
+ 329  OTU_668     0.99%    failed      0.16%
+ 330  OTU_550     0.99%    failed      0.19%
+ 331  OTU_431     0.99%    failed      0.23%
+ 332  OTU_275     0.99%    failed      0.28%
+ 333  OTU_537     0.99%    failed      0.52%
+ 334  OTU_582     0.99%    failed      0.43%
+ 335  OTU_769     0.99%    failed      0.36%
+ 336  OTU_1007    0.99%    failed      0.17%
+ 337  OTU_882     0.99%    failed      0.31%
+ 338  OTU_375     0.00%    failed      0.09%
+ 339  OTU_304     0.00%    failed      0.07%
+ 340  OTU_448     0.00%    failed      0.10%
+ 341  OTU_506     0.00%    failed      0.07%
+ 342  OTU_470     0.00%    failed      0.09%
+ 343  OTU_442     0.00%    failed      0.13%
+ 344  OTU_390     0.00%    failed      0.11%
+ 345  OTU_443     0.00%    failed      0.13%
+ 346  OTU_477     0.00%    failed      0.10%
+ 347  OTU_419     0.49%    failed      0.06%
+ 348  OTU_377     0.00%    failed      0.05%
+ 349  OTU_952     0.00%    failed      0.25%
+ 350  OTU_918     0.00%    failed      0.13%
+ 351  OTU_975     0.00%    failed      0.36%
+ 352  OTU_718     0.00%    failed      0.14%
+ 353  OTU_870     0.00%    failed      0.11%
+ 354  OTU_1053    0.00%    failed      0.21%
+ 355  OTU_1023    0.00%    failed      0.19%
+ 356  OTU_974     0.00%    failed      0.15%
+ 357  OTU_945     0.00%    failed      0.13%
+ 358  OTU_594     0.00%    failed      0.08%
+ 359  OTU_854     0.00%    failed      0.07%
+ 360  OTU_606     0.00%    failed      0.12%
+ 361  OTU_623     0.00%    failed      0.22%
+ 362  OTU_642     0.00%    failed      0.17%
+ 363  OTU_672     0.00%    failed      0.27%
+ 364  OTU_693     0.00%    failed      0.14%
+ 365  OTU_735     0.00%    failed      0.31%
+ 366  OTU_697     0.00%    failed      0.27%
+ 367  OTU_561     0.00%    failed      0.15%
+ 368  OTU_525     0.00%    failed      0.18%
+ 369  OTU_555     0.00%    failed      0.18%
+ 370  OTU_632     0.00%    failed      0.21%
+ 371  OTU_634     0.00%    failed      0.14%
+ 372  OTU_660     0.00%    failed      0.20%
+ 373  OTU_673     0.00%    failed      0.25%
+ 374  OTU_780     0.00%    failed      0.31%
+ 375  OTU_757     0.00%    failed      0.27%
+ 376  OTU_681     0.99%    failed      0.28%
+ 377  OTU_502     0.00%    failed      0.13%
+ 378  OTU_539     0.00%    failed      0.17%
+ 379  OTU_540     0.00%    failed      0.09%
+ 380  OTU_557     0.00%    failed      0.07%
+ 381  OTU_610     0.00%    failed      0.21%
+ 382  OTU_840     0.00%    failed      0.14%
+ 383  OTU_763     0.00%    failed      0.17%
+ 384  OTU_703     0.00%    failed      0.25%
+ 385  OTU_783     0.00%    failed      0.11%
+ 386  OTU_464     0.00%    failed      0.11%
+ 387  OTU_503     0.00%    failed      0.07%
+ 388  OTU_572     0.00%    failed      0.06%
+ 389  OTU_748     0.00%    failed      0.08%
+ 390  OTU_667     0.00%    failed      0.14%
+ 391  OTU_644     0.00%    failed      0.09%
+ 392  OTU_1482    1.97%    failed      0.96%
+ 393  OTU_1356    1.97%    failed      0.16%
+ 394  OTU_1407    1.97%    failed      0.16%
+ 395  OTU_1088    1.97%    failed      0.27%
+ 396  OTU_1639    1.97%    failed      0.19%
+ 397  OTU_1151    1.97%    failed      0.19%
+ 398  OTU_1529    2.96%    failed      0.39%
+ 399  OTU_1177    1.97%    failed      0.16%
+ 400  OTU_1514    4.43%    failed      0.41%
+ 401  OTU_1181    2.96%    failed      0.40%
+ 402  OTU_1393    2.96%    failed      0.28%
+ 403  OTU_1392   11.33%    failed      0.66%
+ 404  OTU_1454    5.91%    failed      0.80%
+ 405  OTU_1437    3.45%    failed      1.85%
+ 406  OTU_1658    4.43%    failed      1.56%
+ 407  OTU_1013   10.34%    passed     12.73%
+ 408  OTU_1666   12.32%    passed     30.18%
+ 409  OTU_1481   12.81%    passed      8.54%
+ 410  OTU_1483    0.00%    passed     35.60%
+ 411  OTU_1042    0.49%    passed     53.80%
+ 412  OTU_405     0.00%    passed     89.33%
+ 413  OTU_1243    0.49%    passed     64.94%
+ 414  OTU_1313    0.49%    passed     57.42%
+ 415  OTU_1673    2.46%    passed     10.70%
+ 416  OTU_1325    0.00%    passed     89.71%
+ 417  OTU_897     0.00%    passed     14.32%
+ 418  OTU_1326    0.00%    passed     16.10%
+ 419  OTU_1629    0.00%    passed     10.88%
+ 420  OTU_117     1.48%    passed      9.30%
+ 421  OTU_367     0.00%    passed      9.57%
+ 422  OTU_1061    0.00%    passed      6.99%
+ 423  OTU_465     0.00%    passed     67.19%
+ 424  OTU_1043    0.00%    passed     57.43%
+ 425  OTU_1625    0.00%    passed     60.50%
+ 426  OTU_1259    0.00%    passed     89.54%
+ 427  OTU_1064    0.00%    passed     26.66%
+ 428  OTU_1160    0.00%    passed     70.37%
+ 429  OTU_1661    0.00%    passed     17.99%
+ 430  OTU_1398    0.00%    passed     14.69%
+ 431  OTU_1496    0.00%    passed     74.96%
+ 432  OTU_1527    0.00%    passed     67.54%
+ 433  OTU_1036    0.00%    passed     29.21%
+ 434  OTU_1637    0.00%    passed     43.77%
+ 435  OTU_1368    0.00%    passed     37.14%
+ 436  OTU_1382    0.00%    passed     24.93%
+ 437  OTU_394     0.00%    passed     33.52%
+ 438  OTU_430     0.00%    passed     36.69%
+ 439  OTU_1578    0.00%    passed     48.36%
+ 440  OTU_1668    0.00%    passed      6.69%
+ 441  OTU_267     0.00%    passed     32.62%
+ 442  OTU_1287    0.00%    passed     32.62%
+ 443  OTU_1526    0.49%    passed     40.56%
+ 444  OTU_48      0.00%    passed     11.35%
+ 445  OTU_41      0.00%    passed     28.12%
+ 446  OTU_119     0.00%    passed     38.14%
+ 447  OTU_149     0.00%    passed     26.15%
+ 448  OTU_31      0.00%    passed     44.48%
+ 449  OTU_187     0.00%    passed     26.15%
+ 450  OTU_499     0.00%    passed     11.60%
+ 451  OTU_1305    0.00%    passed      6.65%
+ 452  OTU_932     0.00%    passed     84.97%
+ 453  OTU_857     0.00%    passed     51.07%
+ 454  OTU_1234    0.00%    passed     70.62%
+ 455  OTU_1408    0.00%    passed     70.62%
+ 456  OTU_1317    0.00%    passed     72.15%
+ 457  OTU_862     0.00%    passed     41.36%
+ 458  OTU_1128    0.00%    passed     62.28%
+ 459  OTU_1041    0.00%    passed     59.70%
+ 460  OTU_1461    0.00%    passed     57.18%
+ 461  OTU_1600    0.00%    passed     56.29%
+ 462  OTU_1083    0.00%    passed     72.83%
+ 463  OTU_1255    0.00%    passed     83.59%
+ 464  OTU_22      0.00%    passed     28.23%
+ 465  OTU_1441    0.00%    passed     79.90%
+ 466  OTU_666     0.00%    passed     96.03%
+ 467  OTU_74      0.00%    passed     98.47%
+ 468  OTU_305     0.00%    passed     98.47%
+ 469  OTU_72      0.00%    passed     99.95%
+ 470  OTU_143     0.00%    passed     99.90%
+ 471  OTU_1511    0.00%    passed     99.74%
+ 472  OTU_79      0.00%    passed     99.90%
+ 473  OTU_1353    0.00%    passed     62.67%
+ 474  OTU_317     0.00%    passed     96.62%
+ 475  OTU_817     0.00%    passed     94.66%
+ 476  OTU_1081    0.00%    passed     92.14%
+ 477  OTU_428     0.00%    passed     95.82%
+ 478  OTU_1210    0.00%    passed     93.04%
+ 479  OTU_1078    0.00%    passed     62.62%
+ 480  OTU_1098    0.00%    passed     83.12%
+ 481  OTU_1212    0.00%    passed     73.27%
+ 482  OTU_1355    0.00%    passed     59.02%
+ 483  OTU_1024    0.00%    passed     51.18%
+ 484  OTU_472     0.00%    passed     62.14%
+ 485  OTU_1642    0.00%    passed     59.70%
+ 486  OTU_913     0.00%    passed     48.73%
+ 487  OTU_1460    0.00%    passed     52.82%
+ 488  OTU_283     0.00%    passed     58.17%
+ 489  OTU_197     0.99%    passed     82.12%
+ 490  OTU_812     0.00%    passed     69.27%
+ 491  OTU_1159    0.00%    passed     96.48%
+ 492  OTU_1223    0.00%    passed     98.34%
+ 493  OTU_303     0.00%    passed     89.71%
+ 494  OTU_930     0.00%    passed     82.27%
+ 495  OTU_236     0.00%    passed     85.19%
+ 496  OTU_1648    0.00%    passed     72.15%
+ 497  OTU_771     0.00%    passed     76.32%
+ 498  OTU_1677    0.00%    passed     70.84%
+ 499  OTU_656     0.00%    passed     44.55%
+ 500  OTU_115     0.00%    passed     83.62%
+ 501  OTU_1433    0.00%    passed     36.25%
+ 502  OTU_1144    0.00%    passed     82.27%
+ 503  OTU_1669    0.00%    passed     90.02%
+ 504  OTU_238     0.00%    passed     48.78%
+ 505  OTU_694     0.00%    passed     44.94%
+ 506  OTU_1559    0.00%    passed     22.38%
+ 507  OTU_1250    0.00%    passed     27.36%
+ 508  OTU_1187    0.00%    passed     14.65%
+ 509  OTU_1269    0.00%    passed     11.62%
+ 510  OTU_1444    0.00%    passed     38.79%
+ 511  OTU_126     0.00%    passed     67.35%
+ 512  OTU_247     0.00%    passed     74.96%
+ 513  OTU_1678    0.00%    passed     63.57%
+ 514  OTU_218     0.00%    passed     48.36%
+ 515  OTU_416     0.00%    passed     54.68%
+ 516  OTU_371     0.00%    passed     15.51%
+ 517  OTU_13      0.00%    passed     26.45%
+ 518  OTU_43      0.00%    passed     27.32%
+ 519  OTU_29      0.00%    passed     27.32%
+ 520  OTU_118     0.00%    passed     34.62%
+ 521  OTU_69      0.00%    passed     24.91%
+ 522  OTU_26      0.00%    passed     24.91%
+ 523  OTU_100     0.00%    passed     18.11%
+ 524  OTU_203     0.00%    passed     36.69%
+ 525  OTU_310     0.00%    passed     18.11%
+ 526  OTU_366     0.00%    passed     27.32%
+ 527  OTU_1       0.00%    passed     26.45%
+ 528  OTU_1276    0.00%    passed     62.14%
+ 529  OTU_5       0.00%    passed     10.90%
+ 530  OTU_1539    0.00%    passed     10.34%
+ 531  OTU_1522    0.00%    passed     73.84%
+ 532  OTU_1348    0.00%    passed     81.34%
+ 533  OTU_269     0.00%    passed     50.81%
+ 534  OTU_773     0.00%    passed     44.07%
+ 535  OTU_858     0.49%    passed     42.67%
+ 536  OTU_19      0.00%    passed     26.22%
+ 537  OTU_11      0.00%    passed     56.56%
+ 538  OTU_229     0.00%    passed     56.56%
+ 539  OTU_424     0.00%    passed     35.51%
+ 540  OTU_607     0.00%    passed     37.61%
+ 541  OTU_4       0.00%    passed     48.36%
+ 542  OTU_999     0.00%    passed     18.73%
+ 543  OTU_60      0.00%    passed     27.32%
+ 544  OTU_92      0.00%    passed     37.85%
+ 545  OTU_947     0.00%    passed     27.32%
+ 546  OTU_198     0.00%    passed     37.85%
+ 547  OTU_86      0.00%    passed     36.69%
+ 548  OTU_21      0.00%    passed     44.84%
+ 549  OTU_509     0.00%    passed     44.84%
+ 550  OTU_369     0.00%    passed     45.76%
+ 551  OTU_746     0.00%    passed     34.62%
+ 552  OTU_1197    0.00%    passed     45.76%
+ 553  OTU_188     0.00%    passed     36.69%
+ 554  OTU_1213    0.00%    passed     34.62%
+ 555  OTU_6       0.00%    passed     36.69%
+ 556  OTU_169     0.00%    passed     48.01%
+ 557  OTU_180     0.00%    passed     51.35%
+ 558  OTU_510     0.00%    passed     34.62%
+ 559  OTU_23      0.00%    passed     53.24%
+ 560  OTU_107     0.00%    passed     31.79%
+ 561  OTU_36      0.00%    passed     42.16%
+ 562  OTU_1485    0.00%    passed     53.79%
+ 563  OTU_1630    0.00%    passed     12.41%
+ 564  OTU_1507    0.00%    passed     17.39%
+ 565  OTU_1638    0.00%    passed     43.63%
+ 566  OTU_1319    0.00%    passed     26.31%
+ 567  OTU_1268    0.00%    passed     38.13%
+ 568  OTU_1274    0.00%    passed     56.94%
+ 569  OTU_1017    0.00%    passed     52.73%
+ 570  OTU_1096    0.00%    passed     53.60%
+ 571  OTU_665     0.00%    passed     62.92%
+ 572  OTU_258     0.00%    passed     62.92%
+ 573  OTU_205     0.00%    passed     71.58%
+ 574  OTU_915     0.00%    passed     72.15%
+ 575  OTU_591     0.00%    passed     80.25%
+ 576  OTU_1152    0.00%    passed     62.60%
+ 577  OTU_973     0.00%    passed     48.00%
+ 578  OTU_20      0.00%    passed     51.29%
+ 579  OTU_568     0.00%    passed     51.07%
+ 580  OTU_208     0.00%    passed     40.18%
+ 581  OTU_265     0.00%    passed     44.48%
+ 582  OTU_1068    0.00%    passed     24.62%
+ 583  OTU_1009    0.00%    passed     58.10%
+ 584  OTU_311     0.00%    passed     37.80%
+ 585  OTU_1209    0.00%    passed     32.93%
+ 586  OTU_1607    0.00%    passed     14.77%
+ 587  OTU_1679    0.00%    passed     14.18%
+ 588  OTU_1283    0.00%    passed      8.19%
+ 589  OTU_1502    0.00%    passed      8.89%
+ 590  OTU_838     0.49%    passed     93.24%
+ 591  OTU_1227    0.00%    passed     19.00%
+ 592  OTU_1057    0.00%    passed     92.86%
+ 593  OTU_1176    0.00%    passed     52.58%
+ 594  OTU_538     0.00%    passed     57.87%
+ 595  OTU_1060    0.00%    passed     57.87%
+ 596  OTU_1297    0.00%    passed     57.87%
+ 597  OTU_1289    0.99%    passed     29.86%
+ 598  OTU_1672    0.99%    passed     24.89%
+ 599  OTU_1278    0.00%    passed     56.34%
+ 600  OTU_1354    0.00%    passed     80.41%
+ 601  OTU_1118    0.00%    passed     86.09%
+ 602  OTU_1054    0.00%    passed     66.67%
+ 603  OTU_1242    0.00%    passed     77.05%
+ 604  OTU_1056    0.00%    passed     43.41%
+ 605  OTU_1573    0.00%    passed     77.80%
+ 606  OTU_658     0.00%    passed     94.70%
+ 607  OTU_1439    0.00%    passed     95.70%
+ 608  OTU_1065    0.00%    passed     49.40%
+ 609  OTU_724     0.00%    passed     71.54%
+ 610  OTU_877     0.00%    passed     74.52%
+ 611  OTU_1380    0.00%    passed     44.61%
+ 612  OTU_1575    0.49%    passed     58.42%
+ 613  OTU_1333    0.99%    failed      0.07%
+ 614  OTU_1663    0.99%    failed      0.07%
+ 615  OTU_1005    0.49%    failed      0.47%
+ 616  OTU_1665    0.49%    failed      1.10%
+ 617  OTU_1601    0.49%    passed     58.63%
+ 618  OTU_186     0.00%    passed     50.96%
+ 619  OTU_1279    0.00%    passed     33.50%
+ 620  OTU_57      0.00%    passed     39.05%
+ 621  OTU_1275    0.00%    passed     58.06%
+ 622  OTU_1576    0.00%    failed      0.04%
+ 623  OTU_1236    0.00%    failed      0.02%
+ 624  OTU_1430    0.00%    failed      0.00%
+ 625  OTU_1574    0.00%    passed     51.94%
+ 626  OTU_1660    0.00%    passed      8.35%
+ 627  OTU_1597    0.00%    passed     54.78%
+ 628  OTU_185     0.00%    passed     32.56%
+ 629  OTU_1414    0.00%    passed     63.61%
+ 630  OTU_1508    0.00%    passed     94.68%
+ 631  OTU_1195    0.00%    passed      6.00%
+ 632  OTU_1449    1.97%    passed     39.19%
+ 633  OTU_1497    0.00%    passed     12.75%
+ 634  OTU_1141    0.00%    passed     57.08%
+ 635  OTU_1376    0.00%    passed     41.16%
+ 636  OTU_1525    0.00%    passed     81.23%
+ 637  OTU_1035    0.00%    passed      6.58%
+ 638  OTU_1149    0.99%    passed     13.20%
+ 639  OTU_1277    0.00%    passed     10.08%
+ 640  OTU_1676    0.99%    passed     17.20%
+ 641  OTU_1370    0.49%    failed      2.38%
+ 642  OTU_260     0.99%    failed      2.67%
+ 643  OTU_1288    0.49%    failed      4.19%
+ 644  OTU_120     0.49%    passed      5.40%
+ 645  OTU_42      0.49%    passed      5.57%
+ 646  OTU_138     0.49%    failed      4.72%
+ 647  OTU_829     0.49%    failed      4.33%
+ 648  OTU_1386    0.00%    passed      6.35%
+ 649  OTU_1436    0.00%    passed      6.46%
+ 650  OTU_853     0.00%    passed      5.08%
+ 651  OTU_982     0.00%    failed      3.83%
+ 652  OTU_1598    0.00%    failed      2.52%
+ 653  OTU_1192    0.49%    failed      0.19%
+ 654  OTU_522     0.49%    failed      2.02%
+ 655  OTU_1016    0.49%    failed      0.45%
+ 656  OTU_1480    0.99%    failed      0.08%
+ 657  OTU_784     0.49%    failed      0.33%
+ 658  OTU_1063    0.49%    failed      0.24%
+ 659  OTU_215     0.49%    failed      0.45%
+ 660  OTU_1389    0.49%    failed      0.45%
+ 661  OTU_1415    0.49%    failed      0.87%
+ 662  OTU_1074    0.00%    failed      4.01%
+ 663  OTU_1143    0.00%    failed      3.35%
+ 664  OTU_847     0.99%    passed      9.05%
+ 665  OTU_902     0.49%    passed     10.92%
+ 666  OTU_1008    0.00%    passed     13.00%
+ 667  OTU_906     0.49%    passed     15.76%
+ 668  OTU_687     0.49%    passed     10.71%
+ 669  OTU_719     0.49%    passed     14.54%
+ 670  OTU_1314    0.49%    passed     10.06%
+ 671  OTU_1115    0.49%    passed     10.06%
+ 672  OTU_1402    0.49%    passed     14.54%
+ 673  OTU_700     0.00%    failed      2.68%
+ 674  OTU_1343    0.49%    passed     55.01%
+ 675  OTU_1205    0.00%    passed     16.40%
+ 676  OTU_990     0.49%    passed     15.76%
+ 677  OTU_1129    0.49%    passed     10.71%
+ 678  OTU_546     0.00%    passed     25.14%
+ 679  OTU_1331    0.00%    passed     24.61%
+ 680  OTU_1544    0.00%    passed      6.65%
+ 681  OTU_1104    0.00%    passed     20.03%
+ 682  OTU_1245    0.49%    passed     13.79%
+ 683  OTU_1000    0.00%    passed     16.36%
+ 684  OTU_1165    0.00%    passed     11.37%
+ 685  OTU_958     0.00%    failed      4.78%
+ 686  OTU_1132    0.00%    failed      2.13%
+ 687  OTU_1602    0.00%    failed      3.39%
+ 688  OTU_1260    0.00%    passed     13.26%
+ 689  OTU_1498    0.00%    passed     33.80%
+ 690  OTU_1611    0.00%    passed     64.39%
+ 691  OTU_1320    0.00%    passed     13.73%
+ 692  OTU_1622    0.00%    passed     21.33%
+ 693  OTU_1596    0.00%    passed     16.86%
+ 694  OTU_1438    0.00%    passed     48.19%
+ 695  OTU_1664    0.00%    passed     27.67%
+ 696  OTU_1286    0.00%    passed     74.54%
+ 697  OTU_1169    0.00%    passed     71.12%
+ 698  OTU_1512    0.00%    passed     61.79%
+ 699  OTU_1425    0.00%    passed     76.36%
+ 700  OTU_1135    0.00%    passed     53.55%
+ 701  OTU_1403    0.00%    passed     67.88%
+ 702  OTU_1609    0.00%    passed     82.47%
+ 703  OTU_924     0.00%    passed     72.82%
+ 704  OTU_1214    0.00%    passed     60.94%
+ 705  OTU_1171    0.00%    passed     91.67%
+ 706  OTU_1456    0.00%    passed     86.75%
+ 707  OTU_1671    0.00%    passed     44.62%
+ 708  OTU_1623    0.00%    passed     78.24%
+ 709  OTU_1306    0.00%    passed     66.23%
+ 710  OTU_1606    0.49%    passed     81.29%
+ 711  OTU_1636    0.00%    passed     97.27%
+ 712  OTU_968     0.00%    passed     90.18%
+ 713  OTU_174     0.00%    passed     67.29%
+ 714  OTU_414     0.00%    passed     78.61%
+ 715  OTU_1509    0.49%    passed     92.31%
+ 716  OTU_168     0.00%    passed     33.09%
+ 717  OTU_211     0.00%    passed     52.10%
+ 718  OTU_361     0.00%    passed     68.77%
+ 719  OTU_54      0.49%    passed     65.52%
+ 720  OTU_1608    0.00%    passed     71.89%
+ 721  OTU_189     0.00%    passed     97.27%
+ 722  OTU_978     0.00%    passed     95.41%
+ 723  OTU_440     0.00%    passed     95.41%
+ 724  OTU_1048    0.00%    passed     88.71%
+ 725  OTU_1185    0.00%    passed     95.41%
+ 726  OTU_1647    0.00%    passed     48.19%
+ 727  OTU_266     0.00%    passed     76.92%
+ 728  OTU_279     0.00%    passed     74.58%
+ 729  OTU_576     0.00%    passed     82.26%
+ 730  OTU_741     0.00%    passed     82.26%
+ 731  OTU_27      0.00%    passed     80.39%
+ 732  OTU_671     0.00%    passed     87.67%
+ 733  OTU_18      0.00%    passed     97.25%
+ 734  OTU_145     0.49%    passed     95.35%
+ 735  OTU_1571    0.00%    passed     77.39%
+ 736  OTU_1106    0.00%    passed     94.08%
+ 737  OTU_1532    0.00%    passed     86.11%
+ 738  OTU_1462    0.00%    passed     67.52%
+ 739  OTU_1193    0.00%    passed     65.96%
+ 740  OTU_1631    0.00%    passed     65.96%
+ 741  OTU_1397    0.00%    passed     59.16%
+ 742  OTU_1540    0.00%    passed     58.40%
+ 743  OTU_1290    0.00%    passed     49.62%
+ 744  OTU_1513    0.00%    passed     49.62%
+ 745  OTU_1627    0.00%    passed     94.59%
+ 746  OTU_1369    0.00%    passed     46.65%
+ 747  OTU_1324    0.00%    passed     41.08%
+ 748  OTU_1463    0.00%    passed     17.23%
+ 749  OTU_1510    0.00%    passed     26.46%
+ 750  OTU_483     0.00%    passed     21.69%
+ 751  OTU_1125    0.00%    passed     46.93%
+ 752  OTU_1248    0.00%    passed     52.11%
+ 753  OTU_995     0.00%    passed     35.60%
+ 754  OTU_1304    0.00%    passed     60.15%
+ 755  OTU_1549    0.00%    passed     75.49%
+ 756  OTU_1528    0.00%    passed     50.57%
+ 757  OTU_1347    0.00%    passed     44.09%
+ 758  OTU_1416    0.00%    passed     39.05%
+ 759  OTU_1530    0.00%    passed     78.11%
+ 760  OTU_1357    0.00%    passed     41.39%
+ 761  OTU_1120    0.00%    passed     25.80%
+ 762  OTU_1194    0.00%    passed     61.79%
+ 763  OTU_1654    0.00%    passed     79.41%
+ 764  OTU_1196    0.00%    passed     92.47%
+ 765  OTU_731     0.00%    passed     86.03%
+ 766  OTU_234     0.00%    passed     66.49%
+ 767  OTU_785     0.00%    passed     71.12%
+ 768  OTU_28      0.00%    passed     69.91%
+ 769  OTU_475     0.00%    passed     69.48%
+ 770  OTU_950     0.00%    passed     75.67%
+ 771  OTU_192     0.00%    passed     75.67%
+ 772  OTU_182     0.00%    passed     78.34%
+ 773  OTU_325     0.00%    passed     78.34%
+ 774  OTU_331     0.00%    passed     78.26%
+ 775  OTU_1012    0.00%    passed     70.06%
+ 776  OTU_1426    0.00%    passed     28.17%
+ 777  OTU_1531    0.00%    passed     78.61%
+ 778  OTU_1592    0.00%    passed     30.88%
+ 779  OTU_663     0.00%    passed     77.13%
+ 780  OTU_979     0.00%    passed     75.90%
+ 781  OTU_1479    0.00%    passed     53.63%
+ 782  OTU_3       0.00%    passed     58.40%
+ 783  OTU_1203    0.00%    passed     31.93%
+ 784  OTU_1225    0.00%    passed     48.66%
+ 785  OTU_93      0.00%    passed     40.31%
+ 786  OTU_1395    0.00%    passed     70.38%
+ 787  OTU_1029    0.00%    passed     82.18%
+ 788  OTU_1211    0.00%    passed     72.53%
+ 789  OTU_1184    0.49%    passed     72.44%
+ 790  OTU_611     0.00%    passed     65.34%
+ 791  OTU_1605    0.00%    passed     88.43%
+ 792  OTU_1105    0.00%    passed     79.36%
+ 793  OTU_983     0.00%    passed     74.61%
+ 794  OTU_1157    0.00%    passed     81.57%
+ 795  OTU_1145    0.00%    passed     82.54%
+ 796  OTU_1619    0.00%    passed     84.35%
+ 797  OTU_1204    0.00%    passed     89.80%
+ 798  OTU_1428    0.00%    passed     84.76%
+ 799  OTU_1650    0.00%    passed     91.51%
+ 800  OTU_1156    0.00%    passed     80.88%
+ 801  OTU_281     0.00%    passed     89.28%
+ 802  OTU_1256    0.00%    passed     89.80%
+ 803  OTU_659     0.00%    passed     80.41%
+ 804  OTU_1237    0.00%    passed     76.92%
+ 805  OTU_1580    0.00%    passed     43.69%
+ 806  OTU_653     0.00%    passed     93.09%
+ 807  OTU_797     0.00%    passed     75.27%
+ 808  OTU_1649    0.00%    passed     17.79%
+ 809  OTU_1409    0.49%    passed     74.18%
+ 810  OTU_1477    0.49%    passed     47.78%
+ 811  OTU_290     0.49%    passed     59.86%
+ 812  OTU_1087    0.49%    passed     58.68%
+ 813  OTU_70      0.49%    passed     48.31%
+ 814  OTU_221     0.49%    passed     47.30%
+ 815  OTU_386     0.49%    passed     37.12%
+ 816  OTU_1070    0.49%    passed     47.30%
+ 817  OTU_1232    0.49%    passed     47.30%
+ 818  OTU_288     0.49%    passed     48.31%
+ 819  OTU_38      0.49%    passed     47.30%
+ 820  OTU_39      0.49%    passed     48.31%
+ 821  OTU_569     0.49%    passed     47.30%
+ 822  OTU_598     0.49%    passed     47.30%
+ 823  OTU_382     0.49%    passed     47.30%
+ 824  OTU_156     0.49%    passed     47.30%
+ 825  OTU_861     0.49%    passed     47.30%
+ 826  OTU_894     0.49%    passed     45.13%
+ 827  OTU_101     0.49%    passed     47.30%
+ 828  OTU_1459    1.48%    passed     21.37%
+ 829  OTU_333     0.00%    passed     18.51%
+ 830  OTU_1264    0.99%    passed     19.68%
+ 831  OTU_1162    0.99%    failed      0.05%
+ 832  OTU_1410    0.00%    failed      0.00%
+ 833  OTU_141     0.49%    failed      0.00%
+ 834  OTU_690     0.00%    failed      0.00%
+ 835  OTU_820     0.00%    failed      0.00%
+ 836  OTU_1116    0.49%    passed     42.26%
+ 837  OTU_1547    0.00%    failed      0.20%
+ 838  OTU_1515    0.00%    passed      5.04%
+ 839  OTU_1651    0.49%    passed      5.78%
+ 840  OTU_322     0.00%    failed      2.44%
+ 841  OTU_1117    0.49%    failed      0.34%
+ 842  OTU_1229    0.49%    failed      0.26%
+ 843  OTU_1418    0.49%    failed      0.03%
+ 844  OTU_1085    0.49%    passed     35.06%
+ 845  OTU_1032    0.00%    failed      1.87%
+ 846  OTU_261     0.49%    passed     47.92%
+ 847  OTU_1501    0.00%    passed     31.30%
+ 848  OTU_1150    0.49%    passed     81.00%
+ 849  OTU_1058    0.00%    passed     17.88%
+ 850  OTU_702     0.00%    passed     46.89%
+ 851  OTU_1614    0.99%    passed     46.50%
+ 852  OTU_1667    0.49%    passed     80.96%
+ 853  OTU_1674    0.49%    passed     81.00%
+ 854  OTU_139     0.49%    passed     83.65%
+ 855  OTU_262     0.49%    passed     75.09%
+ 856  OTU_1099    0.49%    passed     80.96%
+ 857  OTU_1374    0.49%    passed     80.96%
+ 858  OTU_96      0.49%    passed     80.96%
+ 859  OTU_1252    0.00%    passed     81.57%
+ 860  OTU_1448    0.99%    passed     79.63%
+ 861  OTU_1172    0.00%    passed     90.92%
+ 862  OTU_1350    0.99%    passed     74.20%
+ 863  OTU_223     0.00%    passed     86.21%
+ 864  OTU_1366    0.99%    passed     86.39%
+ 865  OTU_960     0.00%    passed     82.54%
+ 866  OTU_1365    0.00%    passed     82.28%
+ 867  OTU_885     0.49%    passed     52.47%
+ 868  OTU_1641    0.49%    passed     41.97%
+ 869  OTU_834     0.49%    passed     69.66%
+ 870  OTU_1246    0.49%    passed     77.77%
+ 871  OTU_1011    0.49%    passed     57.98%
+ 872  OTU_1271    0.49%    passed     65.37%
+ 873  OTU_1412    0.49%    passed     57.98%
+ 874  OTU_457     0.49%    passed     68.69%
+ 875  OTU_998     0.00%    passed     78.15%
+ 876  OTU_324     0.00%    passed     85.21%
+ 877  OTU_1367    0.00%    passed     22.06%
+ 878  OTU_1610    0.00%    passed     30.36%
+ 879  OTU_1655    0.00%    passed     77.55%
+ 880  OTU_1489    0.00%    passed     60.11%
+ 881  OTU_1182    0.00%    passed     49.35%
+ 882  OTU_881     0.99%    passed     64.54%
+ 883  OTU_1019    0.99%    passed     79.97%
+ 884  OTU_103     0.00%    passed     57.04%
+ 885  OTU_908     0.00%    passed     57.04%
+ 886  OTU_426     0.99%    passed     71.82%
+ 887  OTU_1010    0.99%    passed     69.07%
+ 888  OTU_1344    0.99%    passed     69.07%
+ 889  OTU_75      0.00%    passed     66.91%
+ 890  OTU_469     0.00%    passed     74.99%
+ 891  OTU_131     0.00%    passed     74.99%
+ 892  OTU_501     0.00%    passed     57.90%
+ 893  OTU_230     0.99%    passed     66.67%
+ 894  OTU_1158    0.99%    passed     58.48%
+ 895  OTU_937     0.00%    passed     39.05%
+ 896  OTU_1310    0.00%    passed     60.44%
+ 897  OTU_761     0.00%    passed     93.04%
+ 898  OTU_1121    0.00%    passed     80.85%
+ 899  OTU_1265    0.00%    passed     65.72%
+ 900  OTU_1300    0.00%    passed     94.85%
+ 901  OTU_1247    0.00%    passed     93.04%
+ 902  OTU_1499    0.00%    passed     88.92%
+ 903  OTU_1235    0.00%    passed     97.65%
+ 904  OTU_1351    0.00%    passed     98.82%
+ 905  OTU_849     0.00%    passed     92.91%
+ 906  OTU_1001    0.00%    passed     97.92%
+ 907  OTU_992     0.00%    passed     64.91%
+ 908  OTU_200     0.00%    passed     70.92%
+ 909  OTU_939     0.00%    passed     70.88%
+ 910  OTU_1431    0.00%    passed     85.12%
+ 911  OTU_1097    0.00%    passed     39.43%
+ 912  OTU_1316    0.00%    passed     39.43%
+ 913  OTU_1296    0.00%    passed     46.17%
+ 914  OTU_1378    0.00%    passed     46.17%
+ 915  OTU_1179    0.00%    passed     78.30%
+ 916  OTU_1124    0.00%    passed      9.02%
+ 917  OTU_1155    0.00%    passed     30.88%
+ 918  OTU_1188    0.00%    passed     53.79%
+ 919  OTU_295     0.00%    passed     75.90%
+ 920  OTU_628     0.00%    passed     60.94%
+ 921  OTU_1126    0.00%    passed     62.67%
+ 922  OTU_1363    0.00%    passed     79.41%
+ 923  OTU_183     0.00%    passed     79.41%
+ 924  OTU_500     0.00%    passed     66.99%
+ 925  OTU_1127    0.00%    passed     60.11%
+ 926  OTU_177     0.00%    passed     83.77%
+ 927  OTU_1221    0.00%    passed     87.31%
+ 928  OTU_1443    0.00%    passed     47.71%
+ 929  OTU_1583    0.00%    passed     47.71%
+ 930  OTU_1553    0.00%    passed     49.62%
+ 931  OTU_341     0.49%    passed     17.03%
+ 932  OTU_994     0.49%    passed     24.72%
+ 933  OTU_241     0.00%    passed     42.60%
+ 934  OTU_579     0.00%    passed     42.60%
+ 935  OTU_415     0.49%    passed     47.23%
+ 936  OTU_1168    0.49%    passed     33.28%
+ 937  OTU_15      0.49%    passed     40.27%
+ 938  OTU_158     0.49%    passed     48.31%
+ 939  OTU_309     0.49%    passed     48.47%
+ 940  OTU_1298    0.49%    passed     94.69%
+ 941  OTU_1338    0.49%    passed     59.23%
+ 942  OTU_56      0.49%    passed     68.30%
+ 943  OTU_348     0.49%    passed     76.72%
+ 944  OTU_583     0.49%    passed     67.76%
+ 945  OTU_905     0.49%    passed     67.76%
+ 946  OTU_1337    0.49%    passed     66.72%
+ 947  OTU_59      0.49%    passed     67.76%
+ 948  OTU_1224    0.49%    passed     75.63%
+ 949  OTU_249     0.49%    passed     76.72%
+ 950  OTU_250     0.49%    passed     76.72%
+ 951  OTU_350     0.00%    passed     60.17%
+ 952  OTU_173     0.00%    passed     69.91%
+ 953  OTU_585     0.49%    passed     53.13%
+ 954  OTU_151     0.00%    passed     36.26%
+ 955  OTU_77      0.49%    passed     24.77%
+ 956  OTU_252     0.49%    passed     24.77%
+ 957  OTU_599     0.49%    passed     65.57%
+ 958  OTU_723     0.49%    passed     65.57%
+ 959  OTU_330     0.49%    passed     37.36%
+ 960  OTU_1391    0.49%    passed     50.87%
+ 961  OTU_1254    0.49%    passed     47.23%
+ 962  OTU_1635    0.00%    passed     37.76%
+ 963  OTU_543     0.49%    passed     65.39%
+ 964  OTU_1086    0.49%    passed     40.61%
+ 965  OTU_159     0.49%    passed     47.24%
+ 966  OTU_114     0.00%    passed     43.89%
+ 967  OTU_406     0.00%    passed     43.89%
+ 968  OTU_1329    0.00%    passed     38.10%
+ 969  OTU_404     0.00%    passed     44.36%
+ 970  OTU_542     0.00%    passed     27.23%
+ 971  OTU_207     0.00%    passed     35.36%
+ 972  OTU_1537    0.49%    passed     80.73%
+ 973  OTU_1390    0.49%    passed     43.04%
+ 974  OTU_1421    0.49%    passed     32.12%
+ 975  OTU_1202    0.49%    passed     34.77%
+ 976  OTU_479     0.49%    passed     54.47%
+ 977  OTU_1557    0.49%    passed     56.88%
+ 978  OTU_399     0.49%    passed     36.88%
+ 979  OTU_716     0.49%    passed     41.16%
+ 980  OTU_209     0.49%    passed     36.88%
+ 981  OTU_321     0.49%    passed     72.44%
+ 982  OTU_112     0.49%    passed     66.28%
+ 983  OTU_868     0.49%    passed     64.53%
+ 984  OTU_1643    0.49%    passed     82.88%
+ 985  OTU_1680    0.49%    passed     78.59%
+ 986  OTU_427     0.49%    passed     70.44%
+ 987  OTU_802     0.49%    passed     78.59%
+ 988  OTU_33      0.49%    passed     75.11%
+ 989  OTU_1309    0.49%    passed     53.74%
+ 990  OTU_1417    0.49%    passed     64.13%
+ 991  OTU_1072    0.00%    passed     81.93%
+ 992  OTU_901     0.00%    passed     70.92%
+ 993  OTU_1148    0.00%    passed     60.26%
+ 994  OTU_1381    0.00%    passed     52.59%
+ 995  OTU_1327    0.00%    passed     60.16%
+ 996  OTU_662     0.00%    passed     57.99%
+ 997  OTU_1102    0.00%    passed     68.60%
+ 998  OTU_685     0.00%    passed     60.70%
+ 999  OTU_1206    0.00%    passed     71.89%
+1000  OTU_639     0.00%    passed     42.62%
+1001  OTU_1419    0.00%    passed     75.30%
+1002  OTU_1567    0.00%    passed     75.30%
+1003  OTU_1138    0.49%    passed     34.25%
+1004  OTU_1618    0.00%    passed     24.16%
+1005  OTU_1318    0.00%    passed     68.95%
+1006  OTU_476     0.99%    passed     27.96%
+1007  OTU_805     0.99%    passed     16.09%
+1008  OTU_199     0.99%    passed     23.63%
+1009  OTU_167     0.99%    passed     17.47%
+1010  OTU_1358    0.99%    passed     23.63%
+1011  OTU_570     0.99%    passed     28.40%
+1012  OTU_170     0.99%    passed     32.69%
+1013  OTU_1670   16.75%    passed     47.74%
+1014  OTU_136     0.99%    passed     26.12%
+1015  OTU_1490    0.99%    passed     13.54%
+1016  OTU_777     0.99%    passed     15.27%
+1017  OTU_1328    0.99%    passed      9.68%
+1018  OTU_972     0.99%    passed     16.74%
+1019  OTU_1467    0.99%    passed     16.74%
+1020  OTU_1591    0.00%    passed     10.99%
+1021  OTU_1488    0.00%    passed     17.85%
+1022  OTU_980     0.00%    passed     51.16%
+1023  OTU_1335    0.00%    passed     42.10%
+1024  OTU_1190    0.00%    passed     21.08%
+1025  OTU_1039    0.00%    passed     12.74%
+1026  OTU_1154    0.00%    passed     52.44%
+1027  OTU_1478    0.00%    passed     82.69%
+1028  OTU_1560    0.49%    passed     47.90%
+1029  OTU_336     0.49%    passed     67.92%
+1030  OTU_889     0.00%    passed     71.72%
+1031  OTU_1342    0.49%    passed     80.22%
+1032  OTU_1332    0.49%    passed     68.33%
+1033  OTU_1388    0.49%    passed     83.26%
+1034  OTU_97      0.49%    passed     75.03%
+1035  OTU_486     0.00%    passed     84.98%
+1036  OTU_454     0.49%    passed     89.82%
+1037  OTU_1226    0.00%    passed     86.75%
+1038  OTU_1476    0.00%    passed     45.08%
+1039  OTU_1273    0.00%    passed     72.82%
+1040  OTU_1469    0.00%    passed     90.50%
+1041  OTU_1404    0.00%    passed     89.30%
+1042  OTU_1452    0.00%    passed     86.60%
+1043  OTU_1612    0.00%    passed     85.96%
+1044  OTU_1626    0.00%    passed     90.50%
+1045  OTU_1589    0.00%    passed     84.23%
+1046  OTU_1360    0.00%    passed     89.35%
+1047  OTU_1472    0.00%    passed     71.00%
+1048  OTU_1552    0.00%    passed     89.54%
+1049  OTU_1301    0.00%    passed     65.82%
+1050  OTU_1131    0.00%    passed     46.68%
+1051  OTU_1500    0.00%    passed     41.89%
+1052  OTU_1545    0.00%    passed     94.57%
+1053  OTU_1561    0.00%    passed     91.60%
+1054  OTU_1570    0.00%    passed     35.40%
+1055  OTU_61      0.00%    passed     61.05%
+1056  OTU_144     0.00%    passed     61.05%
+1057  OTU_190     0.00%    passed     52.59%
+1058  OTU_351     0.00%    passed     52.59%
+1059  OTU_626     0.00%    passed     49.80%
+1060  OTU_892     0.00%    passed     61.05%
+1061  OTU_68      0.00%    passed     52.59%
+1062  OTU_1517    0.00%    passed     71.77%
+1063  OTU_1387    0.00%    passed     15.24%
+1064  OTU_507     0.00%    passed     43.89%
+1065  OTU_1396    0.00%    passed     34.85%
+1066  OTU_1644    0.00%    passed     84.19%
+1067  OTU_1617    0.00%    passed     53.12%
+1068  OTU_1534    0.00%    passed     75.94%
+1069  OTU_1653    0.00%    passed     30.32%
+1070  OTU_1475    0.00%    passed     34.86%
+1071  OTU_1581    0.00%    passed     46.59%
+1072  OTU_1564    0.00%    passed     53.40%
+1073  OTU_1453    0.00%    passed     56.23%
+1074  OTU_825     0.00%    passed     19.65%
+1075  OTU_1027    0.00%    passed     20.89%
+1076  OTU_1558    0.00%    passed     27.70%
+1077  OTU_1541    0.00%    passed     22.08%
+1078  OTU_1170    0.00%    passed     36.26%
+1079  OTU_65      0.00%    passed     34.86%
+1080  OTU_1546    0.00%    passed     35.71%
+1081  OTU_581     0.00%    passed     41.89%
+1082  OTU_1584    0.00%    passed     56.23%
+1083  OTU_134     0.00%    passed     39.82%
+1084  OTU_625     0.00%    passed     39.82%
+1085  OTU_1059    0.00%    passed     39.82%
+1086  OTU_111     0.00%    passed     39.82%
+1087  OTU_1191    0.00%    passed     39.48%
+1088  OTU_128     0.00%    passed     52.59%
+1089  OTU_529     0.00%    passed     58.01%
+1090  OTU_364     0.00%    passed     53.40%
+1091  OTU_530     0.00%    passed     53.40%
+1092  OTU_896     0.00%    passed     59.07%
+1093  OTU_37      0.00%    passed     53.40%
+1094  OTU_986     0.00%    passed     33.14%
+1095  OTU_306     0.00%    passed     48.70%
+1096  OTU_914     0.00%    passed     48.70%
+1097  OTU_35      0.00%    passed     42.70%
+1098  OTU_53      0.00%    passed     36.34%
+1099  OTU_1113    0.00%    passed     42.70%
+1100  OTU_388     0.00%    passed     36.34%
+1101  OTU_494     0.00%    passed     32.94%
+1102  OTU_887     0.00%    passed     39.82%
+1103  OTU_935     0.00%    passed     27.58%
+1104  OTU_62      0.00%    passed     32.94%
+1105  OTU_228     0.00%    passed     60.16%
+1106  OTU_1434    0.00%    passed     34.40%
+1107  OTU_1284    0.00%    passed     41.48%
+1108  OTU_410     0.00%    passed     30.32%
+1109  OTU_964     0.00%    passed     37.71%
+1110  OTU_385     0.00%    passed     30.32%
+1111  OTU_314     0.00%    passed     37.71%
+1112  OTU_627     0.00%    passed     37.71%
+1113  OTU_645     0.00%    passed     45.42%
+1114  OTU_24      0.00%    passed     37.71%
+1115  OTU_1084    0.00%    passed     39.49%
+1116  OTU_113     0.00%    passed     25.44%
+1117  OTU_441     0.00%    passed     15.62%
+1118  OTU_778     0.00%    passed     33.44%
+1119  OTU_811     0.00%    passed     26.39%
+1120  OTU_55      0.00%    passed     30.32%
+1121  OTU_1069    0.00%    passed     64.32%
+1122  OTU_1495    0.00%    passed     21.11%
+1123  OTU_320     0.00%    passed     57.79%
+1124  OTU_833     0.00%    passed     60.26%
+1125  OTU_1524    0.00%    passed     71.84%
+1126  OTU_1073    0.00%    passed     56.09%
+1127  OTU_219     0.00%    passed     57.95%
+1128  OTU_332     0.00%    passed     49.80%
+1129  OTU_359     0.00%    passed     49.80%
+1130  OTU_1071    0.00%    passed     49.80%
+1131  OTU_50      0.00%    passed     49.80%
+1132  OTU_179     0.00%    passed     65.43%
+1133  OTU_273     0.00%    passed     57.95%
+1134  OTU_301     0.00%    passed     64.32%
+1135  OTU_396     0.00%    passed     57.95%
+1136  OTU_670     0.00%    passed     53.03%
+1137  OTU_676     0.00%    passed     65.43%
+1138  OTU_7       0.00%    passed     57.95%
+1139  OTU_178     0.00%    passed     65.43%
+1140  OTU_677     0.00%    passed     53.03%
+1141  OTU_45      0.00%    passed     57.95%
+1142  OTU_521     0.00%    passed     53.12%
+1143  OTU_91      0.00%    passed     50.53%
+1144  OTU_1471    0.00%    passed     57.95%
+1145  OTU_302     0.00%    passed     52.59%
+1146  OTU_52      0.00%    passed     33.44%
+1147  OTU_692     0.00%    passed     30.32%
+1148  OTU_1050    0.00%    passed     30.32%
+1149  OTU_435     0.00%    passed     37.71%
+1150  OTU_1080    0.00%    passed     37.71%
+1151  OTU_900     0.00%    passed     57.95%
+1152  OTU_535     0.00%    passed     50.49%
+1153  OTU_1123    0.00%    passed     50.49%
+1154  OTU_40      0.00%    passed     61.05%
+1155  OTU_596     0.00%    passed     42.62%
+1156  OTU_874     0.00%    passed     39.48%
+1157  OTU_272     0.00%    passed     41.48%
+1158  OTU_66      0.00%    passed     41.48%
+1159  OTU_810     0.00%    passed     49.80%
+1160  OTU_1543    0.00%    passed     69.90%
+1161  OTU_1554    0.00%    passed     62.11%
+1162  OTU_967     0.00%    passed     55.99%
+1163  OTU_1645   15.76%    passed     64.48%
+1164  OTU_47      0.00%    passed     62.48%
+1165  OTU_1186    0.00%    passed     56.59%
+1166  OTU_102     0.00%    passed     62.48%
+1167  OTU_1291    0.00%    passed     54.23%
+1168  OTU_88      0.00%    passed     59.39%
+1169  OTU_254     0.00%    passed     59.39%
+1170  OTU_1218    0.00%    passed     55.78%
+1171  OTU_227     0.00%    passed     55.60%
+1172  OTU_733     0.00%    passed     59.76%
+1173  OTU_1615    0.00%    passed     61.05%
+1174  OTU_872     0.00%    passed     57.95%
+1175  OTU_1251    0.00%    passed     57.95%
+1176  OTU_1586    0.00%    passed     38.10%
+1177  OTU_1487    0.00%    passed     47.66%
+1178  OTU_1140    0.00%    passed     69.22%
+1179  OTU_743     0.00%    passed     43.89%
+1180  OTU_1292    0.00%    passed     23.58%
+1181  OTU_1349    0.00%    passed     23.58%
+1182  OTU_181     0.00%    passed     23.58%
+1183  OTU_1405    0.00%    passed     36.30%
+1184  OTU_1484    0.00%    passed     60.26%
+1185  OTU_1582    0.00%    passed     52.44%
+1186  OTU_1491    0.00%    passed     28.76%
+1187  OTU_961     0.00%    passed     36.15%
+1188  OTU_63      0.00%    passed     35.45%
+1189  OTU_1563    0.00%    passed     20.90%
+1190  OTU_1266    0.00%    passed     35.46%
+1191  OTU_1295    0.00%    passed     36.15%
+1192  OTU_282     0.00%    passed     52.59%
+1193  OTU_734     0.00%    passed     52.59%
+1194  OTU_484     0.00%    passed     33.16%
+1195  OTU_768     0.00%    passed     42.23%
+1196  OTU_855     0.00%    passed     32.56%
+1197  OTU_76      0.00%    passed     33.16%
+1198  OTU_584     0.00%    passed     42.74%
+1199  OTU_378     0.00%    passed     44.73%
+1200  OTU_125     0.00%    passed     41.49%
+1201  OTU_608     0.00%    passed     34.86%
+1202  OTU_123     0.00%    passed     34.86%
+1203  OTU_108     0.00%    passed     34.86%
+1204  OTU_220     0.00%    passed     33.56%
+1205  OTU_248     0.00%    passed     33.56%
+1206  OTU_313     0.00%    passed     34.86%
+1207  OTU_316     0.00%    passed     33.56%
+1208  OTU_338     0.00%    passed     34.86%
+1209  OTU_381     0.00%    passed     34.86%
+1210  OTU_422     0.00%    passed     43.75%
+1211  OTU_451     0.00%    passed     35.45%
+1212  OTU_612     0.00%    passed     43.75%
+1213  OTU_737     0.00%    passed     33.56%
+1214  OTU_806     0.00%    passed     33.56%
+1215  OTU_871     0.00%    passed     33.56%
+1216  OTU_953     0.00%    passed     43.75%
+1217  OTU_17      0.00%    passed     34.86%
+1218  OTU_556     0.00%    passed     35.45%
+1219  OTU_210     0.00%    passed     39.48%
+1220  OTU_1100    0.00%    passed     35.16%
+1221  OTU_921     0.00%    passed     53.03%
+1222  OTU_319     0.00%    passed     22.03%
+1223  OTU_1446    0.00%    passed     25.81%
+1224  OTU_1458    0.00%    passed     30.32%
+1225  OTU_83      0.00%    passed     26.07%
+1226  OTU_400     0.00%    passed     19.65%
+1227  OTU_10      0.00%    passed     26.07%
+1228  OTU_463     0.00%    passed     33.44%
+1229  OTU_280     0.00%    passed     22.03%
+1230  OTU_372     0.00%    passed     28.76%
+1231  OTU_491     0.00%    passed     36.30%
+1232  OTU_16      0.00%    passed     28.76%
+1233  OTU_1604    0.00%    passed     43.91%
+1234  OTU_1656    0.00%    passed     48.70%
+1235  OTU_1599    0.00%    passed     30.58%
+1236  OTU_1577    0.00%    passed     80.34%
+1237  OTU_1028    0.00%    passed     34.86%
+1238  OTU_1303    0.00%    passed     57.95%
+1239  OTU_1163    0.00%    passed     65.19%
+1240  OTU_826     0.00%    passed     43.63%
+1241  OTU_1228    0.00%    passed     43.63%
+1242  OTU_1595    0.00%    passed     49.83%
+1243  OTU_1238    0.00%    passed     28.85%
+1244  OTU_105     0.00%    passed     44.29%
+1245  OTU_1092    0.00%    passed     42.62%
+1246  OTU_1216    0.00%    passed     74.52%
+1247  OTU_1516    0.00%    passed     23.98%
+1248  OTU_1282    0.00%    passed     58.06%
+1249  OTU_1620    0.00%    passed     64.17%
+1250  OTU_1562    0.00%    passed     19.65%
+1251  OTU_1628    0.00%    passed     47.66%
+1252  OTU_1569    0.00%    passed     66.99%
+1253  OTU_87      0.00%    passed     65.82%
+1254  OTU_1556    0.00%    passed     74.52%
+1255  OTU_162     0.00%    passed     50.38%
+1256  OTU_1493    0.00%    passed     60.17%
+1257  OTU_1015    0.00%    passed     63.63%
+1258  OTU_744     0.00%    passed     60.44%
+1259  OTU_239     0.00%    passed     60.44%
+1260  OTU_1447    0.00%    passed     54.01%
+1261  OTU_407     0.00%    passed     66.99%
+1262  OTU_161     0.00%    passed     60.11%
+1263  OTU_948     0.00%    passed     52.39%
+1264  OTU_89      0.00%    passed     60.11%
+1265  OTU_1217    0.00%    passed     49.80%
+1266  OTU_1486    0.00%    passed     28.24%
+1267  OTU_155     0.00%    passed     52.59%
+1268  OTU_423     0.00%    passed     43.33%
+1269  OTU_124     0.00%    passed     43.33%
+1270  OTU_242     0.00%    passed     35.93%
+1271  OTU_899     0.00%    passed     28.34%
+1272  OTU_263     0.00%    passed     35.31%
+1273  OTU_172     0.00%    passed     45.42%
+1274  OTU_175     0.00%    passed     37.71%
+1275  OTU_823     0.00%    passed     46.98%
+1276  OTU_1346    0.00%    passed     36.26%
+1277  OTU_1307    0.00%    passed     23.58%
+1278  OTU_1394    0.00%    passed     42.66%
+1279  OTU_1505    0.00%    passed     44.33%
+1280  OTU_1536    0.00%    passed     65.43%
+1281  OTU_274     0.00%    passed     43.89%
+1282  OTU_473     0.00%    passed     43.89%
+1283  OTU_533     0.00%    passed     52.59%
+1284  OTU_575     0.00%    passed     43.89%
+1285  OTU_683     0.00%    passed     35.45%
+1286  OTU_841     0.00%    passed     52.59%
+1287  OTU_44      0.00%    passed     43.89%
+1288  OTU_401     0.00%    passed     70.92%
+1289  OTU_461     0.00%    passed     78.34%
+1290  OTU_619     0.00%    passed     62.33%
+1291  OTU_756     0.00%    passed     68.69%
+1292  OTU_987     0.00%    passed     62.33%
+1293  OTU_25      0.00%    passed     70.92%
+1294  OTU_516     0.00%    passed     49.80%
+1295  OTU_1263    0.00%    passed     65.43%
+1296  OTU_808     0.00%    passed     36.34%
+1297  OTU_511     0.00%    passed     41.89%
+1298  OTU_298     0.00%    passed     68.69%
+1299  OTU_411     0.00%    passed     70.92%
+1300  OTU_864     0.00%    passed     76.04%
+1301  OTU_202     0.00%    passed     68.69%
+1302  OTU_1198    0.00%    passed     63.34%
+1303  OTU_85      0.00%    passed     81.54%
+1304  OTU_425     0.00%    passed     86.60%
+1305  OTU_959     0.00%    passed     81.54%
+1306  OTU_214     0.00%    passed     74.85%
+1307  OTU_622     0.00%    passed     86.60%
+1308  OTU_109     0.00%    passed     81.54%
+1309  OTU_133     0.00%    passed     75.79%
+1310  OTU_256     0.00%    passed     81.54%
+1311  OTU_446     0.00%    passed     75.79%
+1312  OTU_946     0.00%    passed     86.60%
+1313  OTU_30      0.00%    passed     81.54%
+1314  OTU_1401    0.00%    passed     35.93%
+1315  OTU_985     0.00%    passed     41.89%
+1316  OTU_12      0.00%    passed     53.03%
+1317  OTU_770     0.00%    passed     60.09%
+1318  OTU_1233    0.00%    passed     45.42%
+1319  OTU_1249    0.00%    passed     60.44%
+1320  OTU_363     0.00%    passed     54.01%
+1321  OTU_614     0.00%    passed     54.01%
+1322  OTU_933     0.00%    passed     46.89%
+1323  OTU_1090    0.00%    passed     54.01%
+1324  OTU_78      0.00%    passed     54.01%
+1325  OTU_226     0.00%    passed     54.23%
+1326  OTU_551     0.00%    passed     45.97%
+1327  OTU_307     0.00%    passed     62.29%
+1328  OTU_1110    0.00%    passed     58.78%
+1329  OTU_98      0.00%    passed     43.63%
+1330  OTU_163     0.00%    passed     50.38%
+1331  OTU_1261    0.00%    passed     36.38%
+1332  OTU_243     0.00%    passed     58.06%
+1333  OTU_1175    0.00%    passed     71.09%
+1334  OTU_171     0.00%    passed     60.09%
+1335  OTU_966     0.00%    passed     53.03%
+1336  OTU_649     0.00%    passed     39.48%
+1337  OTU_246     0.00%    passed     43.89%
+1338  OTU_514     0.00%    passed     43.89%
+1339  OTU_328     0.00%    passed     60.44%
+1340  OTU_135     0.00%    passed     48.41%
+1341  OTU_971     0.00%    passed     48.41%
+1342  OTU_601     0.00%    passed     59.39%
+1343  OTU_99      0.00%    passed     60.44%
+1344  OTU_1091    0.00%    passed     48.70%
+1345  OTU_176     0.00%    passed     60.44%
+1346  OTU_1006    0.00%    passed     50.49%
+1347  OTU_391     0.00%    passed     39.48%
+1348  OTU_600     0.00%    passed     53.03%
+1349  OTU_146     0.00%    passed     53.03%
+1350  OTU_1207    0.00%    passed     60.44%
+1351  OTU_1107    0.00%    passed     54.01%
+1352  OTU_343     0.00%    passed     63.63%
+1353  OTU_365     0.00%    passed     54.01%
+1354  OTU_429     0.00%    passed     53.40%
+1355  OTU_554     0.00%    passed     54.01%
+1356  OTU_851     0.00%    passed     59.07%
+1357  OTU_46      0.00%    passed     59.07%
+1358  OTU_32      0.00%    passed     50.49%
+1359  OTU_259     0.00%    passed     53.03%
+1360  OTU_81      0.00%    passed     39.48%
+1361  OTU_212     0.00%    passed     41.89%
+1362  OTU_941     0.00%    passed     46.89%
+1363  OTU_420     0.00%    passed     46.89%
+1364  OTU_1542    0.00%    passed     32.10%
+1365  OTU_1383    0.00%    passed     54.36%
+1366  OTU_362     0.00%    passed     44.73%
+1367  OTU_458     0.00%    passed     35.35%
+1368  OTU_688     0.00%    passed     44.73%
+1369  OTU_754     0.00%    passed     40.01%
+1370  OTU_14      0.00%    passed     42.87%
+1371  OTU_235     0.00%    passed     49.81%
+1372  OTU_563     0.00%    passed     44.73%
+1373  OTU_71      0.00%    passed     42.87%
+1374  OTU_898     0.00%    passed     59.39%
+1375  OTU_104     0.00%    passed     52.39%
+1376  OTU_949     0.00%    passed     60.11%
+1377  OTU_1299    0.00%    passed     57.95%
+1378  OTU_821     0.00%    passed     71.84%
+1379  OTU_233     0.00%    passed     65.43%
+1380  OTU_152     0.00%    passed     65.43%
+1381  OTU_884     0.00%    passed     65.43%
+1382  OTU_508     0.00%    passed     65.43%
+1383  OTU_1142    0.00%    passed     28.24%
+1384  OTU_106     0.00%    passed     34.86%
+1385  OTU_699     0.00%    passed     54.01%
+1386  OTU_842     0.00%    passed     58.01%
+1387  OTU_137     0.00%    passed     60.09%
+1388  OTU_245     0.00%    passed     71.09%
+1389  OTU_548     0.00%    passed     71.09%
+1390  OTU_1293    0.00%    passed     56.51%
+1391  OTU_859     0.00%    passed     64.74%
+1392  OTU_148     0.00%    passed     65.43%
+1393  OTU_988     0.00%    passed     68.76%
+1394  OTU_1302    0.00%    passed     45.42%
+1395  OTU_294     0.00%    passed     43.89%
+1396  OTU_1550    1.48%    passed     52.31%
+1397  OTU_1055    0.99%    passed     57.98%
+1398  OTU_1411    1.48%    passed     76.61%
+1399  OTU_787     0.99%    passed     59.63%
+1400  OTU_1352    0.99%    passed     57.03%
+1401  OTU_1566    0.49%    passed     31.61%
+1402  OTU_368     0.49%    passed     27.69%
+1403  OTU_815     0.49%    passed     31.72%
+1404  OTU_955     0.00%    passed     80.69%
+1405  OTU_652     0.00%    passed     43.81%
+1406  OTU_1427    0.00%    passed     65.84%
+1407  OTU_1565    0.00%    passed     74.12%
+1408  OTU_1133    0.00%    passed     32.65%
+1409  OTU_356     0.00%    passed     84.43%
+1410  OTU_650     0.00%    passed     41.16%
+1411  OTU_1020    0.00%    passed     26.93%
+1412  OTU_828     0.00%    passed     84.35%
+1413  OTU_991     0.00%    passed     86.75%
+1414  OTU_1079    0.00%    passed     44.21%
+1415  OTU_793     0.00%    passed     57.81%
+1416  OTU_1435    0.00%    passed     69.17%
+1417  OTU_1588    0.99%    passed     46.60%
+1418  OTU_447     0.99%    passed     63.67%
+1419  OTU_1445    0.99%    passed     56.24%
+1420  OTU_418     0.00%    passed     87.31%
+1421  OTU_963     0.00%    passed     79.23%
+1422  OTU_1423    0.00%    passed     71.77%
+1423  OTU_1373    0.00%    passed     71.99%
+1424  OTU_1429    0.00%    passed     63.81%
+1425  OTU_1345    0.00%    passed     57.81%
+1426  OTU_1208    0.00%    passed     52.81%
+1427  OTU_1372    0.00%    passed     52.81%
+1428  OTU_1535    0.99%    passed     56.72%
+1429  OTU_376     0.00%    passed     52.81%
+1430  OTU_1200    0.00%    passed     71.99%
+1431  OTU_1321    1.48%    passed     73.41%
+1432  OTU_1341    1.48%    passed     62.18%
+1433  OTU_1362    1.48%    passed     60.46%
+1434  OTU_711     0.00%    passed     75.60%
+1435  OTU_1339    0.00%    passed     87.51%
+1436  OTU_1470    0.00%    passed     66.79%
+1437  OTU_1066    0.00%    passed     75.79%
+1438  OTU_1336    0.00%    passed     81.54%
+1439  OTU_1440    0.00%    passed     51.91%
+1440  OTU_1652    0.00%    passed     55.27%
+1441  OTU_1594    0.00%    passed     84.43%
+1442  OTU_1201    0.00%    passed     81.54%
+1443  OTU_1432    0.00%    passed     88.43%
+1444  OTU_1003    0.00%    passed     51.08%
+1445  OTU_1114    0.00%    passed     45.45%
+1446  OTU_1624    0.00%    passed     46.68%
+1447  OTU_1681    0.00%    passed     98.06%
+1448  OTU_153     0.00%    passed     78.78%
+1449  OTU_1385    0.00%    passed     58.54%
+1450  OTU_814     0.00%    passed     44.55%
+1451  OTU_344     0.00%    passed     65.19%
+1452  OTU_222     0.00%    passed     67.37%
+1453  OTU_251     0.00%    passed     83.77%
+1454  OTU_1330    0.00%    passed     67.37%
+1455  OTU_49      0.00%    passed     76.27%
+1456  OTU_64      0.00%    passed     57.04%
+1457  OTU_1662    0.00%    passed     66.73%
+1458  OTU_193     0.00%    passed     60.49%
+1459  OTU_286     0.00%    passed     60.49%
+1460  OTU_605     0.00%    passed     60.49%
+1461  OTU_1450    0.00%    passed     57.02%
+1462  OTU_865     0.00%    passed     41.50%
+1463  OTU_1613    0.00%    passed     30.32%
+1464  OTU_1034    0.00%    passed     42.23%
+1465  OTU_1049    0.00%    passed     33.47%
+1466  OTU_132     0.00%    passed     62.33%
+1467  OTU_775     0.00%    passed     62.30%
+1468  OTU_1334    0.00%    passed     98.82%
+1469  OTU_1634    0.00%    passed     98.79%
+1470  OTU_1572    0.00%    passed     91.44%
+1471  OTU_1640    0.00%    passed     50.63%
+1472  OTU_1199    0.00%    passed     53.55%
+1473  OTU_1323    0.00%    passed     62.48%
+1474  OTU_1400    0.00%    passed     60.67%
+1475  OTU_1267    0.00%    passed     70.06%
+1476  OTU_1587    0.00%    passed     71.00%
+1477  OTU_1451    0.00%    passed     80.34%
+1478  OTU_1621    0.00%    passed     66.98%
+1479  OTU_51      0.00%    passed     39.67%
+1480  OTU_82      0.00%    passed     60.16%
+1481  OTU_90      0.00%    passed     66.99%
+1482  OTU_140     0.00%    passed     67.04%
+1483  OTU_147     0.00%    passed     66.99%
+1484  OTU_201     0.00%    passed     67.04%
+1485  OTU_217     0.00%    passed     67.04%
+1486  OTU_257     0.00%    passed     72.72%
+1487  OTU_397     0.00%    passed     66.99%
+1488  OTU_434     0.00%    passed     66.99%
+1489  OTU_675     0.00%    passed     72.72%
+1490  OTU_680     0.00%    passed     66.99%
+1491  OTU_2       0.00%    passed     67.04%
+1492  OTU_73      0.00%    passed     50.63%
+1493  OTU_354     0.00%    passed     64.91%
+1494  OTU_801     0.00%    passed     60.16%
+1495  OTU_8       0.00%    passed     58.16%
+1496  OTU_150     0.00%    passed     58.16%
+1497  OTU_347     0.00%    passed     64.91%
+1498  OTU_919     0.00%    passed     60.16%
+1499  OTU_9       0.00%    passed     58.16%
+1500  OTU_1503    0.00%    passed     47.54%
+1501  OTU_285     0.00%    passed     62.48%
+1502  OTU_962     0.00%    passed     53.74%
+1503  OTU_58      0.00%    passed     59.43%
+1504  OTU_1215    0.49%    passed     55.52%
+1505  OTU_1422    0.49%    passed     62.86%
+1506  OTU_1272    0.00%    passed     47.10%
+1507  OTU_1241    0.00%    passed     50.49%
+1508  OTU_1308    0.00%    passed     44.29%
+1509  OTU_127     0.00%    passed     43.89%
+1510  OTU_318     0.00%    passed     47.37%
+1511  OTU_383     0.00%    passed     39.33%
+1512  OTU_34      0.00%    passed     39.33%
+1513  OTU_679     0.00%    passed     20.77%
+1514  OTU_654     0.00%    passed     27.04%
+1515  OTU_1136    0.00%    passed     39.51%
+1516  OTU_244     0.00%    passed     31.97%
+1517  OTU_1139    0.00%    passed     52.44%
+1518  OTU_957     0.00%    passed     42.16%
+1519  OTU_603     0.00%    passed     58.01%
+1520  OTU_264     0.00%    passed     50.49%
+1521  OTU_195     0.00%    passed     60.09%
+1522  OTU_532     0.00%    passed     57.95%
+1523  OTU_527     0.00%    passed     58.01%
+1524  OTU_1585    0.00%    passed     60.11%
+1525  OTU_977     0.00%    passed     41.89%
+1526  OTU_384     0.49%    passed     66.97%
+1527  OTU_1167    0.00%    passed     50.38%
+1528  OTU_160     0.00%    passed     51.94%
+1529  OTU_1465    0.00%    passed     51.76%
+1530  OTU_1322    0.49%    passed     99.13%
+1531  OTU_1519    0.49%    passed     79.07%
+1532  OTU_1294    0.49%    passed     69.66%
+1533  OTU_1103    0.49%    passed     68.22%
+1534  OTU_1494    0.49%    passed     86.03%
+1535  OTU_630     0.49%    passed     72.23%
+1536  OTU_736     0.00%    passed     63.13%
+1537  OTU_1384    0.00%    passed     31.88%
+1538  OTU_1520    0.00%    passed     82.21%
+1539  OTU_916     0.00%    passed     46.31%
+1540  OTU_1468    0.00%    passed     32.22%
+1541  OTU_164     0.00%    passed     44.45%
+1542  OTU_1413    0.00%    passed     31.72%
+1543  OTU_1101    0.00%    passed     34.07%
+1544  OTU_292     0.00%    passed     33.31%
+1545  OTU_866     0.00%    passed     32.94%
+1546  OTU_1466    0.00%    passed     41.48%
+1547  OTU_620     0.00%    passed     37.71%
+1548  OTU_1523    0.49%    passed     59.23%
+1549  OTU_907     0.00%    passed     77.27%
+1550  OTU_1161    0.00%    passed     54.15%
+1551  OTU_1112    0.00%    passed     57.95%
+1552  OTU_1219    0.00%    passed     64.81%
+1553  OTU_493     0.00%    passed     53.12%
+1554  OTU_1420    0.00%    passed     60.09%
+1555  OTU_1442    0.49%    passed     86.74%
+1556  OTU_1280    0.49%    passed     70.86%
+1557  OTU_1506    0.49%    passed     67.09%
+1558  OTU_1109    0.49%    passed     88.38%
+1559  OTU_166     0.49%    passed     83.18%
+1560  OTU_661     0.49%    passed     89.82%
+1561  OTU_1240    0.49%    passed     79.87%
+1562  OTU_1315    0.00%    passed     69.17%
+1563  OTU_1657    0.00%    passed     59.58%
+1564  OTU_1603    0.00%    passed     57.53%
+1565  OTU_291     0.00%    passed     52.59%
+1566  OTU_1646    0.00%    passed     60.81%
+1567  OTU_1025    0.00%    passed     70.06%
+1568  OTU_1134    0.00%    passed     56.23%
+1569  OTU_1002    0.00%    passed     49.80%
+1570  OTU_1040    0.00%    passed     49.80%
+1571  OTU_231     0.00%    passed     42.17%
+1572  OTU_1230    0.00%    passed     42.17%
+1573  OTU_67      0.00%    passed     42.66%
+1574  OTU_1379    0.00%    passed     64.81%
+1575  OTU_157     0.00%    passed     48.43%
+1576  OTU_1164    0.00%    passed     52.96%
+1577  OTU_1311    0.00%    passed     47.66%
+1578  OTU_409     0.00%    passed     53.03%
+1579  OTU_1130    0.00%    passed     37.71%
+1580  OTU_1166    0.00%    passed     45.42%
+1581  OTU_876     0.00%    passed     73.35%
+1582  OTU_1067    0.00%    passed     47.98%
+1583  OTU_1464    0.00%    passed     61.66%
+1584  OTU_1548    0.00%    passed     93.04%
+1585  OTU_355     0.00%    passed     60.26%
+1586  OTU_1253    0.00%    passed     68.76%
+1587  OTU_116     0.00%    passed     77.29%
+1588  OTU_1632    0.00%    passed     63.61%
+1589  OTU_122     0.00%    passed     74.85%
+1590  OTU_1590    0.00%    passed     82.54%
+1591  OTU_213     0.00%    passed     76.27%
+1592  OTU_578     0.00%    passed     76.27%
+1593  OTU_284     0.00%    passed     60.09%
+1594  OTU_196     0.00%    passed     71.84%
+1595  OTU_1340    0.00%    passed     71.84%
+1596  OTU_1111    0.00%    passed     66.22%
+1597  OTU_1375    0.00%    passed     51.95%
+1598  OTU_480     0.00%    passed     58.06%
+1599  OTU_370     0.00%    passed     59.45%
+1600  OTU_395     0.00%    passed     59.56%
+1601  OTU_459     0.00%    passed     62.33%
+1602  OTU_334     0.00%    passed     76.04%
+1603  OTU_84      0.00%    passed     64.32%
+1604  OTU_408     0.00%    passed     76.04%
+1605  OTU_1371    0.00%    passed     50.93%
+1606  OTU_1518    0.00%    passed     28.58%
+1607  OTU_80      0.00%    passed     38.79%
+1608  OTU_903     0.00%    passed     49.84%
+1609  OTU_1406    0.00%    passed     57.99%
+1610  OTU_498     0.00%    passed     61.05%
+1611  OTU_1568    0.00%    passed     85.12%
+1612  OTU_1089    0.00%    passed     66.99%
+1613  OTU_1399    0.00%    passed     60.11%
+1614  OTU_121     0.00%    passed     66.99%
+1615  OTU_956     0.00%    passed     65.82%
+1616  OTU_698     0.00%    passed     57.50%
+1617  OTU_1504    0.00%    passed     65.43%
+1618  OTU_1147    0.00%    passed     60.44%
+1619  OTU_1281    0.00%    passed     58.78%
+1620  OTU_1183    0.00%    passed     70.92%
+1621  OTU_110     0.00%    passed     56.51%
+1622  OTU_1361    0.00%    passed     57.79%
+1623  OTU_1521    0.00%    passed     71.46%
+1624  OTU_95      0.00%    passed     53.03%
+1625  OTU_154     0.00%    passed     46.68%
+1626  OTU_129     0.00%    passed     60.09%
+1627  OTU_255     0.00%    passed     57.95%
+1628  OTU_360     0.00%    passed     53.03%
+1629  OTU_216     0.00%    passed     38.10%
+1630  OTU_1364    0.00%    passed     25.68%
+1631  OTU_1014    0.00%    passed     31.20%
+1632  OTU_895     0.00%    passed     53.03%
+1633  OTU_1257    0.00%    passed     71.46%
+1634  OTU_1579    0.00%    passed     53.55%
+1635  OTU_1189    0.00%    passed     48.43%
+1636  OTU_1424    0.00%    passed     43.75%
+1637  OTU_1239    0.00%    passed     50.53%
+1638  OTU_879     0.00%    passed     60.26%
+1639  OTU_1474    0.00%    passed     68.69%
+1640  OTU_1593    0.00%    passed     40.32%
+1641  OTU_1244    0.00%    passed     22.01%
+1642  OTU_1457    0.00%    passed     47.36%
+1643  OTU_1262    0.00%    passed     35.93%
+1644  OTU_1377    0.00%    passed     35.93%
+1645  OTU_1533    0.00%    passed     42.46%
+1646  OTU_206     0.00%    passed     43.33%
+1647  OTU_929     0.00%    passed     42.23%
+1648  OTU_1022    0.00%    passed     32.22%
+1649  OTU_1359    0.00%    passed     28.85%
+1650  OTU_1473    0.00%    passed     35.16%
+1651  OTU_327     0.00%    passed     50.49%
+1652  OTU_1231    0.00%    passed     58.01%
+1653  OTU_130     0.00%    passed     52.39%
+1654  OTU_1555    0.00%    passed     58.20%
+1655  OTU_94      0.00%    passed     47.66%
+1656  OTU_438     0.00%    passed     41.49%
+1657  OTU_387     0.00%    passed     37.71%
+1658  OTU_705     0.00%    passed     60.09%
+1659  OTU_940     0.00%    passed     51.24%
+1660  OTU_526     0.00%    passed     60.26%
+1661  OTU_1285    0.00%    passed     39.25%
+1662  OTU_194     0.00%    passed     34.88%
+1663  OTU_1094    0.00%    passed     34.88%
+1664  OTU_925     0.00%    passed     57.79%
+1665  OTU_788     0.00%    passed     66.91%
+1666  OTU_845     0.00%    passed     38.79%
+1667  OTU_1018    0.00%    passed     44.21%
+1668  OTU_1119    0.00%    passed     32.65%
+1669  OTU_1174    0.00%    passed     38.79%
+1670  OTU_165     0.00%    passed     63.13%
+1671  OTU_883     0.00%    passed     78.26%
+1672  OTU_846     0.00%    passed     48.43%
+1673  OTU_774     0.00%    passed     52.96%
+1674  OTU_1258    0.00%    passed     71.77%
+1675  OTU_1492    0.00%    passed     60.09%
+1676  OTU_1222    0.00%    passed     49.51%
+1677  OTU_920     0.00%    passed     39.25%
+1678  OTU_1616    0.00%    passed     47.67%
+1679  OTU_1312    0.00%    passed     44.36%
+1680  OTU_1659    0.00%    passed     87.17%
+1681  OTU_1675    0.49%    passed     80.79%
+****  TOTAL       0.51%  446 sequences failed composition chi2 test (p-value<5%; df=3)
+NOTE: OTU_466 is identical to OTU_505 but kept for subsequent analysis
+NOTE: OTU_455 is identical to OTU_547 but kept for subsequent analysis
+NOTE: OTU_669 is identical to OTU_566 but kept for subsequent analysis
+NOTE: OTU_558 is identical to OTU_590 but kept for subsequent analysis
+NOTE: OTU_595 is identical to OTU_613 but kept for subsequent analysis
+NOTE: OTU_755 is identical to OTU_701 but kept for subsequent analysis
+NOTE: OTU_641 is identical to OTU_695 but kept for subsequent analysis
+NOTE: OTU_432 is identical to OTU_520 but kept for subsequent analysis
+NOTE: OTU_439 is identical to OTU_456 but kept for subsequent analysis
+NOTE: OTU_544 is identical to OTU_553 but kept for subsequent analysis
+NOTE: OTU_504 is identical to OTU_564 but kept for subsequent analysis
+NOTE: OTU_710 is identical to OTU_588 but kept for subsequent analysis
+NOTE: OTU_809 is identical to OTU_664 but kept for subsequent analysis
+NOTE: OTU_760 is identical to OTU_730 but kept for subsequent analysis
+NOTE: OTU_519 is identical to OTU_602 but kept for subsequent analysis
+NOTE: OTU_757 is identical to OTU_1046 but kept for subsequent analysis
+NOTE: OTU_632 is identical to OTU_738 but kept for subsequent analysis
+NOTE: OTU_673 is identical to OTU_637 but kept for subsequent analysis
+NOTE: OTU_642 is identical to OTU_766 but kept for subsequent analysis
+NOTE: OTU_606 is identical to OTU_791 but kept for subsequent analysis
+NOTE: OTU_525 is identical to OTU_1075 but kept for subsequent analysis
+NOTE: OTU_634 is identical to OTU_886 but kept for subsequent analysis
+NOTE: OTU_142 is identical to OTU_1052 but kept for subsequent analysis
+NOTE: OTU_323 is identical to OTU_616 but kept for subsequent analysis
+NOTE: OTU_277 is identical to OTU_682 but kept for subsequent analysis
+NOTE: OTU_326 is identical to OTU_1146 but kept for subsequent analysis
+NOTE: OTU_678 is identical to OTU_224 but kept for subsequent analysis
+NOTE: OTU_893 is identical to OTU_487 but kept for subsequent analysis
+NOTE: OTU_799 is identical to OTU_571 but kept for subsequent analysis
+NOTE: OTU_803 is identical to OTU_270 but kept for subsequent analysis
+NOTE: OTU_786 is identical to OTU_560 but kept for subsequent analysis
+NOTE: OTU_798 is identical to OTU_453 but kept for subsequent analysis
+NOTE: OTU_912 is identical to OTU_481 but kept for subsequent analysis
+NOTE: OTU_856 is identical to OTU_433 but kept for subsequent analysis
+NOTE: OTU_657 is identical to OTU_403 but kept for subsequent analysis
+NOTE: OTU_928 is identical to OTU_449 but kept for subsequent analysis
+NOTE: OTU_969 is identical to OTU_467 but kept for subsequent analysis
+NOTE: OTU_751 is identical to OTU_468 but kept for subsequent analysis
+NOTE: OTU_1030 is identical to OTU_471 but kept for subsequent analysis
+NOTE: OTU_1031 is identical to OTU_482 but kept for subsequent analysis
+NOTE: OTU_762 is identical to OTU_488 but kept for subsequent analysis
+NOTE: OTU_835 is identical to OTU_496 but kept for subsequent analysis
+NOTE: OTU_984 is identical to OTU_513 but kept for subsequent analysis
+NOTE: OTU_740 is identical to OTU_577 but kept for subsequent analysis
+NOTE: OTU_506 is identical to OTU_927 but kept for subsequent analysis
+NOTE: OTU_1082 is identical to OTU_795 but kept for subsequent analysis
+NOTE: OTU_707 is identical to OTU_926 but kept for subsequent analysis
+NOTE: OTU_518 is identical to OTU_559 but kept for subsequent analysis
+NOTE: OTU_789 is identical to OTU_816 but kept for subsequent analysis
+NOTE: OTU_742 is identical to OTU_830 but kept for subsequent analysis
+NOTE: OTU_609 is identical to OTU_873 but kept for subsequent analysis
+NOTE: OTU_772 is identical to OTU_1004 but kept for subsequent analysis
+NOTE: OTU_686 is identical to OTU_938 but kept for subsequent analysis
+NOTE: OTU_747 is identical to OTU_911 but kept for subsequent analysis
+NOTE: OTU_562 is identical to OTU_708 but kept for subsequent analysis
+NOTE: OTU_586 is identical to OTU_725 but kept for subsequent analysis
+NOTE: OTU_635 is identical to OTU_739 but kept for subsequent analysis
+NOTE: OTU_852 is identical to OTU_839 but kept for subsequent analysis
+NOTE: OTU_643 is identical to OTU_615 but kept for subsequent analysis
+NOTE: OTU_727 is identical to OTU_954 but kept for subsequent analysis
+NOTE: OTU_495 is identical to OTU_651 but kept for subsequent analysis
+NOTE: OTU_352 is identical to OTU_890 but kept for subsequent analysis
+NOTE: OTU_783 is identical to OTU_191 but kept for subsequent analysis
+NOTE: OTU_540 is identical to OTU_204 but kept for subsequent analysis
+NOTE: OTU_557 is identical to OTU_240 but kept for subsequent analysis
+NOTE: OTU_539 is identical to OTU_253 but kept for subsequent analysis
+NOTE: OTU_667 is identical to OTU_271 but kept for subsequent analysis
+NOTE: OTU_703 is identical to OTU_278 but kept for subsequent analysis
+NOTE: OTU_748 is identical to OTU_299 but kept for subsequent analysis
+NOTE: OTU_840 is identical to OTU_337 but kept for subsequent analysis
+NOTE: OTU_763 is identical to OTU_345 but kept for subsequent analysis
+NOTE: OTU_681 is identical to OTU_275 but kept for subsequent analysis
+NOTE: OTU_1287 is identical to OTU_267 but kept for subsequent analysis
+NOTE: OTU_1408 is identical to OTU_1234 but kept for subsequent analysis
+NOTE: OTU_305 is identical to OTU_74 but kept for subsequent analysis
+NOTE: OTU_79 is identical to OTU_143 but kept for subsequent analysis
+NOTE: OTU_1 is identical to OTU_13 but kept for subsequent analysis
+NOTE: OTU_29 is identical to OTU_43 but kept for subsequent analysis
+NOTE: OTU_229 is identical to OTU_11 but kept for subsequent analysis
+NOTE: OTU_947 is identical to OTU_60 but kept for subsequent analysis
+NOTE: OTU_198 is identical to OTU_92 but kept for subsequent analysis
+NOTE: OTU_509 is identical to OTU_21 but kept for subsequent analysis
+NOTE: OTU_1197 is identical to OTU_369 but kept for subsequent analysis
+NOTE: OTU_6 is identical to OTU_188 but kept for subsequent analysis
+NOTE: OTU_258 is identical to OTU_665 but kept for subsequent analysis
+NOTE: OTU_1060 is identical to OTU_538 but kept for subsequent analysis
+NOTE: OTU_1389 is identical to OTU_215 but kept for subsequent analysis
+NOTE: OTU_440 is identical to OTU_978 but kept for subsequent analysis
+NOTE: OTU_1631 is identical to OTU_1193 but kept for subsequent analysis
+NOTE: OTU_1513 is identical to OTU_1290 but kept for subsequent analysis
+NOTE: OTU_192 is identical to OTU_950 but kept for subsequent analysis
+NOTE: OTU_325 is identical to OTU_182 but kept for subsequent analysis
+NOTE: OTU_288 is identical to OTU_70 but kept for subsequent analysis
+NOTE: OTU_38 is identical to OTU_1070 but kept for subsequent analysis
+NOTE: OTU_598 is identical to OTU_569 but kept for subsequent analysis
+NOTE: OTU_820 is identical to OTU_690 but kept for subsequent analysis
+NOTE: OTU_1374 is identical to OTU_1099 but kept for subsequent analysis
+NOTE: OTU_908 is identical to OTU_103 but kept for subsequent analysis
+NOTE: OTU_1344 is identical to OTU_1010 but kept for subsequent analysis
+NOTE: OTU_1316 is identical to OTU_1097 but kept for subsequent analysis
+NOTE: OTU_1378 is identical to OTU_1296 but kept for subsequent analysis
+NOTE: OTU_579 is identical to OTU_241 but kept for subsequent analysis
+NOTE: OTU_905 is identical to OTU_583 but kept for subsequent analysis
+NOTE: OTU_252 is identical to OTU_77 but kept for subsequent analysis
+NOTE: OTU_723 is identical to OTU_599 but kept for subsequent analysis
+NOTE: OTU_406 is identical to OTU_114 but kept for subsequent analysis
+NOTE: OTU_209 is identical to OTU_399 but kept for subsequent analysis
+NOTE: OTU_1567 is identical to OTU_1419 but kept for subsequent analysis
+NOTE: OTU_1467 is identical to OTU_972 but kept for subsequent analysis
+NOTE: OTU_144 is identical to OTU_61 but kept for subsequent analysis
+NOTE: OTU_351 is identical to OTU_190 but kept for subsequent analysis
+NOTE: OTU_625 is identical to OTU_134 but kept for subsequent analysis
+NOTE: OTU_530 is identical to OTU_364 but kept for subsequent analysis
+NOTE: OTU_1113 is identical to OTU_35 but kept for subsequent analysis
+NOTE: OTU_388 is identical to OTU_53 but kept for subsequent analysis
+NOTE: OTU_62 is identical to OTU_494 but kept for subsequent analysis
+NOTE: OTU_385 is identical to OTU_410 but kept for subsequent analysis
+NOTE: OTU_627 is identical to OTU_314 but kept for subsequent analysis
+NOTE: OTU_359 is identical to OTU_332 but kept for subsequent analysis
+NOTE: OTU_396 is identical to OTU_273 but kept for subsequent analysis
+NOTE: OTU_1050 is identical to OTU_692 but kept for subsequent analysis
+NOTE: OTU_1080 is identical to OTU_435 but kept for subsequent analysis
+NOTE: OTU_1123 is identical to OTU_535 but kept for subsequent analysis
+NOTE: OTU_102 is identical to OTU_47 but kept for subsequent analysis
+NOTE: OTU_254 is identical to OTU_88 but kept for subsequent analysis
+NOTE: OTU_1251 is identical to OTU_872 but kept for subsequent analysis
+NOTE: OTU_1349 is identical to OTU_1292 but kept for subsequent analysis
+NOTE: OTU_734 is identical to OTU_282 but kept for subsequent analysis
+NOTE: OTU_76 is identical to OTU_484 but kept for subsequent analysis
+NOTE: OTU_123 is identical to OTU_608 but kept for subsequent analysis
+NOTE: OTU_313 is identical to OTU_108 but kept for subsequent analysis
+NOTE: OTU_10 is identical to OTU_83 but kept for subsequent analysis
+NOTE: OTU_16 is identical to OTU_372 but kept for subsequent analysis
+NOTE: OTU_1228 is identical to OTU_826 but kept for subsequent analysis
+NOTE: OTU_239 is identical to OTU_744 but kept for subsequent analysis
+NOTE: OTU_89 is identical to OTU_161 but kept for subsequent analysis
+NOTE: OTU_124 is identical to OTU_423 but kept for subsequent analysis
+NOTE: OTU_473 is identical to OTU_274 but kept for subsequent analysis
+NOTE: OTU_25 is identical to OTU_401 but kept for subsequent analysis
+NOTE: OTU_202 is identical to OTU_298 but kept for subsequent analysis
+NOTE: OTU_109 is identical to OTU_959 but kept for subsequent analysis
+NOTE: OTU_614 is identical to OTU_363 but kept for subsequent analysis
+NOTE: OTU_514 is identical to OTU_246 but kept for subsequent analysis
+NOTE: OTU_971 is identical to OTU_135 but kept for subsequent analysis
+NOTE: OTU_176 is identical to OTU_99 but kept for subsequent analysis
+NOTE: OTU_46 is identical to OTU_851 but kept for subsequent analysis
+NOTE: OTU_420 is identical to OTU_941 but kept for subsequent analysis
+NOTE: OTU_71 is identical to OTU_14 but kept for subsequent analysis
+NOTE: OTU_152 is identical to OTU_233 but kept for subsequent analysis
+NOTE: OTU_548 is identical to OTU_245 but kept for subsequent analysis
+NOTE: OTU_1372 is identical to OTU_1208 but kept for subsequent analysis
+NOTE: OTU_605 is identical to OTU_286 but kept for subsequent analysis
+NOTE: OTU_201 is identical to OTU_140 but kept for subsequent analysis
+NOTE: OTU_9 is identical to OTU_150 but kept for subsequent analysis
+NOTE: OTU_34 is identical to OTU_383 but kept for subsequent analysis
+NOTE: OTU_1040 is identical to OTU_1002 but kept for subsequent analysis
+NOTE: OTU_1230 is identical to OTU_231 but kept for subsequent analysis
+NOTE: OTU_1340 is identical to OTU_196 but kept for subsequent analysis
+NOTE: OTU_121 is identical to OTU_1089 but kept for subsequent analysis
+NOTE: OTU_1094 is identical to OTU_194 but kept for subsequent analysis
+NOTE: 45 identical sequences (see below) will be ignored for subsequent analysis
+NOTE: OTU_523 (identical to OTU_505) is ignored but added at the end
+NOTE: OTU_517 (identical to OTU_547) is ignored but added at the end
+NOTE: OTU_573 (identical to OTU_566) is ignored but added at the end
+NOTE: OTU_709 (identical to OTU_590) is ignored but added at the end
+NOTE: OTU_618 (identical to OTU_701) is ignored but added at the end
+NOTE: OTU_655 (identical to OTU_520) is ignored but added at the end
+NOTE: OTU_580 (identical to OTU_456) is ignored but added at the end
+NOTE: OTU_565 (identical to OTU_564) is ignored but added at the end
+NOTE: OTU_502 (identical to OTU_1052) is ignored but added at the end
+NOTE: OTU_644 (identical to OTU_616) is ignored but added at the end
+NOTE: OTU_572 (identical to OTU_682) is ignored but added at the end
+NOTE: OTU_610 (identical to OTU_1146) is ignored but added at the end
+NOTE: OTU_464 (identical to OTU_191) is ignored but added at the end
+NOTE: OTU_1297 (identical to OTU_538) is ignored but added at the end
+NOTE: OTU_39 (identical to OTU_70) is ignored but added at the end
+NOTE: OTU_382 (identical to OTU_569) is ignored but added at the end
+NOTE: OTU_156 (identical to OTU_569) is ignored but added at the end
+NOTE: OTU_861 (identical to OTU_569) is ignored but added at the end
+NOTE: OTU_101 (identical to OTU_569) is ignored but added at the end
+NOTE: OTU_96 (identical to OTU_1099) is ignored but added at the end
+NOTE: OTU_59 (identical to OTU_583) is ignored but added at the end
+NOTE: OTU_68 (identical to OTU_190) is ignored but added at the end
+NOTE: OTU_1059 (identical to OTU_134) is ignored but added at the end
+NOTE: OTU_111 (identical to OTU_134) is ignored but added at the end
+NOTE: OTU_37 (identical to OTU_364) is ignored but added at the end
+NOTE: OTU_24 (identical to OTU_314) is ignored but added at the end
+NOTE: OTU_1071 (identical to OTU_332) is ignored but added at the end
+NOTE: OTU_50 (identical to OTU_332) is ignored but added at the end
+NOTE: OTU_7 (identical to OTU_273) is ignored but added at the end
+NOTE: OTU_45 (identical to OTU_273) is ignored but added at the end
+NOTE: OTU_181 (identical to OTU_1292) is ignored but added at the end
+NOTE: OTU_338 (identical to OTU_108) is ignored but added at the end
+NOTE: OTU_381 (identical to OTU_108) is ignored but added at the end
+NOTE: OTU_17 (identical to OTU_108) is ignored but added at the end
+NOTE: OTU_575 (identical to OTU_274) is ignored but added at the end
+NOTE: OTU_44 (identical to OTU_274) is ignored but added at the end
+NOTE: OTU_256 (identical to OTU_959) is ignored but added at the end
+NOTE: OTU_30 (identical to OTU_959) is ignored but added at the end
+NOTE: OTU_1090 (identical to OTU_363) is ignored but added at the end
+NOTE: OTU_78 (identical to OTU_363) is ignored but added at the end
+NOTE: OTU_884 (identical to OTU_233) is ignored but added at the end
+NOTE: OTU_508 (identical to OTU_233) is ignored but added at the end
+NOTE: OTU_376 (identical to OTU_1208) is ignored but added at the end
+NOTE: OTU_217 (identical to OTU_140) is ignored but added at the end
+NOTE: OTU_2 (identical to OTU_140) is ignored but added at the end
+
+For your convenience alignment with unique sequences printed to iqtree/training_otus.uniqueseq.phy
+
+
+Create initial parsimony tree by phylogenetic likelihood library (PLL)... 0.411 seconds
+NOTE: ModelFinder requires 111 MB RAM!
+ModelFinder will test 286 DNA models (sample size: 203) ...
+ No. Model         -LnL         df  AIC          AICc         BIC
+Measuring multi-threading efficiency up to 12 CPU cores
+Increase to 10 rounds for branch lengths
+9 trees examined
+Threads: 1 / Time: 13.205 sec / Speedup: 1.000 / Efficiency: 100% / LogL: -222789
+Threads: 2 / Time: 14.906 sec / Speedup: 0.886 / Efficiency: 44% / LogL: -222789
+BEST NUMBER OF THREADS: 1
+
+  1  JC            49614.138    3269 105766.276   21485026.276 116597.146
+  2  JC+I          49529.960    3270 105599.919   21497939.919 116434.103
+  3  JC+G4         43580.260    3270 93700.521    21486040.521 104534.704
+  4  JC+I+G4       43578.389    3271 93698.778    21499122.778 104536.275
+  5  JC+R2         44944.259    3271 96430.519    21501854.519 107268.016
+  6  JC+R3         44170.835    3273 94887.670    21526491.670 105731.793
+  7  JC+R4         43813.019    3275 94176.037    21551976.037 105026.787
+  8  JC+R5         43593.288    3277 93740.577    21577752.577 104597.953
+  9  JC+R6         43468.627    3279 93495.253    21603735.253 104359.256
+ 10  JC+R7         43399.077    3281 93360.154    21629844.154 104230.782
+ 11  JC+R8         43352.215    3283 93270.430    21656014.430 104147.685
+ 12  JC+R9         43321.766    3285 93213.531    21682233.531 104097.413
+ 13  JC+R10        43286.656    3287 93147.311    21708459.311 104037.819
+ 14  F81+F         49596.120    3272 105736.240   21524248.240 116577.050
+ 15  F81+F+I       49509.821    3273 105565.643   21537169.643 116409.766
+ 16  F81+F+G4      43645.082    3273 93836.164    21525440.164 104680.287
+ 17  F81+F+I+G4    43643.172    3274 93834.343    21538534.343 104681.779
+ 18  F81+F+R2      44993.296    3274 96534.591    21541234.591 107382.027
+ 19  F81+F+R3      44203.850    3276 94959.700    21565863.700 105813.763
+ 20  F81+F+R4      43844.622    3278 94245.245    21591369.245 105105.934
+ 21  F81+F+R5      43633.631    3280 93827.262    21617187.262 104694.578
+ 22  F81+F+R6      43511.486    3282 93586.972    21643198.972 104460.914
+ 23  F81+F+R7      43448.267    3284 93464.534    21669344.534 104345.103
+ 24  F81+F+R8      43407.600    3286 93387.199    21695551.199 104274.394
+ 25  F81+F+R9      43382.396    3288 93340.792    21721804.792 104234.614
+ 26  F81+F+R10     43336.407    3290 93252.815    21748032.815 104153.263
+ 27  K2P           48513.218    3270 103566.437   21495906.437 114400.620
+ 28  K2P+I         48428.299    3271 103398.599   21508822.599 114236.095
+ 29  K2P+G4        42372.608    3271 91287.216    21496711.216 102124.713
+ 30  K2P+I+G4      42370.905    3272 91285.810    21509797.810 102126.620
+ 31  K2P+R2        43781.079    3272 94106.158    21512618.158 104946.968
+ 32  K2P+R3        42999.450    3274 92546.900    21537246.900 103394.337
+ 33  K2P+R4        42621.952    3276 91795.904    21562699.904 102649.967
+ 34  K2P+R5        42405.222    3278 91366.445    21588490.445 102227.134
+ 35  K2P+R6        42271.802    3280 91103.604    21614463.604 101970.920
+ 36  K2P+R7        42197.343    3282 90958.686    21640570.686 101832.628
+ 37  K2P+R8        42147.427    3284 90862.854    21666742.854 101743.423
+ 38  K2P+R9        42113.974    3286 90799.949    21692963.949 101687.144
+ 39  K2P+R10       42079.477    3288 90734.954    21719198.954 101628.775
+ 40  HKY+F         48656.752    3273 103859.504   21535463.504 114703.627
+ 41  HKY+F+I       48571.072    3274 103690.144   21548390.144 114537.581
+ 42  HKY+F+G4      42481.941    3274 91511.881    21536211.881 102359.317
+ 43  HKY+F+I+G4    42480.228    3275 91510.456    21549310.456 102361.205
+ 44  HKY+F+R2      43910.390    3275 94370.779    21552170.779 105221.529
+ 45  HKY+F+R3      43120.548    3277 92795.097    21576807.097 103652.473
+ 46  HKY+F+R4      42735.908    3279 92029.817    21602269.817 102893.819
+ 47  HKY+F+R5      42518.789    3281 91599.577    21628083.577 102470.206
+ 48  HKY+F+R6      42381.103    3283 91328.206    21654072.206 102205.461
+ 49  HKY+F+R7      42304.880    3285 91179.761    21680199.761 102063.642
+ 50  HKY+F+R8      42253.276    3287 91080.553    21706392.553 101971.061
+ 51  HKY+F+R9      42218.799    3289 91015.597    21732635.597 101912.732
+ 52  HKY+F+R10     42188.749    3291 90959.497    21758903.497 101863.258
+ 53  TNe           48454.888    3271 103451.775   21508875.775 114289.272
+ 54  TNe+I         48368.010    3272 103280.019   21521792.019 114120.829
+ 55  TNe+G4        42372.121    3272 91288.242    21509800.242 102129.052
+ 56  TNe+I+G4      42370.427    3273 91286.854    21522890.854 102130.977
+ 57  TNe+R2        43777.333    3273 94100.665    21525704.665 104944.788
+ 58  TNe+R3        42994.720    3275 92539.440    21550339.440 103390.189
+ 59  TNe+R4        42618.894    3277 91791.788    21575803.788 102649.164
+ 60  TNe+R5        42402.898    3279 91363.795    21601603.795 102227.798
+ 61  TNe+R6        42271.037    3281 91104.074    21627588.074 101974.703
+ 62  TNe+R7        42197.080    3283 90960.160    21653704.160 101837.416
+ 63  TNe+R8        42147.428    3285 90864.856    21679884.856 101748.738
+ 64  TNe+R9        42113.677    3287 90801.354    21706113.354 101691.862
+ 65  TNe+R10       42079.392    3289 90736.784    21732356.784 101633.918
+ 66  TN+F          48372.893    3274 103293.785   21547993.785 114141.222
+ 67  TN+F+I        48282.684    3275 103115.368   21560915.368 113966.118
+ 68  TN+F+G4       42384.957    3275 91319.913    21549119.913 102170.663
+ 69  TN+F+I+G4     42379.962    3276 91311.923    21562215.923 102165.986
+ 70  TN+F+R2       43744.908    3276 94041.815    21564945.815 104895.878
+ 71  TN+F+R3       42965.008    3278 92486.016    21589610.016 103346.705
+ 72  TN+F+R4       42594.755    3280 91749.509    21615109.509 102616.825
+ 73  TN+F+R5       42393.374    3282 91350.748    21640962.748 102224.690
+ 74  TN+F+R6       42258.631    3284 91085.262    21666965.262 101965.831
+ 75  TN+F+R7       42195.125    3286 90962.250    21693126.250 101849.445
+ 76  TN+F+R8       42155.054    3288 90886.108    21719350.108 101779.930
+ 77  TN+F+R9       42128.916    3290 90837.831    21745617.831 101738.279
+ 78  TN+F+R10      42078.734    3292 90741.467    21771853.467 101648.541
+ 79  K3P           48513.219    3271 103568.439   21508992.439 114405.936
+ 80  K3P+I         48428.298    3272 103400.597   21521912.597 114241.407
+ 81  K3P+G4        42372.556    3272 91289.112    21509801.112 102129.922
+ 82  K3P+I+G4      42370.850    3273 91287.700    21522891.700 102131.823
+ 83  K3P+R2        43781.054    3273 94108.108    21525712.108 104952.231
+ 84  K3P+R3        42999.494    3275 92548.987    21550348.987 103399.737
+ 85  K3P+R4        42621.998    3277 91797.997    21575809.997 102655.373
+ 86  K3P+R5        42406.540    3279 91371.080    21601611.080 102235.083
+ 87  K3P+R6        42271.806    3281 91105.612    21627589.612 101976.241
+ 88  K3P+R7        42198.027    3283 90962.054    21653706.054 101839.309
+ 89  K3P+R8        42147.975    3285 90865.950    21679885.950 101749.831
+ 90  K3P+R9        42114.138    3287 90802.275    21706114.275 101692.783
+ 91  K3P+R10       42081.809    3289 90741.617    21732361.617 101638.752
+ 92  K3Pu+F        48656.766    3274 103861.533   21548561.533 114708.969
+ 93  K3Pu+F+I      48571.085    3275 103692.170   21561492.170 114542.920
+ 94  K3Pu+F+G4     42481.794    3275 91513.589    21549313.589 102364.338
+ 95  K3Pu+F+I+G4   42480.082    3276 91512.164    21562416.164 102366.227
+ 96  K3Pu+F+R2     43910.396    3276 94372.791    21565276.791 105226.854
+ 97  K3Pu+F+R3     43120.519    3278 92797.038    21589921.038 103657.727
+ 98  K3Pu+F+R4     42735.884    3280 92031.768    21615391.768 102899.084
+ 99  K3Pu+F+R5     42520.251    3282 91604.502    21641216.502 102478.444
+100  K3Pu+F+R6     42381.019    3284 91330.037    21667210.037 102210.606
+101  K3Pu+F+R7     42305.088    3286 91182.176    21693346.176 102069.371
+102  K3Pu+F+R8     42254.033    3288 91084.066    21719548.066 101977.887
+103  K3Pu+F+R9     42218.917    3290 91017.834    21745797.834 101918.282
+104  K3Pu+F+R10    42190.604    3292 90965.208    21772077.208 101872.282
+105  TPM2+F        48657.334    3274 103862.668   21548562.668 114710.104
+106  TPM2+F+I      48571.409    3275 103692.817   21561492.817 114543.567
+107  TPM2+F+G4     42480.190    3275 91510.380    21549310.380 102361.130
+108  TPM2+F+I+G4   42478.463    3276 91508.926    21562412.926 102362.989
+109  TPM2+F+R2     43909.719    3276 94371.439    21565275.439 105225.502
+110  TPM2+F+R3     43118.639    3278 92793.277    21589917.277 103653.966
+111  TPM2+F+R4     42734.469    3280 92028.939    21615388.939 102896.254
+112  TPM2+F+R5     42518.794    3282 91601.589    21641213.589 102475.531
+113  TPM2+F+R6     42378.494    3284 91324.988    21667204.988 102205.556
+114  TPM2+F+R7     42302.110    3286 91176.220    21693340.220 102063.415
+115  TPM2+F+R8     42250.629    3288 91077.259    21719541.259 101971.080
+116  TPM2+F+R9     42215.927    3290 91011.853    21745791.853 101912.301
+117  TPM2+F+R10    42188.735    3292 90961.469    21772073.469 101868.543
+118  TPM2u+F       48657.332    3274 103862.664   21548562.664 114710.101
+119  TPM2u+F+I     48571.405    3275 103692.810   21561492.810 114543.560
+120  TPM2u+F+G4    42480.188    3275 91510.377    21549310.377 102361.126
+121  TPM2u+F+I+G4  42478.461    3276 91508.923    21562412.923 102362.986
+122  TPM2u+F+R2    43909.716    3276 94371.433    21565275.433 105225.495
+123  TPM2u+F+R3    43118.634    3278 92793.268    21589917.268 103653.958
+124  TPM2u+F+R4    42734.466    3280 92028.933    21615388.933 102896.248
+125  TPM2u+F+R5    42518.798    3282 91601.597    21641213.597 102475.539
+126  TPM2u+F+R6    42378.490    3284 91324.980    21667204.980 102205.549
+127  TPM2u+F+R7    42302.110    3286 91176.220    21693340.220 102063.415
+128  TPM2u+F+R8    42250.626    3288 91077.253    21719541.253 101971.074
+129  TPM2u+F+R9    42215.914    3290 91011.828    21745791.828 101912.275
+130  TPM2u+F+R10   42188.732    3292 90961.463    21772073.463 101868.537
+131  TPM3+F        48481.271    3274 103510.542   21548210.542 114357.978
+132  TPM3+F+I      48403.751    3275 103357.501   21561157.501 114208.251
+133  TPM3+F+G4     42328.194    3275 91206.388    21549006.388 102057.137
+134  TPM3+F+I+G4   42326.795    3276 91205.590    21562109.590 102059.652
+135  TPM3+F+R2     43703.608    3276 93959.217    21564863.217 104813.279
+136  TPM3+F+R3     42947.590    3278 92451.180    21589575.180 103311.870
+137  TPM3+F+R4     42584.675    3280 91729.349    21615089.349 102596.665
+138  TPM3+F+R5     42367.313    3282 91298.627    21640910.627 102172.569
+139  TPM3+F+R6     42246.110    3284 91060.219    21666940.219 101940.788
+140  TPM3+F+R7     42177.597    3286 90927.194    21693091.194 101814.389
+141  TPM3+F+R8     42130.262    3288 90836.525    21719300.525 101730.346
+142  TPM3+F+R9     42096.545    3290 90773.090    21745553.090 101673.538
+143  TPM3+F+R10    42059.940    3292 90703.880    21771815.880 101610.955
+144  TPM3u+F       48481.033    3274 103510.065   21548210.065 114357.502
+145  TPM3u+F+I     48403.556    3275 103357.113   21561157.113 114207.862
+146  TPM3u+F+G4    42328.227    3275 91206.455    21549006.455 102057.204
+147  TPM3u+F+I+G4  42326.829    3276 91205.657    21562109.657 102059.720
+148  TPM3u+F+R2    43703.662    3276 93959.325    21564863.325 104813.387
+149  TPM3u+F+R3    42947.644    3278 92451.288    21589575.288 103311.977
+150  TPM3u+F+R4    42583.510    3280 91727.021    21615087.021 102594.336
+151  TPM3u+F+R5    42367.573    3282 91299.145    21640911.145 102173.087
+152  TPM3u+F+R6    42246.058    3284 91060.116    21666940.116 101940.685
+153  TPM3u+F+R7    42177.529    3286 90927.058    21693091.058 101814.253
+154  TPM3u+F+R8    42130.419    3288 90836.837    21719300.837 101730.659
+155  TPM3u+F+R9    42096.662    3290 90773.324    21745553.324 101673.772
+156  TPM3u+F+R10   42060.155    3292 90704.309    21771816.309 101611.384
+157  TIMe          48454.942    3272 103453.885   21521965.885 114294.695
+158  TIMe+I        48368.072    3273 103282.145   21534886.145 114126.268
+159  TIMe+G4       42372.101    3273 91290.201    21522894.201 102134.325
+160  TIMe+I+G4     42370.408    3274 91288.815    21535988.815 102136.252
+161  TIMe+R2       43777.358    3274 94102.715    21538802.715 104950.152
+162  TIMe+R3       42994.781    3276 92541.563    21563445.563 103395.626
+163  TIMe+R4       42618.930    3278 91793.861    21588917.861 102654.550
+164  TIMe+R5       42403.746    3280 91367.492    21614727.492 102234.808
+165  TIMe+R6       42271.043    3282 91106.086    21640718.086 101980.028
+166  TIMe+R7       42197.433    3284 90962.865    21666842.865 101843.434
+167  TIMe+R8       42148.003    3286 90868.007    21693032.007 101755.202
+168  TIMe+R9       42113.877    3288 90803.755    21719267.755 101697.576
+169  TIMe+R10      42081.240    3290 90742.481    21745522.481 101642.929
+170  TIM+F         48372.902    3275 103295.803   21561095.803 114146.553
+171  TIM+F+I       48282.695    3276 103117.389   21574021.389 113971.452
+172  TIM+F+G4      42384.838    3276 91321.677    21562225.677 102175.739
+173  TIM+F+I+G4    42379.823    3277 91313.646    21575325.646 102171.022
+174  TIM+F+R2      43744.914    3277 94043.828    21578055.828 104901.204
+175  TIM+F+R3      42964.963    3279 92487.926    21602727.926 103351.928
+176  TIM+F+R4      42593.930    3281 91749.860    21628233.860 102620.489
+177  TIM+F+R5      42393.280    3283 91352.559    21654096.559 102229.814
+178  TIM+F+R6      42258.516    3285 91087.032    21680107.032 101970.914
+179  TIM+F+R7      42195.023    3287 90964.046    21706276.046 101854.554
+180  TIM+F+R8      42155.002    3289 90888.003    21732508.003 101785.138
+181  TIM+F+R9      42128.927    3291 90839.854    21758783.854 101743.615
+182  TIM+F+R10     42078.674    3293 90743.348    21785027.348 101653.735
+183  TIM2e         48454.593    3272 103453.186   21521965.186 114293.996
+184  TIM2e+I       48367.320    3273 103280.639   21534884.639 114124.763
+185  TIM2e+G4      42368.984    3273 91283.967    21522887.967 102128.090
+186  TIM2e+I+G4    42367.217    3274 91282.434    21535982.434 102129.871
+187  TIM2e+R2      43776.027    3274 94100.054    21538800.054 104947.490
+188  TIM2e+R3      42991.913    3276 92535.826    21563439.826 103389.888
+189  TIM2e+R4      42615.978    3278 91787.956    21588911.956 102648.645
+190  TIM2e+R5      42399.730    3280 91359.459    21614719.459 102226.775
+191  TIM2e+R6      42266.297    3282 91096.595    21640708.595 101970.537
+192  TIM2e+R7      42192.542    3284 90953.083    21666833.083 101833.652
+193  TIM2e+R8      42142.564    3286 90857.129    21693021.129 101744.324
+194  TIM2e+R9      42109.092    3288 90794.183    21719258.183 101688.004
+195  TIM2e+R10     42078.390    3290 90736.780    21745516.780 101637.227
+196  TIM2+F        48372.766    3275 103295.532   21561095.532 114146.281
+197  TIM2+F+I      48282.321    3276 103116.641   21574020.641 113970.704
+198  TIM2+F+G4     42382.353    3276 91316.705    21562220.705 102170.768
+199  TIM2+F+I+G4   42377.749    3277 91309.498    21575321.498 102166.874
+200  TIM2+F+R2     43743.980    3277 94041.960    21578053.960 104899.336
+201  TIM2+F+R3     42963.451    3279 92484.903    21602724.903 103348.905
+202  TIM2+F+R4     42592.818    3281 91747.636    21628231.636 102618.265
+203  TIM2+F+R5     42389.605    3283 91345.211    21654089.211 102222.466
+204  TIM2+F+R6     42255.287    3285 91080.575    21680100.575 101964.457
+205  TIM2+F+R7     42192.350    3287 90958.700    21706270.700 101849.208
+206  TIM2+F+R8     42152.257    3289 90882.514    21732502.514 101779.648
+207  TIM2+F+R9     42126.262    3291 90834.524    21758778.524 101738.285
+208  TIM2+F+R10    42077.582    3293 90741.163    21785025.163 101651.551
+209  TIM3e         48243.765    3272 103031.530   21521543.530 113872.340
+210  TIM3e+I       48164.113    3273 102874.225   21534478.225 113718.349
+211  TIM3e+G4      42183.828    3273 90913.657    21522517.657 101757.780
+212  TIM3e+I+G4    42182.359    3274 90912.718    21535612.718 101760.154
+213  TIM3e+R2      43545.530    3274 93639.060    21538339.060 104486.497
+214  TIM3e+R3      42789.282    3276 92130.563    21563034.563 102984.626
+215  TIM3e+R4      42434.213    3278 91424.426    21588548.426 102285.115
+216  TIM3e+R5      42220.605    3280 91001.210    21614361.210 101868.525
+217  TIM3e+R6      42101.662    3282 90767.324    21640379.324 101641.266
+218  TIM3e+R7      42034.886    3284 90637.772    21666517.772 101518.341
+219  TIM3e+R8      41990.480    3286 90552.960    21692716.960 101440.155
+220  TIM3e+R9      41954.722    3288 90485.443    21718949.443 101379.264
+221  TIM3e+R10     41916.733    3290 90413.465    21745193.465 101313.913
+222  TIM3+F        48192.229    3275 102934.458   21560734.458 113785.208
+223  TIM3+F+I      48110.409    3276 102772.817   21573676.817 113626.880
+224  TIM3+F+G4     42242.454    3276 91036.908    21561940.908 101890.971
+225  TIM3+F+I+G4   42240.711    3277 91035.422    21575047.422 101892.798
+226  TIM3+F+R2     43580.061    3277 93714.122    21577726.122 104571.498
+227  TIM3+F+R3     42794.453    3279 92146.905    21602386.905 103010.908
+228  TIM3+F+R4     42450.695    3281 91463.391    21627947.391 102334.019
+229  TIM3+F+R5     42247.374    3283 91060.747    21653804.747 101938.002
+230  TIM3+F+R6     42128.998    3285 90827.995    21679847.995 101711.877
+231  TIM3+F+R7     42068.985    3287 90711.971    21706023.971 101602.479
+232  TIM3+F+R8     42029.771    3289 90637.542    21732257.542 101534.676
+233  TIM3+F+R9     41984.279    3291 90550.558    21758494.558 101454.319
+234  TIM3+F+R10    41949.203    3293 90484.406    21784768.406 101394.793
+235  TVMe          48303.392    3273 103152.784   21534756.784 113996.907
+236  TVMe+I        48225.335    3274 102998.670   21547698.670 113846.106
+237  TVMe+G4       42180.531    3274 90909.063    21535609.063 101756.499
+238  TVMe+I+G4     42179.011    3275 90908.022    21548708.022 101758.771
+239  TVMe+R2       43548.567    3275 93647.134    21551447.134 104497.884
+240  TVMe+R3       42790.812    3277 92135.625    21576147.625 102993.001
+241  TVMe+R4       42433.715    3279 91425.430    21601665.430 102289.433
+242  TVMe+R5       42216.729    3281 90995.457    21627479.457 101866.086
+243  TVMe+R6       42096.826    3283 90759.653    21653503.653 101636.908
+244  TVMe+R7       42030.279    3285 90630.558    21679650.558 101514.440
+245  TVMe+R8       41984.250    3287 90542.500    21705854.500 101433.008
+246  TVMe+R9       41949.418    3289 90476.836    21732096.836 101373.970
+247  TVMe+R10      41913.244    3291 90408.487    21758352.487 101312.248
+248  TVM+F         48480.441    3276 103512.882   21574416.882 114366.944
+249  TVM+F+I       48402.754    3277 103359.509   21587371.509 114216.885
+250  TVM+F+G4      42325.919    3277 91205.837    21575217.837 102063.213
+251  TVM+F+I+G4    42324.498    3278 91204.996    21588328.996 102065.685
+252  TVM+F+R2      43704.208    3278 93964.415    21591088.415 104825.104
+253  TVM+F+R3      42944.811    3280 92449.622    21615809.622 103316.937
+254  TVM+F+R4      42582.430    3282 91728.859    21641340.859 102602.801
+255  TVM+F+R5      42364.805    3284 91297.610    21667177.610 102178.179
+256  TVM+F+R6      42242.584    3286 91057.167    21693221.167 101944.362
+257  TVM+F+R7      42174.749    3288 90925.498    21719389.498 101819.319
+258  TVM+F+R8      42126.688    3290 90833.375    21745613.375 101733.823
+259  TVM+F+R9      42094.077    3292 90772.155    21771884.155 101679.229
+260  TVM+F+R10     42057.844    3294 90703.689    21798163.689 101617.389
+261  SYM           48243.076    3274 103034.153   21547734.153 113881.589
+262  SYM+I         48163.080    3275 102876.161   21560676.161 113726.910
+263  SYM+G4        42180.260    3275 90910.521    21548710.521 101761.270
+264  SYM+I+G4      42178.759    3276 90909.519    21561813.519 101763.582
+265  SYM+R2        43545.250    3276 93642.500    21564546.500 104496.563
+266  SYM+R3        42784.643    3278 92125.285    21589249.285 102985.974
+267  SYM+R4        42432.542    3280 91425.084    21614785.084 102292.400
+268  SYM+R5        42216.048    3282 90996.096    21640608.096 101870.038
+269  SYM+R6        42095.894    3284 90759.788    21666639.788 101640.356
+270  SYM+R7        42030.159    3286 90632.318    21692796.318 101519.512
+271  SYM+R8        41984.250    3288 90544.500    21719008.500 101438.321
+272  SYM+R9        41948.884    3290 90477.768    21745257.768 101378.216
+273  SYM+R10       41912.957    3292 90409.913    21771521.913 101316.987
+274  GTR+F         48191.667    3277 102937.333   21586949.333 113794.709
+275  GTR+F+I       48109.618    3278 102775.236   21599899.236 113635.925
+276  GTR+F+G4      42238.952    3278 91033.905    21588157.905 101894.594
+277  GTR+F+I+G4    42237.157    3279 91032.314    21601272.314 101896.316
+278  GTR+F+R2      43578.912    3279 93715.824    21603955.824 104579.826
+279  GTR+F+R3      42792.055    3281 92146.111    21628630.111 103016.740
+280  GTR+F+R4      42449.358    3283 91464.717    21654208.717 102341.972
+281  GTR+F+R5      42243.924    3285 91057.849    21680077.849 101941.730
+282  GTR+F+R6      42124.829    3287 90823.658    21706135.658 101714.166
+283  GTR+F+R7      42065.162    3289 90708.324    21732328.324 101605.458
+284  GTR+F+R8      42026.004    3291 90634.009    21758578.009 101537.770
+285  GTR+F+R9      41984.062    3293 90554.123    21784838.123 101464.511
+286  GTR+F+R10     41947.088    3295 90484.177    21811124.177 101401.191
+Akaike Information Criterion:           TVMe+R10
+Corrected Akaike Information Criterion: JC
+Bayesian Information Criterion:         TVMe+R10
+Best-fit model: TVMe+R10 chosen according to BIC
+
+All model information printed to iqtree/training_otus.model.gz
+CPU time for ModelFinder: 2202.234 seconds (0h:36m:42s)
+Wall-clock time for ModelFinder: 2195.369 seconds (0h:36m:35s)
+Generating 1000 samples for ultrafast bootstrap (seed: 820104)...
+
+NOTE: 111 MB RAM (0 GB) is required!
+Measuring multi-threading efficiency up to 12 CPU cores
+Increase to 10 rounds for branch lengths
+4 trees examined
+Threads: 1 / Time: 14.761 sec / Speedup: 1.000 / Efficiency: 100% / LogL: -180883
+Threads: 2 / Time: 11.451 sec / Speedup: 1.289 / Efficiency: 64% / LogL: -180883
+Threads: 3 / Time: 10.769 sec / Speedup: 1.371 / Efficiency: 46% / LogL: -180883
+BEST NUMBER OF THREADS: 2
+
+Estimate model parameters (epsilon = 0.100)
+1. Initial log-likelihood: -43605.895
+2. Current log-likelihood: -42005.909
+3. Current log-likelihood: -41937.509
+4. Current log-likelihood: -41925.983
+5. Current log-likelihood: -41915.826
+6. Current log-likelihood: -41912.173
+7. Current log-likelihood: -41910.473
+8. Current log-likelihood: -41909.492
+9. Current log-likelihood: -41909.114
+Optimal log-likelihood: -41908.985
+Rate parameters:  A-C: 0.50904  A-G: 2.49698  A-T: 1.13293  C-G: 0.49374  C-T: 2.49698  G-T: 1.00000
+Base frequencies:  A: 0.250  C: 0.250  G: 0.250  T: 0.250
+Site proportion and rates:  (0.408,0.107) (0.180,0.394) (0.082,0.725) (0.095,1.172) (0.032,1.425) (0.017,1.929) (0.049,1.930) (0.056,2.700) (0.056,3.964) (0.025,6.832)
+Parameters optimization took 9 rounds (84.235 sec)
+Computing ML distances based on estimated model parameters... 22.156 sec
+WARNING: Some pairwise ML distances are too long (saturated)
+Computing BIONJ tree...
+11.935 seconds
+Log-likelihood of BIONJ tree: -43240.346
+--------------------------------------------------------------------
+|             INITIALIZING CANDIDATE TREE SET                      |
+--------------------------------------------------------------------
+Generating 98 parsimony trees... 43.738 second
+Computing log-likelihood of 98 initial trees ... 61.273 seconds
+Current best score: -41704.492
+
+Do NNI search on 20 best initial trees
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 1: -41460.778
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 2: -41443.236
+Iteration 10 / LogL: -41509.206 / Time: 0h:10m:6s
+Iteration 20 / LogL: -41577.713 / Time: 0h:15m:4s
+Finish initializing candidate tree set (20)
+Current best tree score: -41443.236 / CPU time: 756.442
+Number of iterations: 20
+--------------------------------------------------------------------
+|               OPTIMIZING CANDIDATE TREE SET                      |
+--------------------------------------------------------------------
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 22: -41404.300
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 26: -41392.055
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 29: -41344.790
+Iteration 30 / LogL: -41459.284 / Time: 0h:19m:15s (1h:5m:45s left)
+Iteration 40 / LogL: -41360.456 / Time: 0h:23m:26s (0h:53m:28s left)
+Iteration 50 / LogL: -41451.963 / Time: 0h:27m:29s (0h:44m:19s left)
+Log-likelihood cutoff on original alignment: -41597.413
+Iteration 60 / LogL: -41368.582 / Time: 0h:31m:24s (0h:36m:44s left)
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 61: -41342.921
+Iteration 70 / LogL: -41401.880 / Time: 0h:35m:11s (0h:46m:24s left)
+Iteration 80 / LogL: -41373.426 / Time: 0h:38m:58s (0h:39m:57s left)
+Iteration 90 / LogL: -41471.449 / Time: 0h:42m:55s (0h:34m:14s left)
+Iteration 100 / LogL: -41385.599 / Time: 0h:46m:50s (0h:28m:51s left)
+Log-likelihood cutoff on original alignment: -41597.413
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.992
+Iteration 110 / LogL: -41397.394 / Time: 0h:50m:56s (0h:42m:3s left)
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 116: -41329.108
+Iteration 120 / LogL: -41395.123 / Time: 0h:55m:4s (0h:44m:26s left)
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 129: -41303.582
+Iteration 130 / LogL: -41382.345 / Time: 0h:58m:55s (0h:45m:13s left)
+Iteration 140 / LogL: -41360.299 / Time: 1h:2m:44s (0h:40m:10s left)
+Iteration 150 / LogL: -41349.258 / Time: 1h:6m:42s (0h:35m:22s left)
+Log-likelihood cutoff on original alignment: -41597.413
+Iteration 160 / LogL: -41398.602 / Time: 1h:10m:43s (0h:30m:41s left)
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 167: -41300.305
+Iteration 170 / LogL: -41399.739 / Time: 1h:14m:53s (0h:42m:59s left)
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 174: -41293.108
+Iteration 180 / LogL: -41301.325 / Time: 1h:19m:16s (0h:41m:37s left)
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 183: -41291.295
+Iteration 190 / LogL: -41319.706 / Time: 1h:23m:17s (0h:40m:58s left)
+Iteration 200 / LogL: -41321.976 / Time: 1h:27m:9s (0h:36m:21s left)
+Log-likelihood cutoff on original alignment: -41597.413
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.950
+NOTE: UFBoot does not converge, continue at least 100 more iterations
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 203: -41283.809
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 204: -41282.665
+Iteration 210 / LogL: -41359.077 / Time: 1h:31m:45s (0h:41m:16s left)
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 211: -41271.032
+Iteration 220 / LogL: -41305.173 / Time: 1h:36m:0s (0h:39m:53s left)
+Iteration 230 / LogL: -41321.431 / Time: 1h:40m:20s (0h:35m:29s left)
+Iteration 240 / LogL: -41387.921 / Time: 1h:44m:34s (0h:31m:4s left)
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 249: -41266.273
+Iteration 250 / LogL: -41322.420 / Time: 1h:49m:9s (0h:43m:23s left)
+Log-likelihood cutoff on original alignment: -41597.413
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 251: -41244.049
+Iteration 260 / LogL: -41325.159 / Time: 1h:53m:46s (0h:39m:58s left)
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 269: -41243.137
+Iteration 270 / LogL: -41251.443 / Time: 1h:58m:16s (0h:43m:31s left)
+Iteration 280 / LogL: -41303.225 / Time: 2h:2m:44s (0h:39m:9s left)
+Iteration 290 / LogL: -41270.593 / Time: 2h:7m:2s (0h:34m:43s left)
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 292: -41239.496
+Iteration 300 / LogL: -41304.133 / Time: 2h:11m:39s (0h:40m:30s left)
+Log-likelihood cutoff on original alignment: -41597.413
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.911
+NOTE: UFBoot does not converge, continue at least 100 more iterations
+Iteration 310 / LogL: -41272.378 / Time: 2h:16m:14s (0h:39m:40s left)
+Iteration 320 / LogL: -41313.289 / Time: 2h:20m:39s (0h:35m:16s left)
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 326: -41237.477
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 327: -41236.175
+Iteration 330 / LogL: -41367.323 / Time: 2h:25m:43s (0h:42m:57s left)
+Iteration 340 / LogL: -41312.372 / Time: 2h:30m:0s (0h:38m:29s left)
+Iteration 350 / LogL: -41252.571 / Time: 2h:34m:16s (0h:34m:2s left)
+Log-likelihood cutoff on original alignment: -41597.413
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 351: -41203.915
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 352: -41197.358
+Iteration 360 / LogL: -41264.344 / Time: 2h:39m:19s (0h:40m:49s left)
+Iteration 370 / LogL: -41257.409 / Time: 2h:43m:50s (0h:36m:24s left)
+Iteration 380 / LogL: -41271.632 / Time: 2h:48m:36s (0h:32m:1s left)
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 389: -41191.981
+Iteration 390 / LogL: -41330.486 / Time: 2h:53m:17s (0h:44m:6s left)
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 395: -41180.188
+Iteration 400 / LogL: -41225.804 / Time: 2h:58m:23s (0h:42m:28s left)
+Log-likelihood cutoff on original alignment: -41597.413
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.884
+NOTE: UFBoot does not converge, continue at least 100 more iterations
+Iteration 410 / LogL: -41314.401 / Time: 3h:3m:1s (0h:40m:16s left)
+Iteration 420 / LogL: -41247.634 / Time: 3h:7m:44s (0h:35m:50s left)
+Iteration 430 / LogL: -41231.968 / Time: 3h:12m:54s (0h:31m:28s left)
+Iteration 440 / LogL: -41271.167 / Time: 3h:17m:52s (0h:27m:2s left)
+Iteration 450 / LogL: -41199.494 / Time: 3h:22m:31s (0h:22m:33s left)
+Log-likelihood cutoff on original alignment: -41597.413
+Iteration 460 / LogL: -41268.410 / Time: 3h:27m:31s (0h:18m:5s left)
+Iteration 470 / LogL: -41226.300 / Time: 3h:32m:28s (0h:13m:35s left)
+Iteration 480 / LogL: -41404.121 / Time: 3h:37m:39s (0h:9m:5s left)
+Iteration 490 / LogL: -41233.202 / Time: 3h:42m:22s (0h:4m:32s left)
+Iteration 500 / LogL: -41278.118 / Time: 3h:47m:24s (0h:0m:0s left)
+Log-likelihood cutoff on original alignment: -41597.413
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.913
+NOTE: UFBoot does not converge, continue at least 100 more iterations
+Iteration 510 / LogL: -41229.697 / Time: 3h:52m:15s (0h:41m:4s left)
+Iteration 520 / LogL: -41220.036 / Time: 3h:57m:15s (0h:36m:34s left)
+Iteration 530 / LogL: -41204.869 / Time: 4h:2m:8s (0h:32m:2s left)
+Iteration 540 / LogL: -41200.572 / Time: 4h:6m:59s (0h:27m:29s left)
+Iteration 550 / LogL: -41257.192 / Time: 4h:12m:1s (0h:22m:57s left)
+Log-likelihood cutoff on original alignment: -41597.413
+Iteration 560 / LogL: -41247.271 / Time: 4h:17m:7s (0h:18m:23s left)
+Iteration 570 / LogL: -41202.643 / Time: 4h:22m:1s (0h:13m:48s left)
+Iteration 580 / LogL: -41331.890 / Time: 4h:27m:4s (0h:9m:13s left)
+Iteration 590 / LogL: -41263.978 / Time: 4h:32m:5s (0h:4m:37s left)
+Iteration 600 / LogL: -41237.000 / Time: 4h:37m:6s (0h:0m:0s left)
+Log-likelihood cutoff on original alignment: -41597.413
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.930
+NOTE: UFBoot does not converge, continue at least 100 more iterations
+Iteration 610 / LogL: -41282.904 / Time: 4h:42m:35s (0h:41m:45s left)
+Iteration 620 / LogL: -41253.829 / Time: 4h:47m:33s (0h:37m:9s left)
+Iteration 630 / LogL: -41265.106 / Time: 4h:52m:42s (0h:32m:34s left)
+Iteration 640 / LogL: -41196.334 / Time: 4h:57m:42s (0h:27m:57s left)
+Iteration 650 / LogL: -41498.738 / Time: 5h:2m:53s (0h:23m:20s left)
+Log-likelihood cutoff on original alignment: -41597.413
+Iteration 660 / LogL: -41223.313 / Time: 5h:8m:24s (0h:18m:43s left)
+Iteration 670 / LogL: -41296.596 / Time: 5h:13m:24s (0h:14m:3s left)
+Iteration 680 / LogL: -41250.116 / Time: 5h:18m:20s (0h:9m:22s left)
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 683: -41177.469
+Iteration 690 / LogL: -41309.850 / Time: 5h:23m:28s (0h:43m:39s left)
+Iteration 700 / LogL: -41212.940 / Time: 5h:28m:37s (0h:39m:1s left)
+Log-likelihood cutoff on original alignment: -41597.413
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.936
+NOTE: UFBoot does not converge, continue at least 100 more iterations
+Iteration 710 / LogL: -41242.043 / Time: 5h:34m:6s (0h:42m:24s left)
+Iteration 720 / LogL: -41256.242 / Time: 5h:39m:0s (0h:37m:43s left)
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 728: -41158.080
+Iteration 730 / LogL: -41208.636 / Time: 5h:44m:9s (0h:46m:15s left)
+Iteration 740 / LogL: -41268.874 / Time: 5h:49m:38s (0h:41m:38s left)
+Iteration 750 / LogL: -41242.280 / Time: 5h:55m:2s (0h:36m:58s left)
+Log-likelihood cutoff on original alignment: -41597.413
+Iteration 760 / LogL: -41259.850 / Time: 6h:0m:30s (0h:32m:17s left)
+Iteration 770 / LogL: -41245.452 / Time: 6h:6m:0s (0h:27m:36s left)
+Iteration 780 / LogL: -41201.675 / Time: 6h:11m:28s (0h:22m:53s left)
+Iteration 790 / LogL: -41268.307 / Time: 6h:16m:17s (0h:18m:7s left)
+Iteration 800 / LogL: -41212.180 / Time: 6h:21m:32s (0h:13m:22s left)
+Log-likelihood cutoff on original alignment: -41597.413
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.973
+NOTE: UFBoot does not converge, continue at least 100 more iterations
+Iteration 810 / LogL: -41218.768 / Time: 6h:26m:44s (0h:43m:1s left)
+Iteration 820 / LogL: -41225.735 / Time: 6h:32m:13s (0h:38m:18s left)
+Iteration 830 / LogL: -41321.887 / Time: 6h:37m:22s (0h:33m:33s left)
+Iteration 840 / LogL: -41211.513 / Time: 6h:42m:43s (0h:28m:48s left)
+Iteration 850 / LogL: -41248.048 / Time: 6h:47m:50s (0h:24m:1s left)
+Log-likelihood cutoff on original alignment: -41597.413
+Iteration 860 / LogL: -41249.859 / Time: 6h:53m:22s (0h:19m:14s left)
+Iteration 870 / LogL: -41225.050 / Time: 6h:58m:47s (0h:14m:27s left)
+Iteration 880 / LogL: -41248.862 / Time: 7h:3m:52s (0h:9m:38s left)
+Iteration 890 / LogL: -41269.612 / Time: 7h:9m:33s (0h:4m:49s left)
+Iteration 900 / LogL: -41197.646 / Time: 7h:14m:37s (0h:0m:0s left)
+Log-likelihood cutoff on original alignment: -41597.413
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.977
+NOTE: UFBoot does not converge, continue at least 100 more iterations
+Iteration 910 / LogL: -41243.181 / Time: 7h:19m:49s (0h:43m:32s left)
+Iteration 920 / LogL: -41272.351 / Time: 7h:25m:9s (0h:38m:45s left)
+Iteration 930 / LogL: -41241.203 / Time: 7h:30m:16s (0h:33m:55s left)
+Iteration 940 / LogL: -41231.914 / Time: 7h:35m:41s (0h:29m:7s left)
+Iteration 950 / LogL: -41262.546 / Time: 7h:40m:53s (0h:24m:16s left)
+Log-likelihood cutoff on original alignment: -41597.413
+Iteration 960 / LogL: -41279.994 / Time: 7h:46m:33s (0h:19m:27s left)
+Iteration 970 / LogL: -41292.060 / Time: 7h:52m:9s (0h:14m:37s left)
+Iteration 980 / LogL: -41276.888 / Time: 7h:57m:35s (0h:9m:45s left)
+Iteration 990 / LogL: -41234.565 / Time: 8h:2m:50s (0h:4m:52s left)
+Iteration 1000 / LogL: -41311.803 / Time: 8h:7m:54s (0h:0m:0s left)
+Log-likelihood cutoff on original alignment: -41597.413
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.977
+NOTE: UFBoot does not converge, continue at least 100 more iterations
+WARNING: bootstrap analysis did not converge. You should rerun with higher number of iterations (-nm option)
+TREE SEARCH COMPLETED AFTER 1001 ITERATIONS / Time: 8h:8m:36s
+
+--------------------------------------------------------------------
+|                    FINALIZING TREE SEARCH                        |
+--------------------------------------------------------------------
+Performs final model parameters optimization
+Estimate model parameters (epsilon = 0.010)
+1. Initial log-likelihood: -41158.080
+Optimal log-likelihood: -41158.077
+Rate parameters:  A-C: 0.47428  A-G: 2.69870  A-T: 1.16282  C-G: 0.45933  C-T: 2.69870  G-T: 1.00000
+Base frequencies:  A: 0.250  C: 0.250  G: 0.250  T: 0.250
+Site proportion and rates:  (0.418,0.103) (0.182,0.390) (0.075,0.705) (0.058,1.141) (0.034,1.141) (0.050,1.566) (0.018,1.566) (0.052,2.242) (0.086,3.825) (0.027,6.592)
+Parameters optimization took 1 rounds (2.111 sec)
+BEST SCORE FOUND : -41158.077
+
+Testing tree branches by SH-like aLRT with 1000 replicates...
+Alternative NNI shows better log-likelihood -41157.763 > -41158.077
+2.360 sec.
+Creating bootstrap support values...
+Split supports printed to NEXUS file iqtree/training_otus.splits.nex
+Total tree length: 71.238
+
+Total number of iterations: 1001
+CPU time used for tree search: 55052.781 sec (15h:17m:32s)
+Wall-clock time used for tree search: 29166.665 sec (8h:6m:6s)
+Total CPU time used: 55348.375 sec (15h:22m:28s)
+Total wall-clock time used: 29329.602 sec (8h:8m:49s)
+
+Computing bootstrap consensus tree...
+Reading input file iqtree/training_otus.splits.nex...
+1636 taxa and 25302 splits.
+Consensus tree written to iqtree/training_otus.contree
+Reading input trees file iqtree/training_otus.contree
+Log-likelihood of consensus tree: -41147.334
+
+Analysis results written to: 
+  IQ-TREE report:                iqtree/training_otus.iqtree
+  Maximum-likelihood tree:       iqtree/training_otus.treefile
+  Likelihood distances:          iqtree/training_otus.mldist
+
+Ultrafast bootstrap approximation results written to:
+  Split support values:          iqtree/training_otus.splits.nex
+  Consensus tree:                iqtree/training_otus.contree
+  Screen log file:               iqtree/training_otus.log
+
+Date and Time: Wed Jul 14 19:23:35 2021
