@@ -1,0 +1,153 @@
+@Article{iHMP,
+  title={The Integrative Human Microbiome Project: Dynamic Analysis of Microbiome-Host Omics Profiles during Periods of Human Health and Disease},
+  journal={Cell Host \& Microbe},
+  year={2014},
+  month={Sep},
+  day={10},
+  publisher={Elsevier},
+  volume={16},
+  number={3},
+  pages={276--289},
+  abstract={Much has been learned about the diversity and distribution of human-associated microbial communities, but we still know little about the biology of the microbiome, how it interacts with the host, and how the host responds to its resident microbiota. The Integrative Human Microbiome Project (iHMP, http://hmp2.org), the second phase of the NIH Human Microbiome Project, will study these interactions by analyzing microbiome and host activities in longitudinal studies of disease-specific cohorts and by creating integrated data sets of microbiome and host functional properties. These data sets will serve as experimental test beds to evaluate new models, methods, and analyses on the interactions of host and microbiome. Here we describe the three models of microbiome-associated human conditions, on the dynamics of preterm birth, inflammatory bowel disease, and type 2 diabetes, and their underlying hypotheses, as well as the multi-omic data types to be collected, integrated, and distributed through public repositories as a community resource.},
+  issn={1931-3128},
+  doi={10.1016/j.chom.2014.08.014},
+  url={https://doi.org/10.1016/j.chom.2014.08.014}
+}
+
+@article{phyloseq,
+  doi = {10.1371/journal.pone.0061217},
+  author = {McMurdie, Paul J. AND Holmes, Susan},
+  journal = {PLOS ONE},
+  publisher = {Public Library of Science},
+  title = {phyloseq: An R Package for Reproducible Interactive Analysis and Graphics of Microbiome Census Data},
+  year = {2013},
+  month = {04},
+  volume = {8},
+  url = {https://doi.org/10.1371/journal.pone.0061217},
+  pages = {1-11},
+  abstract = {Background The analysis of microbial communities through DNA sequencing brings many challenges: the integration of different types of data with methods from ecology, genetics, phylogenetics, multivariate statistics, visualization and testing. With the increased breadth of experimental designs now being pursued, project-specific statistical analyses are often needed, and these analyses are often difficult (or impossible) for peer researchers to independently reproduce. The vast majority of the requisite tools for performing these analyses reproducibly are already implemented in R and its extensions (packages), but with limited support for high throughput microbiome census data.  Results Here we describe a software project, phyloseq, dedicated to the object-oriented representation and analysis of microbiome census data in R. It supports importing data from a variety of common formats, as well as many analysis techniques. These include calibration, filtering, subsetting, agglomeration, multi-table comparisons, diversity analysis, parallelized Fast UniFrac, ordination methods, and production of publication-quality graphics; all in a manner that is easy to document, share, and modify. We show how to apply functions from other R packages to phyloseq-represented data, illustrating the availability of a large number of open source analysis techniques. We discuss the use of phyloseq with tools for reproducible research, a practice common in other fields but still rare in the analysis of highly parallel microbiome census data. We have made available all of the materials necessary to completely reproduce the analysis and figures included in this article, an example of best practices for reproducible research.  Conclusions The phyloseq project for R is a new open-source software package, freely available on the web from both GitHub and Bioconductor.},
+  number = {4},
+}
+
+@Manual{SE,
+  title = {SummarizedExperiment: SummarizedExperiment container},
+  author = {Martin Morgan and Valerie Obenchain and Jim Hester and Hervé Pagès},
+  year = {2021},
+  note = {R package version 1.24.0},
+  url = {https://bioconductor.org/packages/SummarizedExperiment},
+}
+
+@Article{TSE,
+  title = {TreeSummarizedExperiment: a S4 class for data with hierarchical structure},
+  author = {Ruizhu Huang and Charlotte Soneson and Felix G.M. Ernst and Kevin C. Rue-Albrecht and Guangchuang Yu and Stephanie C. Hicks and Mark D. Robinson},
+  journal = {F1000Research},
+  year = {2021},
+  volume = {9},
+  pages = {1246},
+  url = {https://f1000research.com/articles/9-1246},
+}
+
+@Manual{biom,
+  title = {biomformat: An interface package for the BIOM file format},
+  author = {Paul J. McMurdie and Joseph N Paulson},
+  year = {2021},
+  note = {https://github.com/joey711/biomformat/, http://biom-format.org/},
+}
+
+@Manual{vegan,
+  title = {vegan: Community Ecology Package},
+  author = {Jari Oksanen and F. Guillaume Blanchet and Michael Friendly and Roeland Kindt and Pierre Legendre and Dan McGlinn and Peter R. Minchin and R. B. O'Hara and Gavin L. Simpson and Peter Solymos and M. Henry H. Stevens and Eduard Szoecs and Helene Wagner},
+  year = {2020},
+  note = {R package version 2.5-7},
+  url = {https://CRAN.R-project.org/package=vegan},
+}
+
+@article{ggtree2017,
+  author = {Yu, Guangchuang and Smith, David K. and Zhu, Huachen and Guan, Yi and Lam, Tommy Tsan-Yuk},
+  title = {ggtree: an r package for visualization and annotation of phylogenetic trees with their covariates and other associated data},
+  journal = {Methods in Ecology and Evolution},
+  volume = {8},
+  number = {1},
+  pages = {28-36},
+  keywords = {annotation, bioconductor, evolution, phylogeny, r package, visualization},
+  doi = {https://doi.org/10.1111/2041-210X.12628},
+  url = {https://besjournals.onlinelibrary.wiley.com/doi/abs/10.1111/2041-210X.12628},
+  eprint = {https://besjournals.onlinelibrary.wiley.com/doi/pdf/10.1111/2041-210X.12628},
+  abstract = {Summary We present an r package, ggtree, which provides programmable visualization and annotation of phylogenetic trees. ggtree can read more tree file formats than other softwares, including newick, nexus, NHX, phylip and jplace formats, and support visualization of phylo, multiphylo, phylo4, phylo4d, obkdata and phyloseq tree objects defined in other r packages. It can also extract the tree/branch/node-specific and other data from the analysis outputs of beast, epa, hyphy, paml, phylodog, pplacer, r8s, raxml and revbayes software, and allows using these data to annotate the tree. The package allows colouring and annotation of a tree by numerical/categorical node attributes, manipulating a tree by rotating, collapsing and zooming out clades, highlighting user selected clades or operational taxonomic units and exploration of a large tree by zooming into a selected portion. A two-dimensional tree can be drawn by scaling the tree width based on an attribute of the nodes. A tree can be annotated with an associated numerical matrix (as a heat map), multiple sequence alignment, subplots or silhouette images. The package ggtree is released under the artistic-2.0 license. The source code and documents are freely available through bioconductor (http://www.bioconductor.org/packages/ggtree).},
+  year = {2017}
+}
+
+@article{ggtreeExtra,
+  author = {Xu, Shuangbin and Dai, Zehan and Guo, Pingfan and Fu, Xiaocong and Liu, Shanshan and Zhou, Lang and Tang, Wenli and Feng, Tingze and Chen, Meijun and Zhan, Li and Wu, Tianzhi and Hu, Erqiang and Jiang, Yong and Bo, Xiaochen and Yu, Guangchuang},
+  title = "{ggtreeExtra: Compact Visualization of Richly Annotated Phylogenetic Data}",
+  journal = {Molecular Biology and Evolution},
+  volume = {38},
+  number = {9},
+  pages = {4039-4042},
+  year = {2021},
+  month = {06},
+  abstract = "{We present the ggtreeExtra package for visualizing heterogeneous data with a phylogenetic tree in a circular or rectangular layout (https://www.bioconductor.org/packages/ggtreeExtra). The package supports more data types and visualization methods than other tools. It supports using the grammar of graphics syntax to present data on a tree with richly annotated layers and allows evolutionary statistics inferred by commonly used software to be integrated and visualized with external data. GgtreeExtra is a universal tool for tree data visualization. It extends the applications of the phylogenetic tree in different disciplines by making more domain-specific data to be available to visualize and interpret in the evolutionary context.}",
+  issn = {1537-1719},
+  doi = {10.1093/molbev/msab166},
+  url = {https://doi.org/10.1093/molbev/msab166},
+  eprint = {https://academic.oup.com/mbe/article-pdf/38/9/4039/39882875/msab166.pdf},
+}
+
+@article{ggplot2,
+  author = {Wickham, Hadley},
+  title = {ggplot2},
+  journal = {WIREs Computational Statistics },
+  volume = {3},
+  number = {2},
+  pages = {180-185},
+  keywords = {visualization, statistical graphics, R},
+  doi = {https://doi.org/10.1002/wics.147},
+  url = {https://wires.onlinelibrary.wiley.com/doi/abs/10.1002/wics.147},
+  eprint = {https://wires.onlinelibrary.wiley.com/doi/pdf/10.1002/wics.147},
+  abstract = {Abstract This article discusses ggplot2, an open source R package, based on a grammatical theory of graphics. The underlying theory has been discussed in depth elsewhere so this article illustrates some of the consequences of the theory for creating new graphics, the importance of programmable graphics, and the rich ecosystem that has grown up around ggplot2. WIREs Comp Stat 2011 3 180–185 DOI: 10.1002/wics.147 This article is categorized under: Software for Computational Statistics > Software/Statistical Software Statistical and Graphical Methods of Data Analysis > Statistical Graphics and Visualization},
+  year = {2011}
+}
+
+@article{mosquito,
+  author = {REISKIND, M. H. and GRIFFIN, R. H. and JANAIRO, M. S. and HOPPERSTAD, K. A.},
+  title = {Mosquitoes of field and forest: the scale of habitat segregation in a diverse mosquito assemblage},
+  journal = {Medical and Veterinary Entomology},
+  volume = {31},
+  number = {1},
+  pages = {44-54},
+  keywords = {Disease ecology, habitat edges, landscape ecology, vector-borne pathogens},
+  doi = {https://doi.org/10.1111/mve.12193},
+  url = {https://onlinelibrary.wiley.com/doi/abs/10.1111/mve.12193},
+  eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1111/mve.12193},
+  abstract = {Abstract Knowledge of the distribution of arthropod vectors across a landscape is important in determining the risk for vector-borne disease. This has been well explored for ticks, but not for mosquitoes, despite their importance in the transmission of a variety of pathogens. This study examined the importance of habitat, habitat edges, and the scale at which mosquito abundance and diversity vary in a rural landscape by trapping along transects from grassland areas into forest patches. Significant patterns of vector diversity and distinct mosquito assemblages across habitats were found. The scale of individual species' responses to habitat edges was often dramatic, with several species rarely straying even 10 m from the edge. The present results suggest blood-seeking mosquito species are faithful to certain habitats, which has consequences for patterns of vector diversity and risk for pathogen transmission. This implies that analysts of risk for pathogen transmission and foci of control, and developers of land management strategies should assess habitat at a finer scale than previously considered.},
+  year = {2017}
+}
+
+@Article{Douglas2018CD,
+  author={Douglas, Gavin M. and Hansen, Richard and Jones, Casey M. A. and Dunn, Katherine A. and Comeau, Andr{\~A}{\textcopyright} M. and Bielawski, Joseph P. and Tayler, Rachel and El-Omar, Emad M.  and Russell, Richard K. and Hold, Georgina L. and Langille, Morgan G. I. and Van Limbergen, Johan},
+  title={Multi-omics differentially classify disease state and treatment outcome in pediatric Crohn{\^a}??s disease},
+  journal={Microbiome},
+  year={2018},
+  volume={6},
+  number={1},
+  pages={13},
+  abstract={Crohn{\^a}??s disease (CD) has an unclear etiology, but there is growing evidence of a direct link with a dysbiotic microbiome. Many gut microbes have previously been associated with CD, but these have mainly been confounded with patients{\^a}?? ongoing treatments. Additionally, most analyses of CD patients{\^a}?? microbiomes have focused on microbes in stool samples, which yield different insights than profiling biopsy samples.},
+  issn={2049-2618},
+  doi={10.1186/s40168-018-0398-3},
+  url={https://doi.org/10.1186/s40168-018-0398-3}
+}
+
+@Article{MetaPhlAn,
+  author={Segata, Nicola and Waldron, Levi and Ballarini, Annalisa and Narasimhan, Vagheesh and Jousson, Olivier and Huttenhower, Curtis},
+  title={Metagenomic microbial community profiling using unique clade-specific marker genes},
+  journal={Nature Methods},
+  year={2012},
+  volume={9},
+  number={8},
+  pages={811--814},
+  abstract={MetaPhlAn (metagenomic phylogenetic analysis) allows the rapid and accurate identification of microbial species and higher clades from shotgun sequencing data.},
+  issn={1548-7105},
+  doi={10.1038/nmeth.2066},
+  url={https://doi.org/10.1038/nmeth.2066}
+}
+
