@@ -73,11 +73,11 @@ suppressPackageStartupMessages({
 
 # Analysis of 16s rDNA dataset about 43 pediatric CD stool samples from iHMP {#chapter1}
 
-Here, we use the 43 pediatric IBD stool samples as example, obtained from the Integrative Human Microbiome Project Consortium (iHMP) [@iHMP]. 
+Here, we use the 43 pediatric IBD stool samples as example, which were obtained from the Integrative Human Microbiome Project Consortium (iHMP) [@iHMP]. 
 
 ## Importing the output of dada2 {#chapter1.1}
 
-The datasets were obtained from `https://www.microbiomeanalyst.ca/MicrobiomeAnalyst/resources/data/ibd_data.zip`. It contains `ibd_asv_table.txt`, which is feature table (*row features* X *column samples*), `ibd_meta.csv` (metadata file of samples), and `ibd_taxa.txt` (the taxonomic annotation of features). In the session, we use `mp_import_dada2` of `MicrobiotaProcess` to import the dataset, and return a `MPSE` object.
+The datasets were downloaded from web^[<https://www.microbiomeanalyst.ca/MicrobiomeAnalyst/resources/data/ibd_data.zip>]. It contains `ibd_asv_table.txt`, which is feature table (*row features* X *column samples*), `ibd_meta.csv` (metadata file of samples), and `ibd_taxa.txt` (the taxonomic annotation of features). In the session, we use *mp_import_dada2* of *MicrobiotaProcess* to import the dataset, and return a *MPSE* object.
 
 ```{r, message=FALSE, warning=FALSE, fold.plot=FALSE, fold.output=FALSE, LoadData}
 library(MicrobiotaProcess)
@@ -109,11 +109,9 @@ mpse2 <- mpse %>%
 mpse2
 ```
 
-\newpage
-
 ## Other import functions {#chapter1.2}
 
-`MicrobiotaProcess` also presents some other import functions \ref{tab:importFuns} to parse the output of the upstream pipelines. In addition, some common object of R can also be converted to `MPSE` object, such as `phyloseq` [@phyloseq], `SummarizedExperiment` [@SE], `TreeSummarizedExperiment` [@TSE], `biom` [@biom] (output of `biomformat` by `read_biom`) \ref{chapter2.1}. 
+*MicrobiotaProcess* also presents some other import functions \ref{tab:importFuns} to parse the output of the upstream pipelines. In addition, some common object of R can also be converted to *MPSE* object, such as *phyloseq* [@phyloseq], *SummarizedExperiment* [@SE], *TreeSummarizedExperiment* [@TSE], *biom* [@biom] (output of *biomformat* by *read_biom*) \ref{chapter2.1}. 
 
 ```{r, echo=FALSE, results='asis', importFuns}
 
@@ -131,18 +129,18 @@ suppressPackageStartupMessages(require(kableExtra))
 caption = "List of import functions provided by MicrobiotaProcess"
 knitr::kable(y, caption = caption, booktabs = T) %>%
   collapse_rows(columns = 1, latex_hline = "major", valign ="middle") %>%
-  kable_styling(latex_options = c("striped", "scale_down")) #%>% landscape
+  kable_styling(latex_options = c("striped", "hold_position")) #%>% landscape
 ```
 
 ## alpha diversity analysis {#chapter1.3}
 
 ### rarefaction visualization {#chapter1.3.1}
 
-Rarefaction, based on sampling technique, was used to compensate for the effect of sample size on the number of units observed in a sample. `MicrobiotaProcess` provided `mp_cal_rarecurve` and `mp_plot_rarecurve` to calculate and plot the curves.
+Rarefaction, based on sampling technique, was used to compensate for the effect of sample size on the number of units observed in a sample. *MicrobiotaProcess* provided *mp_cal_rarecurve* and *mp_plot_rarecurve* to calculate and plot the curves.
 
-(ref:rarecurve1) **This exampls show MicrobiotaProcess provided mp_cal_rarecurve and mp_plot_rarefraction curve to calculate and visualize the rarecurve.** The horizontal coordinate represents the sequencing depth of samples, the vertical coordinate shows the Alpha diversity index (such as Observe OTU, Chao1 and ACE). The *mp_plot_rarecurve* provides three types of visualization. (A) the rarefraction curve for each sample. (B) the rarefraction curve for each sample with colored group (specified *.group* argument in *mp_plot_rarecurve*). (C) the rarefraction curve for each group with standard error of the mean (specified *.group* argument and *plot.group=TRUE* in *mp_plot_rarecurve*)
+(ref:rarecurve1) **This exampls show *MicrobiotaProcess* provided *mp_cal_rarecurve* and *mp_plot_rarecurve* to calculate and visualize the rarefaction curve.** The horizontal coordinate represents the sequencing depth of samples, the vertical coordinate shows the Alpha diversity index (such as Observe OTU, Chao1 and ACE). The *mp_plot_rarecurve* provides three types of visualization. (A) the rarefaction curve for each sample. (B) the rarefaction curve for each sample with colored group (specified *.group* argument in *mp_plot_rarecurve*). (C) the rarefaction curve for each group with standard error of the mean (specified *.group* argument and *plot.group=TRUE* in *mp_plot_rarecurve*)
 
-```{r class.source = 'fold-show', fold.output=FALSE, fold.plot=FALSE, fig.width=10, fig.height=8, fig.align="center",warning=FALSE, message=FALSE, fig.cap='(ref:rarecurve1)', rarecurve}
+```{r class.source = 'fold-show', fold.output=FALSE, fold.plot=FALSE, fig.width=7, fig.height=6, fig.align="center",warning=FALSE, message=FALSE, fig.cap='(ref:rarecurve1)', rarecurve}
 library(MicrobiotaProcess)
 library(patchwork)
 cols <- c("orange", "deepskyblue")
@@ -152,44 +150,51 @@ mpse2 %<>%
 
 p_rare <- mpse2 %>%
           mp_plot_rarecurve(
-              .rare = RareAbundanceRarecurve, 
-              .alpha = c(Observe, Chao1, ACE),
+            .rare = RareAbundanceRarecurve, 
+            .alpha = c(Observe, Chao1, ACE),
           ) +
-          theme(legend.key.width = unit(0.3, "cm"),
-                legend.key.height = unit(0.3, "cm"),
-                legend.spacing.y=unit(0.01,"cm"),
-                legend.text=element_text(size=4))
+          theme(
+            legend.key.width = unit(0.3, "cm"),
+            legend.key.height = unit(0.3, "cm"),
+            legend.spacing.y = unit(0.01,"cm"),
+            legend.text = element_text(size=4)
+          )
 
 prare1 <- mpse2 %>%
           mp_plot_rarecurve(
-              .rare = RareAbundanceRarecurve, 
-              .alpha = c(Observe, Chao1, ACE),
-              .group = Group
+            .rare = RareAbundanceRarecurve, 
+            .alpha = c(Observe, Chao1, ACE),
+            .group = Group
           ) +
           scale_fill_manual(values = cols)+
           scale_color_manual(values = cols)+
           theme_bw()+
-          theme(axis.text=element_text(size=8), panel.grid=element_blank(),
-                strip.background = element_rect(colour=NA,fill="grey"),
-                strip.text.x = element_text(face="bold"))          
+          theme(
+            axis.text=element_text(size=8), panel.grid=element_blank(),
+            strip.background = element_rect(colour=NA,fill="grey"),
+            strip.text.x = element_text(face="bold")
+          ) 
 
 prare2 <- mpse2 %>%
           mp_plot_rarecurve(
-              .rare = RareAbundanceRarecurve,
-              .alpha = c(Observe, Chao1, ACE),
-              .group = Group,
-              plot.group = TRUE
-         ) +
-         scale_color_manual(values = cols)+
-         scale_fill_manual(values = cols) +
-         theme_bw()+
-         theme(axis.text=element_text(size=8), panel.grid=element_blank(),
-               strip.background = element_rect(colour=NA,fill="grey"),
-               strip.text.x = element_text(face="bold")
-         )
+            .rare = RareAbundanceRarecurve,
+            .alpha = c(Observe, Chao1, ACE),
+            .group = Group,
+            plot.group = TRUE
+          ) +
+          scale_color_manual(values = cols)+
+          scale_fill_manual(values = cols) +
+          theme_bw()+
+          theme(
+            axis.text=element_text(size=8), panel.grid=element_blank(),
+            strip.background = element_rect(colour=NA,fill="grey"),
+            strip.text.x = element_text(face="bold")
+          )
 
 (p_rare / prare1 / prare2) + patchwork::plot_annotation(tag_levels="A")
 ```
+
+\newpage
 
 ```{r echo = FALSE}
 prare1 <- prare1 + 
@@ -206,7 +211,7 @@ Since the curves in each sample were near saturation, the sequencing data were g
 
 ### Calculation and different analysis of alpha index {#chapter1.3.2}
 
-Alpha index can evaluate the richness and abundance of microbial communities. *MicrobiotaProcess* provides *mp_cal_alpha* to calculate alpha index. Six common diversity measures (*Observe*, *Chao1*, *ACE*, *Shannon*, *Simpson*, *Pielou*) are supported. And the different groups of samples can be tested and visualize by `mp_plot_alpha`. This following example shows how to use *mp_cal_alpha* and *mp_plot_alpha* of *MicrobiotaProcess* to analysis the alpha diversity of the community. The *RareAbundance* is rarefied (default), which will be used to calculate the alpha diversity index, users can specified the *force=TRUE* of *mp_cal_alpha* to calculated the index if the abundance is not be rarefied (\ref{chapter2.3.1}).
+Alpha index can evaluate the richness and abundance of microbial communities. *MicrobiotaProcess* provides *mp_cal_alpha* to calculate alpha index. Six common diversity measures (*Observe*, *Chao1*, *ACE*, *Shannon*, *Simpson*, *Pielou*) are supported. And the different groups of samples can be tested and visualize by *mp_plot_alpha*. This following example shows how to use *mp_cal_alpha* and *mp_plot_alpha* of *MicrobiotaProcess* to analysis the alpha diversity of the community. The *RareAbundance* is rarefied (default), which will be used to calculate the alpha diversity index, users can specified the *force=TRUE* of *mp_cal_alpha* to calculated the index if the abundance is not be rarefied (\ref{chapter2.3.1}).
 
 (ref:AlphaBox) **The raincloud plot of alpha diversity index** The horizontal coordinate represents each group (by *.group* argument of *mp_plot_alpha*), the vertical coordinate represents the alpha diversity index. 
 
@@ -400,9 +405,9 @@ ggsave(hclass1, filename = "./Figures/Abunheat.svg", device = "svg", width = 7, 
 
 The Venn or UpSet plot can help us to obtain the difference between groups in overview. MicrobiotaProcess provides `mp_cal_venn` (`mp_plot_venn`) and `mp_cal_upset` (`mp_plot_upset`) to perform the Venn and Upset analysis.
 
-(ref:VennPlot) **The venn diagram for groups in OTU/ASV level**
+(ref:VennUpsetPlot) **The venn diagram and upset plot for groups in OTU/ASV level**
 
-```{r, fig.width=5, fig.height=3, fig.align="center", warning=FALSE, message=FALSE, fig.cap="(ref:VennPlot)", Venn}
+```{r, fig.width=5, fig.height=5, fig.align="center", warning=FALSE, message=FALSE, fig.cap="(ref:VennUpsetPlot)", Venn}
 mpse2 %<>% 
     mp_cal_venn(
       .abundance = RareAbundance,
@@ -410,26 +415,25 @@ mpse2 %<>%
     ) 
 
 venn_p <- mpse2 %>% 
-     mp_plot_venn(
-      .group = Group
-     ) +
-     scale_colour_manual(values = cols) +
-     scale_fill_viridis_c()
-venn_p
-```
+    mp_plot_venn(
+      .group = Group,
+      set_size = 2.5,
+      label_size = 2,
+      edge_size = 2.5
+    ) +
+    scale_colour_manual(values = cols) +
+    scale_fill_viridis_c(guide = guide_colorbar(barwidth=.3, barheight=2)) +
+    theme(
+      legend.title = element_text(size = 8), 
+      legend.text = element_text(size = 6) 
+    )
 
-```{r echo = FALSE}
-ggsave(venn_p, filename = "./Figures/venn.svg", device = "svg", width = 5, height = 3)
-```
-
-(ref:UpsetPlot) **The upset plot of groups in OTU/ASV level**
-
-```{r, fig.width=5, fig.height=5, fig.align="center", warning=FALSE, message=FALSE, fig.cap="(ref:UpsetPlot)", Upset}
 mpse2 %<>%
     mp_cal_upset(
       .abundance = RareAbundance,
       .group = Group
     )
+
 upset_p <- mpse2 %>%
     mp_plot_upset(
       .group = Group
@@ -446,12 +450,21 @@ upset_p <- mpse2 %>%
       combmatrix.label.extra_spacing = 40
     )
 
-upset_p
+library(ggpp)
+p.up.venn <- upset_p + 
+             annotate(
+               "plot_npc", 
+               npcx = "right", 
+               npcy = "top", 
+               label = venn_p,
+               vp.width = 0.6,
+               vp.height = 0.4
+             )
+p.up.venn
 ```
 
 ```{r echo = FALSE}
-upset_p <- upset_p + ggupset::theme_combmatrix(combmatrix.label.extra_spacing = 40)
-ggsave(upset_p, filename = "./Figures/upset.svg", device = "svg", width = 5, height = 4.5)
+ggsave(p.up.venn, filename = "./Figures/upset.svg", device = "svg", width = 5, height = 5)
 ```
 
 ## beta analysis {#chapter1.5}
@@ -599,7 +612,7 @@ The result of distance between the samples also can be visualized by `mp_plot_di
 (ref:distplot) **The distance heatmap and the boxplot for each sample**. The size and color of the heatmap represent the distance of each sample, the color of bar represent the group of sample (A). The boxplot represent the distance pairs of sample among the group, it show the dissimilarity of sample between the *control* and *CD* is significant, which is consistent with the result of 
 Permutational Multivariate Analysis of Variance \ref{chapter1.5.3}.
 
-```{r, fig.width = 10, fig.height = 6, fig.align="center", fig.cap = '(ref:distplot)'}
+```{r, fig.width = 10, fig.height = 6, fig.align="center", message = FALSE, fig.cap = '(ref:distplot)'}
 pdist1 <- mpse2 %>%
           mp_plot_dist(
             .distmethod = bray, 
@@ -642,6 +655,8 @@ pdist2 <- mpse2 %>%
           )
 aplot::plot_list(pdist1, pdist2, widths = c(3, 1), nrow=1, tag_levels = "A")
 ```
+
+\newpage
 
 ### Permutational Multivariate Analysis of Variance {#chapter1.5.3}
 
@@ -735,6 +750,8 @@ cplot1 <- ggtree(
 cplot1
 ```
 
+\newpage
+
 ```{r, echo = FALSE}
 ggsave(cplot1, filename = "./Figures/sample.clust.svg", device = "svg", width = 7, height = 5)
 ```
@@ -823,6 +840,8 @@ diffclade_p <- ggdiffclade(
                )
 diffclade_p
 ```
+
+\newpage
 
 We also can visualized the result with `ggtree` [@ggtree2017] and `ggtreeExtra` [@ggtreeExtra].
 
@@ -917,6 +936,8 @@ p6 <- p6 + theme(
 p6
 ```
 
+\newpage
+
 ```{r, echo = FALSE}
 ggsave(p6, filename="./Figures/Diffres.svg", device="svg", width = 12, height = 12)
 ```
@@ -926,13 +947,15 @@ ggsave(p6, filename="./Figures/Diffres.svg", device="svg", width = 12, height = 
 The left panel represents the relative abundance or abundance (according the standard_method) of biomarker, the right panel represents the confident interval of effect size (LDA or MDA) of biomarker.
 The bigger confident interval shows that the biomarker is more fluctuant, owing to the influence of samples number.
 
-(ref:DiffBoxplot) **The boxplot and the LDA score of different taxa.** The left panel represents the relative abundance of the different taxa, the right panel represents the LDA of different taxa.
+(ref:DiffBoxplot) **The boxplot and the LDA score of different taxa.** The left panel represents the relative abundance of the different taxa, the right panel represents the LDA effect size (95% confidence interval) of different taxa.
 
 ```{r fig.width=6, fig.height=7, fig.align="center", warning=FALSE, message=FALSE, fig.cap="(ref:DiffBoxplot)", diffbox}
 diffbox <- ggdiffbox(obj=deres, box_notch=FALSE, 
 		     colorlist=cols, l_xlabtext="relative abundance")
 diffbox
 ```
+
+\newpage
 
 ### visualization of different results by `ggdifftaxbar` {#chapter1.6.3}
 
@@ -950,82 +973,21 @@ The result is similar with the result of `ggdiffbox`, the bigger confident inter
 
 (ref:LDAplot) **The effect size plot of biomarkers**
 
-```{r fig.width=5, fig.height=7.5, fig.align="center", warning=FALSE, message=FALSE, fig.cap="(ref:LDAplot)", plotES}
+```{r fig.width=5, fig.height=5, fig.align="center", warning=FALSE, message=FALSE, fig.cap="(ref:LDAplot)", plotES}
 es_p <- ggeffectsize(obj=deres, 
-                     lineheight=0.1,
-                     linewidth=0.3) + 
-        scale_color_manual(values=c(cols)) 
+                     pointsize = 1,
+                     lineheight=0.2,
+                     linewidth=0.4) + 
+        scale_color_manual(values=c(cols)) +
+        theme(
+          legend.position = "none",
+          axis.text = element_text(size = 5),
+        )
 
 es_p
 ```
 
-<!--
-
-## 7. Correlation of taxonomy
-
-The result of different analysis also can be visualized with result of correlation.
-
-```
-otutab <- mpse2 %>% mp_extract_assays(.abundance=RelRareAbundanceBySample, byRow=F)
-
-cortest <- WGCNA::corAndPvalue(otutab, method="spearman", alternative="two.sided")
-cortest$cor[upper.tri(cortest$cor, diag = TRUE)] <- NA
-cortest$p[upper.tri(cortest$p, diag = TRUE)] <- NA
-cortab1 <- na.omit(melt(t(cortest$cor))) %>% rename(from=Var1,to=Var2,cor=value)
-corptab1 <- na.omit(melt(t(cortest$p))) %>% rename(pvalue=value)
-cortab1$fdr <- p.adjust(corptab1$pvalue, method="fdr")
-
-cortab1 <- cortab1 %>% mutate(correlation=case_when(cor>0 ~ "positive",cor < 0 ~ "negative",TRUE ~ "No"))
-cortab2 <- cortab1 %>% filter(fdr <= 0.05) %>% filter(cor <= -0.5 | cor >= 0.8)
-
-p <- ggdiffclade(
-         obj=deres,
-         alpha=0.3,
-         linewd=0.25,
-         skpointsize=0.2,
-         layout="inward_circular",
-         taxlevel=7,
-         cladetext=0,
-         setColors=FALSE,
-         xlim=16
-     ) +
-     scale_fill_manual(values=cols,
-                       guide=guide_legend(keywidth=0.5,
-                                          keyheight=0.5,
-                                          order=3,
-                                          override.aes=list(alpha=1))
-     ) +
-     scale_size_continuous(range=c(1, 3),
-                       guide=guide_legend(keywidth=0.5,keyheight=0.5,order=4,
-                                          override.aes=list(shape=21))) +
-     scale_colour_manual(values=rep("white", 100),guide="none")
-
-p2 <- p +
-      new_scale_color() +
-      new_scale("size") +
-      geom_tiplab(size=1, hjust=1) +
-      geom_taxalink(
-          data=cortab2,
-          mapping=aes(taxa1=from,
-                      taxa2=to,
-                      colour=correlation,
-                      size=abs(cor)),
-          alpha=0.4,
-          ncp=10,
-          hratio=1,
-          offset = 0.2
-      ) +
-      scale_size_continuous(range = c(0.2, 1),
-                            guide=guide_legend(keywidth=1, keyheight=0.5,
-                                               order=1, override.aes=list(alpha=1))
-      ) +
-      scale_colour_manual(values=c("chocolate2", "#009E73"),
-                          guide=guide_legend(keywidth=0.5, keyheight=0.5,
-                          order=2, override.aes=list(alpha=1, size=1)))
-p2
-```
-
--->
+\newpage
 
 # the analysis of the other published pediatric CD stool samples {#chapter2} 
 
@@ -1049,7 +1011,7 @@ mpse16s
 
 ### Alpha diversity analysis in 16s level {#chapter2.1.1}
 
-```{r, fig.width = 5, fig.height = 5, alpha16s}
+```{r, fig.width = 5, fig.height = 4, message = FALSE, alpha16s}
 mpse16s %<>% 
     mp_rrarefy() %>%
     mp_cal_alpha(.abundance = RareAbundance) 
@@ -1066,7 +1028,9 @@ p
 
 ### Beta diversity analysis in 16s level {#chapter2.1.2}
 
-```{r, fig.width = 8, fig.height = 10}
+(ref:Diver16s) **The distance heatmap and boxplot and the PCoA plot**
+
+```{r, fig.width = 8, fig.height = 10, fig.cap='(ref:Diver16s)', message = FALSE}
 mpse16s %<>%
     mp_decostand(
       .abundance = Abundance,
@@ -1128,15 +1092,13 @@ p2 <- mpse16s %>%
         .distmethod = bray,
         .group = disease,
         group.test = TRUE
-      )
-
-mpse16s %>% 
-    mp_adonis(
-      .abundance = Abundance, 
-      .formula = ~ disease + response,
-      distmethod = "bray",
-      permutation = 9999
-    )
+      ) +
+      scale_color_manual(
+        values = c("orange", "#00A08A", "deepskyblue")
+      ) +
+      scale_fill_manual(
+        values = c("orange", "#00A08A", "deepskyblue")
+      )      
 
 p3 <- mpse16s %>%
       mp_plot_ord(
@@ -1146,10 +1108,10 @@ p3 <- mpse16s %>%
         .starshape = response,
         show.side = FALSE
       ) +
-      scale_starshape_manual(values=c(1, 13, 15)) +
+      scale_starshape_manual(values = c(1, 13, 15)) +
       scale_fill_manual(
-        values=cols, 
-        guide=guide_legend(override.aes=list(size=2, starshape = 15))
+        values = cols, 
+        guide = guide_legend(override.aes=list(size=2, starshape = 15))
       ) +
       scale_size_continuous(
         range = c(1, 3),
@@ -1163,7 +1125,15 @@ p3 <- mpse16s %>%
         legend.title = element_text(size = 9),            
       )
 
-aplot::plot_list(p1, (aplot::plot_list(p2, p3, nrow=1, widths=c(1, 2))), ncol = 1)
+ff <- aplot::plot_list(p1, (aplot::plot_list(p2, p3, nrow=1, widths=c(1, 2))), ncol = 1, heights = c(1.4, 1))
+ff
+mpse16s %>%
+    mp_adonis(
+       .abundance = Abundance,
+       .formula = ~ disease + response,
+       distmethod = "bray",
+       permutation = 9999
+     )
 ```
 
 ### Composition of the taxonomy in 16s level {#chapter2.1.3}
@@ -1176,16 +1146,16 @@ mpse16s %<>%
 p1 <- mpse16s %>% 
       mp_plot_abundance(
         .abundance = RareAbundance, 
-        taxa.class = Family, 
+        taxa.class = Class, 
         topn = 20, 
         .group = c(disease, response)
-     ) +
-     theme(
-         legend.key.height = unit(0.3, "cm"),
-         legend.key.width = unit(0.3, "cm"),
-         legend.spacing.y = unit(0.02, "cm"),
-         legend.text = element_text(size = 7)
-     )
+      ) +
+      theme(
+        legend.key.height = unit(0.3, "cm"),
+        legend.key.width = unit(0.3, "cm"),
+        legend.spacing.y = unit(0.02, "cm"),
+        legend.text = element_text(size = 7)
+      )
 
 p2 <- mpse16s %>%
       mp_plot_abundance(
@@ -1195,16 +1165,16 @@ p2 <- mpse16s %>%
         .group = c(disease, response)
       ) +
       theme(
-          legend.key.height = unit(0.3, "cm"),
-          legend.key.width = unit(0.3, "cm"),
-          legend.spacing.y = unit(0.02, "cm"),
-          legend.text = element_text(size = 7)
+        legend.key.height = unit(0.3, "cm"),
+        legend.key.width = unit(0.3, "cm"),
+        legend.spacing.y = unit(0.02, "cm"),
+        legend.text = element_text(size = 7)
       )
 
 p3 <- mpse16s %>%
       mp_plot_abundance(
         .abundance = RareAbundance,
-        taxa.class = Family, 
+        taxa.class = Class, 
         topn = 20,
         .group = c(response, disease),
         geom = "heatmap"
@@ -1306,16 +1276,22 @@ p4 <- mpse16s %>%
 aplot::plot_list(p1, p3, p2, p4, ncol = 1)
 ```
 
+\newpage
+
 ### Different analysis in 16S level {#chaper2.1.4}
+
+*MicrobiotaProcess* also provides *mp_plot_diff_res* to displayed the result of *mp_diff_analysis* with *action="add"*, which can decreases coding burden. 
 
 ```{r, fig.width = 10, fig.height = 10}
 mpse16s %<>% 
-    mp_diff_analysis(.abundance=RareAbundance, .group=disease, filter.p="pvalue") 
+    mp_diff_analysis(.abundance = RareAbundance, .group = disease, filter.p = "pvalue") 
 
 p <- mpse16s %>%
-     mp_plot_diff_res(tiplab.size=0.8)
+     mp_plot_diff_res(tiplab.size = 0.8)
 p
 ```
+
+\newpage
 
 ## Loading the KEGG three levels data {#chapter2.2}
 
@@ -1354,6 +1330,8 @@ mpseKEGG %>% mp_plot_diff_res(.taxa.class = Level_1)
 mpseKEGG %>% mp_extract_tree() %>% dplyr::filter(!is.na(pvalue) & pvalue <=0.05, keep.td=FALSE)
 ```
 
+\newpage
+
 ## Loading the MGS data {#chapter2.3}
 
 The taxa abundance data also can be analyzed by *MicrobiotaProcess*, Here we used the example data from output of *MetaPhlAn* [@MetaPhlAn] to show how to perform the related analysis using *MicrobiotaProcess*. The output of other taxa assign and qu can also be imported and converted to the *MPSE* object, and be further analyzed using *MicrobiotaProcess*, which can refer to \ref{chapter2.2} and \ref{chapter3}
@@ -1369,7 +1347,7 @@ mpseMGS
 
 (ref:MGSalpha) **The alpha diversity boxplot based on MGS data**
 
-```{r, fig.width = 5, fig.height = 4, fig.cap="(ref:MGSalpha)", alphaMGS}
+```{r, fig.width = 5, fig.height = 4, fig.cap="(ref:MGSalpha)", message = FALSE, alphaMGS}
 mpseMGS %<>%
     mp_cal_alpha(
       .abundance = Abundance,
@@ -1386,6 +1364,7 @@ p <- mpseMGS %>%
 p
 ```
 
+\newpage
 
 ### Beta diversity analysis in MGS level {#chapter2.3.2}
 
@@ -1454,6 +1433,12 @@ p2 <- mpseMGS %>%
         .distmethod = bray,
         .group = disease,
         group.test = TRUE
+      ) +
+      scale_color_manual(
+        values = c("orange", "#00A08A", "deepskyblue")
+      ) +
+      scale_fill_manual(
+        values = c("orange", "#00A08A", "deepskyblue")
       )
 
 mpseMGS %>%
@@ -1472,14 +1457,15 @@ p3 <- mpseMGS %>%
         .starshape = response,
         show.side = FALSE
       ) +
-      scale_starshape_manual(values=c(1, 13, 15)) +
+      scale_starshape_manual(values = c(1, 13, 15)) +
       scale_fill_manual(
         values=cols,
         guide=guide_legend(
           keywidth = 0.3,
           keyheight = 0.3,
           label.element = element_text(size = 6),
-          override.aes=list(size=2, starshape = 15))
+          override.aes = list(size = 2, starshape = 15)
+        )
       ) +
       scale_size_continuous(
         range = c(1, 3),
@@ -1487,16 +1473,19 @@ p3 <- mpseMGS %>%
           keywidth = 0.3,
           keyheight = 0.3,
           label.element = element_text(size = 6),
-          override.aes=list(starshape = 15))
+          override.aes = list(starshape = 15)
+        )
       )
-aplot::plot_list(p1, (aplot::plot_list(p2, p3, nrow=1, widths=c(1, 2))), ncol = 1)
+aplot::plot_list(p1, (aplot::plot_list(p2, p3, nrow=1, widths=c(1, 2))), ncol = 1, heights = c(1.2, 1))
 ```
+
+\newpage
 
 ### Different analysis in MGS level {#chapter2.3.3}
 
 (ref:DiffMGS) **The result of different analysis based on MGS data**
 
-```{r, fig.width = 10, fig.height = 10, fig.cap = "DiffMGS"}
+```{r, fig.width = 10, fig.height = 10, fig.cap = "(ref:DiffMGS)"}
 mpseMGS %<>%
     mp_diff_analysis(
        .abundance = Abundance,
@@ -1578,6 +1567,8 @@ p3 <- p2 +
       ) 
 p3
 ```
+
+\newpage
 
 # The analysis of the mosquito ecology data using MicrobiotaProcess {#chapter3}
 
