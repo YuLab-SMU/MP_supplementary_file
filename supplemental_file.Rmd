@@ -294,12 +294,6 @@ fclass <- mpse2 %>%
           xlab(NULL) +
           ylab("relative abundance (%)") +
           theme(legend.position = "none")
-          #theme(
-          #      legend.position = "right",
-          #      legend.key.width = unit(0.6, "cm"),
-          #      legend.key.height = unit(0.6, "cm"),
-          #      legend.text = element_text(size=8)
-          #)          
 
 pclass2 <- mpse2 %>%
           mp_plot_abundance(
@@ -985,6 +979,166 @@ es_p <- ggeffectsize(obj=deres,
         )
 
 es_p
+```
+
+## Interoperable with the existing computing ecosystem
+
+Because the *MPSE* object *MicrobiotaProcess* inherits the *SummarizedExperiment* object [@SE], The related inherited methods for signature *SummarizedExperiment* can also be applied to the *MPSE*. For example, the *tidybulk* [@tidybulk] provides an R tidy framework for modular transcriptomic data analysis. It provides a *test_differential_abundance* to perform differential transcription testing using edgeR quasi-likelihood edgeR likelihood-ratio (LR), limma-voom, limma-voom-with-quality-weights or DESeq2. It can also be compatible with *MPSE*.
+
+```{r message=FALSE, warning = FALSE, fig.width = 14, fig.height = 10, tidybulk}
+library(tidybulk)
+library(edgeR)
+library(aplot)
+library(shadowtext)
+library(ggrepel)
+mpse2 %<>% test_differential_abundance(.abundance = Abundance, .formula = ~Group)
+mpse2
+res <- mpse2 %>% dplyr::filter(FDR <= .05 & abs(logFC) >= 2)
+pp <- res %>%
+      mp_plot_abundance(
+        .abundance = RareAbundance,
+        force = TRUE,
+        relative = TRUE,
+        feature.dist = "bray",
+        geom = "heatmap",
+        topn = "all",
+        .group = Group
+      ) %>%
+      set_scale_theme(
+        x = list(scale_fill_viridis_c(option = "H"),
+                 theme(
+                   axis.text.x = element_text(size = 6),
+                   axis.text.y = element_text(size = 6),
+                   legend.title = element_text(size = 7),
+                   legend.text = element_text(size = 5),
+                   legend.key.width = unit(0.3, "cm"),
+                   legend.key.height = unit(0.3, "cm")
+                 )
+            ),
+        aes_var = RelRareAbundance
+      ) %>%
+      set_scale_theme(
+        x = list(scale_fill_manual(values = cols),
+                 theme(
+                   legend.key.height = unit(0.3, "cm"),
+                   legend.key.width = unit(0.3, "cm"),
+                   legend.spacing.y = unit(0.02, "cm"),
+                   legend.text = element_text(size = 7),
+                   legend.title = element_text(size = 9)
+                 )
+            ),
+        aes_var = Group
+      )
+
+f <- res %>%
+     mp_extract_taxonomy %>%
+     ggplot() +
+     geom_text(
+       mapping = aes(y=OTU, x=0, label=Genus, color=Phylum),
+       hjust = 0,
+       size = 2
+     ) +
+     scale_x_continuous(expand=c(0, 0, 0, 0.1)) +
+     theme_bw() +
+     theme(
+       legend.text = element_text(size = 5),
+       legend.title = element_text(size = 7),
+       legend.key.width = unit(0.3, "cm"),
+       legend.key.height = unit(0.3, "cm"),
+       panel.background = element_blank(),
+       panel.grid = element_blank(),
+       axis.text = element_blank(),
+       axis.ticks = element_blank(),
+       panel.border = element_blank()
+     ) +
+     labs(x = NULL, y = NULL)
+
+pp <- pp %>% insert_right(f, width = 0.2)
+
+sample.tree <- res %>%
+      select(-bray) %>%  # remove the bray, Because it was the result of all OTU,
+      mp_cal_clust(.abundance = RelRareAbundanceBySample, distmethod = "bray") %>%
+      ggtree(layout = igraph::layout_with_kk, color = "#afb7b8") +
+      geom_nodepoint(color = "#afb7b8", size = .5) +
+      geom_tippoint(aes(fill = Group), shape = 21, size=3) +
+      geom_text_repel(
+        data = td_filter(isTip),
+        mapping = aes(label = label),
+        color = "black",
+        bg.color = "grey",
+        size = 2,
+        max.overlaps = 30
+      ) +
+      scale_fill_manual(
+        values = cols,
+        guide = guide_legend(
+           title.theme = element_text(size = 7),
+           label.theme = element_text(size = 5),
+        )
+      )
+
+p <- mpse2 %>%
+      mp_cal_dist(
+         .abundance = RelRareAbundanceBySample,
+         distmethod = "bray",
+         cal.feature.dist = T
+      ) %>%
+      hclust() %>%
+      ggtree(layout = igraph::layout_with_kk, color = "#bed0d1") +
+      geom_nodepoint(color = "#bed0d1", size = .5)
+
+# The data.frame contained results of test_differential_abundance
+otu.tab <- mpse2 %>% mp_extract_feature()
+p <- p %<+% otu.tab +
+     geom_tippoint(
+       mapping = aes(fill = logFC, size = -log10(FDR)),
+       shape = 21,
+       color = "grey"
+     ) +
+     scale_fill_viridis_c(
+       option="C",
+       guide = guide_colorbar(
+          title.theme = element_text(size = 7),
+          label.theme = element_text(size = 5),
+          barheight = unit(1.5, "cm"),
+          barwidth = unit(.3, "cm")
+       )
+     ) +
+     scale_size_continuous(
+       range = c(.5, 6),
+       guide = guide_legend(
+          key.width = .3,
+          key.height = .3,
+          label.theme = element_text(size = 5),
+          title.theme = element_text(size = 7)
+       )
+     )+
+     geom_shadowtext(
+       data = td_filter(FDR <= .05 & abs(logFC) >= 2),
+       mapping = aes(x = x, y = y, label = label),
+       color = "black",
+       bg.color = "grey",
+       size = 2
+       #max.overlaps = 60,
+     )
+
+design <- "
+  12
+  13
+  13
+"
+
+plot_list(pp, sample.tree, p, design = design, tag_levels = "A")  
+```
+
+
+```{r, echo = FALSE}
+saveRDS(mpse2, "./TmpRef/mpse2.RDS")
+sample.tree$layers[[3]]$aes_params$size <- 6
+sample.tree$layer[[4]]$aes_params$size <- 3.5
+ggsave("./Figures/OTU_heatmap.svg", pp, device = "svg", width = 6, height = 7)
+ggsave("./Figures/sample.tree.svg", sample.tree, device = "svg", width = 6, height = 5.6)
+ggsave("./Figures/OTU.tree.svg", p, device = "svg", width = 7, height = 7)
 ```
 
 \newpage
