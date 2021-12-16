@@ -20,7 +20,7 @@ link-citations: yes
 **MicrobiotaProcess: A tidy framework for microbiome or other related ecology data analysis**
 \endgroup
 
-**Shuangbin Xu, Wenli Tang, Li Zhan, Zehan Dai, Lang Zhou, Tingze Feng, Shanshan Liu, Meijun Chen, Xiaocong Fu, Tianzhi Wu, Erqiang Hu and Guangchuang Yu\* **
+**Shuangbin Xu, Li Zhan, Wenli Tang, Zehan Dai, Lang Zhou, Tingze Feng, Meijun Chen, Shanshan Liu, Xiaocong Fu, Tianzhi Wu, Erqiang Hu and Guangchuang Yu\* **
 
 ^\*^correspondence: Guangchuang Yu \<gcyu1@smu.edu.cn\>
 
@@ -107,6 +107,10 @@ mpse2 <- mpse %>%
          ) %>% 
          mp_filter_taxa(.abundance = Abundance, min.abun = 1, min.prop = 0.1)
 mpse2
+```
+
+```{r, echo = FALSE}
+saveRDS(mpse, file="./TmpRef/mpse.rds")
 ```
 
 ## Other import functions {#chapter1.2}
@@ -446,7 +450,7 @@ upset_p <- mpse2 %>%
 
 library(ggpp)
 p.up.venn <- upset_p + 
-             annotate(
+             ggpp::annotate(
                "plot_npc", 
                npcx = "right", 
                npcy = "top", 
@@ -1430,8 +1434,6 @@ p4 <- mpse16s %>%
 aplot::plot_list(p1, p3, p2, p4, ncol = 1)
 ```
 
-\newpage
-
 ### Different analysis in 16S level {#chaper2.1.4}
 
 *MicrobiotaProcess* also provides *mp_plot_diff_res* to displayed the result of *mp_diff_analysis* with *action="add"*, which can decreases coding burden. 
@@ -1444,8 +1446,6 @@ p <- mpse16s %>%
      mp_plot_diff_res(tiplab.size = 0.8)
 p
 ```
-
-\newpage
 
 ## Loading the KEGG three levels data {#chapter2.2}
 
@@ -1484,7 +1484,9 @@ mpseKEGG %>% mp_plot_diff_res(.taxa.class = Level_1)
 mpseKEGG %>% mp_extract_tree() %>% dplyr::filter(!is.na(pvalue) & pvalue <=0.05, keep.td=FALSE)
 ```
 
-\newpage
+```{r, echo = FALSE}
+saveRDS(mpseKEGG, "./TmpRef/mpse_KEGG.rds")
+```
 
 ## Loading the MGS data {#chapter2.3}
 
@@ -1517,8 +1519,6 @@ p <- mpseMGS %>%
      theme(legend.position = "none")
 p
 ```
-
-\newpage
 
 ### Beta diversity analysis in MGS level {#chapter2.3.2}
 
@@ -1633,8 +1633,6 @@ p3 <- mpseMGS %>%
 aplot::plot_list(p1, (aplot::plot_list(p2, p3, nrow=1, widths=c(1, 2))), ncol = 1, heights = c(1.2, 1))
 ```
 
-\newpage
-
 ### Different analysis in MGS level {#chapter2.3.3}
 
 (ref:DiffMGS) **The result of different analysis based on MGS data**
@@ -1722,7 +1720,9 @@ p3 <- p2 +
 p3
 ```
 
-\newpage
+```{r echo = FALSE}
+saveRDS(mpseMGS, "./TmpRef/mpse_MGS.rds")
+```
 
 # The analysis of the mosquito ecology data using MicrobiotaProcess {#chapter3}
 
@@ -1747,8 +1747,8 @@ The `MicrobiotaProcess` provides some verbs of `dplyr`, which allows user to exp
 
 (ref:AlphaMosquito) **The raincloud plot of the alpha diversity of the Mosquito ecology community.** The result of the alpha diversity analysis about the Mosquito ecology study showed that the Mosquito species richness gradually increases from field to forest (field \-\-> near field \-\-> edge \-\-> near field \-\-> forest).
 
-```{r, message = FALSE, fig.cap = '(ref:AlphaMosquito)', MosquitoaAlpha}
-cols = terrain.colors(6)[5:1]
+```{r, message = FALSE}
+cols = c("floralwhite", "lightgoldenrod1","chartreuse2", "chartreuse4", "darkgreen")
 # Adjusting the order of Habitat
 mpse %<>% 
    dplyr::mutate(
@@ -1764,7 +1764,11 @@ mpse %<>% mp_cal_alpha(.abundance=Abundance, force=TRUE)
 # test the relationship between the Observe Species and Habitat or Shannon and Habitat.
 mpse %>% mp_extract_sample() %>% lm(formula=Observe ~ Habitat, data=.) %>% anova()
 mpse %>% mp_extract_sample() %>% lm(formula=Shannon ~ Habitat, data=.) %>% anova()
+```
 
+The result of ANOVA test revealed that the richness of the mosquito species was significantly associated with the **habitat**. Then the result was visualized by *mp_plot_alpha*.
+
+```{r, message = FALSE, fig.cap = '(ref:AlphaMosquito)', MosquitoaAlpha}
 p.alpha <- mpse %>%
      mp_plot_alpha(.group = Habitat, .alpha = c(Observe, Shannon), test = NULL) +
      scale_fill_manual(values = cols) +
@@ -1777,28 +1781,41 @@ p.alpha
 
 Here, we use the cca (constrained correspondence analysis) to test which environment factor is related to the Mosquito species in the habitat.
 
-(ref:MosquitoCCA) **The CCA plot of the Mosquito ecology study**. Each point represents one sample, the size of the points represents the observe species of the corresponding sample, the color of the points represents the habitat of the corresponding sample, the shape of points represents the Region of the corresponding sample. And the arrows represent the environment factors, the marked ones by star represent significant related to the Mosquito species of the communities in the study (\* 0.05, \*\* 0.01, \*\*\* 0.001).
+(ref:MosquitoCCA) **The CCA plot of the Mosquito ecology study**. Each point represents one sample, the size of the points represents the observe species of the corresponding sample, the color of the points represents the habitat of the corresponding sample, the shape of points represents the Region of the corresponding sample. And the arrows represent the environment factors, the marked ones by star represent significant related to the Mosquito communities in the study (\* 0.05, \*\* 0.01, \*\*\* 0.001).
 
-```{r, fig.width=6, fig.height=4.6, fig.cap = '(ref:MosquitoCCA)', ccaPlot}
+```{r, message = FALSE, warning = FALSE}
 mpse %<>%
     mutate(NormAbun=sqrt(Abundance)/TrapNights) %>%
     mp_cal_cca(
        .abundance  = NormAbun,
-       .formula = ~DeciduousForest+
+       .formula = ~(DeciduousForest+
            EvergreenForest+
            Grassland+
            MixedForest+
-           ShrubScrub+
-           BarrenLand+
-           Building+
-           Pavement+
-           CultivatedCrops+
-           TrapNights
+           ShrubScrub)+
+           Condition(
+             BarrenLand+
+             Building+
+             Pavement+
+             CultivatedCrops
+           )
     )
 mpse
+```
 
+The raw result of pCCA was added the *internal_attr*, which can be extract by *mp_extract_internal_attr* with specific *name=cca*. Then it can be performed the significance test using the functions of *vegan* [@vegan], such as *anova.cca*, *permutest*.
+
+```{r, message = FALSE, warning = FALSE}
 # Extract the raw result of cca analysis
-mpse %>% mp_extract_internal_attr(name=cca)
+# And significance test with anova
+mpse %>% 
+    mp_extract_internal_attr(name=cca) %>%
+    anova()
+```
+
+Further we used *mp_envfit* to identity the environment variables that were significantly associated with the mosquito communities.
+
+```{r, message = FALSE, warning = FALSE}
 # fits environmental vectors onto cca
 mpse %<>% 
     mp_envfit(
@@ -1808,12 +1825,7 @@ mpse %<>%
           EvergreenForest, 
           Grassland, 
           MixedForest, 
-          ShrubScrub, 
-          BarrenLand, 
-          Building, 
-          Pavement, 
-          CultivatedCrops, 
-          TrapNights
+          ShrubScrub 
         ),
        action = "add", 
        permutation = 9999
@@ -1821,7 +1833,43 @@ mpse %<>%
 
 # Extract the raw result of envfit analysis
 mpse %>% mp_extract_internal_attr(name=cca_envfit)
-# visualization
+```
+
+Then we used *mp_plot_ord* to visualize the result of pCCA.
+
+```{r, message = FALSE, warning = FALSE, fig.width=12, fig.height=4.6, fig.cap = '(ref:MosquitoCCA)', ccaPlot}
+# visualization only pCCA
+f <- mpse %>%
+     mp_plot_ord(
+       .ord = cca,
+       .group = Habitat,
+       .size = Observe,
+       .starshape = Region,
+       show.side = FALSE,
+       show.envfit = FALSE,
+       colour = 'white',
+       bg.colour = 'black'
+     ) +
+     scale_starshape_manual(values=c(1, 13, 15)) +
+     scale_fill_manual(
+        values = cols,
+        guide = guide_legend(
+          override.aes = list(starshape=15)
+        )
+     ) +
+     scale_size_continuous(
+       range = c(1, 3),
+       guide = guide_legend(override.aes = list(starshape=15))
+     ) +
+     theme(
+        legend.key.height = unit(0.3, "cm"),
+        legend.key.width = unit(0.3, "cm"),
+        legend.spacing.y = unit(0.02, "cm"),
+        legend.text = element_text(size = 7),
+        legend.title = element_text(size = 9),
+     )
+
+# visualization with envfit result
 p <- mpse %>% 
      mp_plot_ord(
        .ord = cca, 
@@ -1851,10 +1899,128 @@ p <- mpse %>%
         legend.text = element_text(size = 7),
         legend.title = element_text(size = 9),              
      )
-p
+
+aplot::plot_list(f, p, tag_levels="A")
 ```
 
+## The distribution of Mosquito species in the study. {#chapter3.4}
+
+We used *mp_cal_abundance* and *mp_plot_abundance* to calculated and visualized the abundance of the Mosquito species in the study.
+
+```{r, message = FALSE, warning = FALSE , fig.width = 14, fig.height=6}
+cols2 <- c("deepskyblue", "yellow", "#FF9933")
+
+# The theme and scale of fill of heatmap
+Abund.char <- list(
+           scale_fill_viridis_c(option = "H"),
+           theme(
+             axis.text.x = element_text(size = 6),
+             axis.text.y = element_text(size = 8),
+             legend.title = element_text(size = 7),
+             legend.text = element_text(size = 5),
+             legend.key.width = unit(0.3, "cm"),
+             legend.key.height = unit(0.3, "cm")
+           )
+      )
+
+# The theme and legend of annotate bar of 'Habitat' variable
+Habitat.char <- list(
+           scale_fill_manual(values = cols),
+           theme(
+             legend.key.height = unit(0.3, "cm"),
+             legend.key.width = unit(0.3, "cm"),
+             legend.spacing.y = unit(0.02, "cm"),
+             legend.text = element_text(size = 7),
+             legend.title = element_text(size = 9)
+           )
+      )
+
+# The theme and legend of annotate bar of 'Region' variable
+Region.char <- list(
+           scale_fill_manual(values = cols2),
+           theme(
+             legend.key.height = unit(0.3, "cm"),
+             legend.key.width = unit(0.3, "cm"),
+             legend.spacing.y = unit(0.02, "cm"),
+             legend.text = element_text(size = 7),
+             legend.title = element_text(size = 9)
+           )
+      )
+
+# visualization of the count abundance.
+p.count <- mpse %>%
+    mp_cal_abundance(
+      .abundance = Abundance,
+      force = T,
+      relative = F
+    ) %>%
+    mp_plot_abundance(
+      .abundance = Abundance,
+      force = T,
+      relative = F,
+      geom = "heatmap",
+      topn = "all",
+      .group = c(Habitat, Region)
+    ) %>%
+    set_scale_theme(
+      x = Abund.char,
+      aes_var = Abundance
+    ) %>%
+    set_scale_theme(
+      x = Habitat.char,
+      aes_var = Habitat
+    ) %>%
+    set_scale_theme(
+      x = Region.char,
+      aes_var = Region
+    )
+
+# visualization of the relative abundance
+p.rel <- mpse %>%
+    mp_cal_abundance(
+      .abundance = Abundance,
+      force = T,
+      relative = T
+    ) %>%
+    mp_plot_abundance(
+      .abundance = Abundance,
+      force = T,
+      relative = T,
+      geom = "heatmap",
+      topn = "all",
+      .group = c(Habitat, Region)
+    ) %>%
+    set_scale_theme(
+      x = Abund.char,
+      aes_var = RelAbundance
+    ) %>%
+    set_scale_theme(
+      x = Habitat.char,
+      aes_var = Habitat
+    ) %>%
+    set_scale_theme(
+      x = Region.char,
+      aes_var = Region
+    )
+
+aplot::plot_list(p.count, p.rel, tag_levels="A")    
+```
+
+Then We can use *mp_diff_analysis* to identify the species that have significant difference abundance between the **field** and **forest**. We found the Cx.sal (*Culex salinarius*) and Ps.col (*Psorophora columbiae*) were significantly enriched in **field**, However, the Ae.albo (*Aedes albopicta*), Ae.cin (*Aedes cinereus*), Ps.fer (*Psorophora ferox*), Ae.tris (*Aedes triseriatus*), Ae.can (*Aedes canadensis*), Ae.hen (*Aedes hendersoni*), Ae.atl (*Aedes atlanticus*) and Ae.dup (*Aedes dupreei*) were significantly enriched in the **forest**
+
+```{r}
+mpse %>% 
+    dplyr::filter(Habitat %in% c("Field", "Forest")) %>% 
+    dplyr::mutate(Habitat = as.vector(Habitat)) %>%
+    mp_diff_analysis(.abundance=Abundance, force=T, relative=T, .group=Habitat) %>%
+    mp_extract_feature() %>% 
+    dplyr::filter(fdr<=0.05) %>% 
+    print(width=200)
+```
+
+
 ```{r, echo = FALSE}
+saveRDS(mpse, "./TmpRef/mosquito_mpse.rds")
 pp <- aplot::plot_list(p.alpha, p, widths = c(2.5, 3), nrow = 1)
 ggsave(filename="./Figures/Fig7.svg", pp, device="svg", width = 10, height = 5)
 ```
@@ -1864,7 +2030,7 @@ ggsave(filename="./Figures/Fig7.svg", pp, device="svg", width = 10, height = 5)
 Here is the output of sessionInfo() on the system on which this document was compiled:
 
 ```{r, echo=FALSE}
-sessionInfo()
+sessioninfo::session_info()
 ```
 
 # References {#chapter5}
