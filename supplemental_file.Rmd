@@ -1096,10 +1096,10 @@ sample.tree <- res %>%
       geom_text_repel(
         data = td_filter(isTip),
         mapping = aes(label = label),
-        color = "black",
-        bg.color = "grey",
         size = 2,
-        max.overlaps = 30
+        max.overlaps = 30,
+        colour = "black",
+        bg.colour = "white"
       ) +
       scale_fill_manual(
         values = cols,
@@ -1144,13 +1144,16 @@ p <- p %<+% otu.tab +
           label.theme = element_text(size = 5),
           title.theme = element_text(size = 7)
        )
-     )+
-     geom_shadowtext(
+     ) +
+     geom_text_repel(
        data = td_filter(FDR <= .05 & abs(logFC) >= 2),
        mapping = aes(x = x, y = y, label = label),
-       color = "black",
-       bg.color = "grey",
-       size = 2
+       size = 2,
+       min.segment.length = 0.1,
+       segment.size = .25,
+       segment.colour = 'grey18',
+       colour = "black",
+       bg.colour = 'white'
        #max.overlaps = 60,
      )
 
@@ -1196,6 +1199,8 @@ mpse2 %>%
 saveRDS(mpse2, "./TmpRef/mpse2.RDS")
 sample.tree$layers[[3]]$aes_params$size <- 6
 sample.tree$layer[[4]]$aes_params$size <- 3.5
+p$layer[[4]]$aes_params$size <- 2.8
+p$layer[[4]]$aes_params$segment.size <- .4
 ggsave("./Figures/OTU_heatmap.svg", pp, device = "svg", width = 6, height = 7)
 ggsave("./Figures/sample.tree.svg", sample.tree, device = "svg", width = 6, height = 5.6)
 ggsave("./Figures/OTU.tree.svg", p, device = "svg", width = 7, height = 7)
@@ -2000,8 +2005,8 @@ f <- mpse %>%
        .starshape = Region,
        show.side = FALSE,
        show.envfit = FALSE,
-       colour = 'white',
-       bg.colour = 'black'
+       colour = 'black',
+       bg.colour = 'white'
      ) +
      scale_starshape_manual(values=c(1, 13, 15)) +
      scale_fill_manual(
@@ -2031,8 +2036,8 @@ p <- mpse %>%
        .starshape = Region,
        show.side = FALSE, 
        show.envfit = TRUE,
-       colour = "white",
-       bg.colour = "black"
+       colour = "black",
+       bg.colour = "white"
      ) +
      scale_starshape_manual(values=c(1, 13, 15)) +
      scale_fill_manual(
