@@ -17,7 +17,7 @@ link-citations: yes
 **Supplemental File of**
 
 \begingroup\Large
-**MicrobiotaProcess: A tidy framework for microbiome or other related ecology data analysis**
+**MicrobiotaProcess: A tidy framework facilitating microbiome or other related ecology data reproducible analysis**
 \endgroup
 
 **Shuangbin Xu, Li Zhan, Wenli Tang, Zehan Dai, Lang Zhou, Tingze Feng, Meijun Chen, Shanshan Liu, Xiaocong Fu, Tianzhi Wu, Erqiang Hu and Guangchuang Yu\* **
@@ -74,11 +74,47 @@ suppressPackageStartupMessages({
 })
 ```
 
-# Analysis of 16s rDNA dataset about 43 pediatric CD stool samples from iHMP {#chapter1}
+# Installation 
+
+To install `MicrobiotaProcess` package, please enter the following command in R:
+
+```r
+if (!requireNamespace("BiocManager", quietly = TRUE))
+   install.packages("BiocManager")
+BiocManager::install("MicrobiotaProcess")
+```
+
+To reproduce the analysis in this document, the several extra packages also needed to be installed.
+
+```r
+cranpkgs <- c("aplot", "ggpp", 
+              "broom", "forcats",
+              "ggrepel", "ggVennDiagram", 
+              "patchwork", "shadowtext",
+              "ggupset", "ggnewscale")
+
+for (i in cranpkgs){
+    if (!requireNamespace(i, quietly = TRUE)){
+        install.packages(i)
+    }
+}
+
+Biocpkgs <- c("SummarizedExperiment", "clusterProfiler", 
+              "edgeR", "enrichplot", "tidybulk",
+              "ggtree", "ggtreeExtra", "MicrobiomeProfiler")
+
+for (i in Biocpkgs){
+    if (!requireNamespace(i, quietly = TRUE)){
+        BiocManager::install(i)
+    }
+}
+```
+
+# Analysis of 16s rDNA dataset about 43 pediatric CD stool samples from iHMP {#chapter2}
 
 Here, we use the 43 pediatric IBD stool samples as example, which were obtained from the Integrative Human Microbiome Project Consortium (iHMP) [@iHMP]. 
 
-## Importing the output of dada2 {#chapter1.1}
+## Importing the output of dada2 {#chapter2.1}
 
 The datasets were downloaded from web^[<https://www.microbiomeanalyst.ca/MicrobiomeAnalyst/resources/data/ibd_data.zip>]. It contains `ibd_asv_table.txt`, which is feature table (*row features* X *column samples*), `ibd_meta.csv` (metadata file of samples), and `ibd_taxa.txt` (the taxonomic annotation of features). In the session, we use *mp_import_dada2* of *MicrobiotaProcess* to import the dataset, and return a *MPSE* object.
 
@@ -116,9 +152,9 @@ mpse2
 saveRDS(mpse, file="./TmpRef/mpse.rds")
 ```
 
-## Other import functions {#chapter1.2}
+## Other import functions {#chapter2.2}
 
-*MicrobiotaProcess* also presents some other import functions \ref{tab:importFuns} to parse the output of the upstream pipelines. In addition, some common object of R can also be converted to *MPSE* object, such as *phyloseq* [@phyloseq], *SummarizedExperiment* [@SE], *TreeSummarizedExperiment* [@TSE], *biom* [@biom] (output of *biomformat* by *read_biom*) \ref{chapter2.1}. 
+*MicrobiotaProcess* also presents some other import functions \ref{tab:importFuns} to parse the output of the upstream pipelines. In addition, some common object of R can also be converted to *MPSE* object, such as *phyloseq* [@phyloseq], *SummarizedExperiment* [@SE], *TreeSummarizedExperiment* [@TSE], *biom* [@biom] (output of *biomformat* by *read_biom*) \ref{chapter3.1}. 
 
 ```{r, echo=FALSE, results='asis', importFuns}
 
@@ -139,9 +175,9 @@ knitr::kable(y, caption = caption, booktabs = T) %>%
   kable_styling(latex_options = c("striped", "hold_position")) #%>% landscape
 ```
 
-## alpha diversity analysis {#chapter1.3}
+## alpha diversity analysis {#chapter2.3}
 
-### rarefaction visualization {#chapter1.3.1}
+### rarefaction visualization {#chapter2.3.1}
 
 Rarefaction, based on sampling technique, was used to compensate for the effect of sample size on the number of units observed in a sample. *MicrobiotaProcess* provided *mp_cal_rarecurve* and *mp_plot_rarecurve* to calculate and plot the curves.
 
@@ -216,9 +252,9 @@ ggsave(prare1, file = "./Figures/rarecurve.svg", device="svg", width=7, height=3
 
 Since the curves in each sample were near saturation, the sequencing data were great enough with very few new species undetected
 
-### Calculation and different analysis of alpha index {#chapter1.3.2}
+### Calculation and different analysis of alpha index {#chapter2.3.2}
 
-Alpha index can evaluate the richness and abundance of microbial communities. *MicrobiotaProcess* provides *mp_cal_alpha* to calculate alpha index. Six common diversity measures (*Observe*, *Chao1*, *ACE*, *Shannon*, *Simpson*, *Pielou*) are supported. And the different groups of samples can be tested and visualize by *mp_plot_alpha*. This following example shows how to use *mp_cal_alpha* and *mp_plot_alpha* of *MicrobiotaProcess* to analysis the alpha diversity of the community. The *RareAbundance* is rarefied (default), which will be used to calculate the alpha diversity index, users can specified the *force=TRUE* of *mp_cal_alpha* to calculated the index if the abundance is not be rarefied (\ref{chapter2.3.1}).
+Alpha index can evaluate the richness and abundance of microbial communities. *MicrobiotaProcess* provides *mp_cal_alpha* to calculate alpha index. Six common diversity measures (*Observe*, *Chao1*, *ACE*, *Shannon*, *Simpson*, *Pielou*) are supported. And the different groups of samples can be tested and visualize by *mp_plot_alpha*. This following example shows how to use *mp_cal_alpha* and *mp_plot_alpha* of *MicrobiotaProcess* to analysis the alpha diversity of the community. The *RareAbundance* is rarefied (default), which will be used to calculate the alpha diversity index, users can specified the *force=TRUE* of *mp_cal_alpha* to calculated the index if the abundance is not be rarefied (\ref{chapter3.3.1}).
 
 (ref:AlphaBox) **The raincloud plot of alpha diversity index** The horizontal coordinate represents each group (by *.group* argument of *mp_plot_alpha*), the vertical coordinate represents the alpha diversity index. 
 
@@ -241,11 +277,11 @@ p_alpha
 ggsave(p_alpha, file = "./Figures/alpha.svg", device = "svg", width = 7, height = 3.8)
 ```
 
-## Taxonomy composition analysis {#chapter1.4}
+## Taxonomy composition analysis {#chapter2.4}
 
-### Statistics and visualization of specific levels {#chapter1.4.1}
+### Statistics and visualization of specific levels {#chapter2.4.1}
 
-*MicrobiotaProcess* presents the *mp_cal_abundance* and *mp_plot_abundance* for the calculation and visualization of composition of microbial communities. After the *mp_cal_abundance* done, you can get the abundance of specific levels of class by *mp_extract_abundance* \ref{chapter1.5.4}. 
+*MicrobiotaProcess* presents the *mp_cal_abundance* and *mp_plot_abundance* for the calculation and visualization of composition of microbial communities. After the *mp_cal_abundance* done, you can get the abundance of specific levels of class by *mp_extract_abundance* \ref{chapter2.5.4}. 
 
 (ref:Abundance1) **The relative abundance of each sample in *class* level**
 
@@ -402,7 +438,7 @@ p
 ggsave(hclass1, filename = "./Figures/Abunheat.svg", device = "svg", width = 7, height = 5)
 ```
 
-### Venn or Upset plot {#chapter1.4.2}
+### Venn or Upset plot {#chapter2.4.2}
 
 The Venn or UpSet plot can help us to obtain the difference between groups in overview. MicrobiotaProcess provides `mp_cal_venn` (`mp_plot_venn`) and `mp_cal_upset` (`mp_plot_upset`) to perform the Venn and Upset analysis.
 
@@ -468,9 +504,9 @@ p.up.venn
 ggsave(p.up.venn, filename = "./Figures/upset.svg", device = "svg", width = 5, height = 5)
 ```
 
-## beta analysis {#chapter1.5}
+## beta analysis {#chapter2.5}
 
-### PCA analysis {#chapter1.5.1}
+### PCA analysis {#chapter2.5.1}
 
 `PCA` (Principal component analysis) and `PCoA` (Principal Coordinate Analysis) are general statistical procedures to compare dissimilarity of samples. And `PCoA` can based on the phylogenetic or count-based distance metrics, such as `Bray-Curtis`, `Jaccard`, `Unweighted-UniFrac` and `weighted-UniFrac`. `MicrobiotaProcess` presents the `mp_cal_dist`, `mp_cal_pca`, `mp_cal_pcoa`, `mp_cal_dca`, `mp_cal_nmds`, `mp_cal_cca`, `mp_cal_rda`, `mp_adonis`, `mp_anosim`, `mp_mrpp`, `mp_envfit` and `mp_mantel` for the analysis.
 
@@ -530,7 +566,7 @@ pcaplot2 <- mpse2 %>%
 (pcaplot1 | pcaplot2) + plot_annotation(tag_levels = "A")
 ```
 
-### PCoA analysis {#chapter1.5.2}
+### PCoA analysis {#chapter2.5.2}
 
 (ref:PCoAplot) **The PCoA plot based on Bray-Curtis distance**. 
 
@@ -611,7 +647,7 @@ ggsave(pcoaplot1, filename="./Figures/pcoa.svg", width = 5, height = 4, device =
 The result of distance between the samples also can be visualized by `mp_plot_dist` with heatmap or boxplot.
 
 (ref:distplot) **The distance heatmap and the boxplot for each sample**. The size and color of the heatmap represent the distance of each sample, the color of bar represent the group of sample (A). The boxplot represent the distance pairs of sample among the group, it show the dissimilarity of sample between the *control* and *CD* is significant, which is consistent with the result of 
-Permutational Multivariate Analysis of Variance \ref{chapter1.5.3}.
+Permutational Multivariate Analysis of Variance \ref{chapter2.5.3}.
 
 ```{r, fig.width = 10, fig.height = 6, fig.align="center", message = FALSE, fig.cap = '(ref:distplot)'}
 pdist1 <- mpse2 %>%
@@ -659,7 +695,7 @@ aplot::plot_list(pdist1, pdist2, widths = c(3, 1), nrow=1, tag_levels = "A")
 
 \newpage
 
-### Permutational Multivariate Analysis of Variance {#chapter1.5.3}
+### Permutational Multivariate Analysis of Variance {#chapter2.5.3}
 
 We also can perform the Permutational Multivariate Analysis of Variance using `mp_adonis` wrapping the `adonis` of `vegan` [@vegan].
 
@@ -675,9 +711,9 @@ mpse2 %>%
     mp_fortify()
 ```
 
-From the result, we found the `pvalue` of the analysis of `adonis` is smaller than 0.05 for the `Group`, meaning the dissimilarity of samples between the `Group` is significant, which is consistent with the \ref{chapter1.5.2}.
+From the result, we found the `pvalue` of the analysis of `adonis` is smaller than 0.05 for the `Group`, meaning the dissimilarity of samples between the `Group` is significant, which is consistent with the \ref{chapter2.5.2}.
 
-### hierarchical cluster analysis of samples {#chapter1.5.4}
+### hierarchical cluster analysis of samples {#chapter2.5.4}
 
 `beta diversity` metrics can assess the differences between microbial communities. It can be visualized with `PCA` or `PCoA`, this can also be visualized with hierarchical clustering based on ggplot2 [@ggplot2], ggtree [@ggtree2017] and ggtreeExtra [@ggtreeExtra]
 
@@ -757,7 +793,7 @@ cplot1
 ggsave(cplot1, filename = "./Figures/sample.clust.svg", device = "svg", width = 7, height = 5)
 ```
 
-## biomarker discovery {#chapter1.6}
+## biomarker discovery {#chapter2.6}
 
 This package provides `mp_diff_analysis` to detect the biomarker. And the result (with `action = "get"`) can be visualized by `ggdiffbox`, `ggdiffclade`, `ggeffectsize`, `ggdifftaxbar` and `mp_plot_diff_res`, or displayed manually using `ggtree` [@ggtree2017] and `ggtreeExtra` [@ggtreeExtra].
 
@@ -802,7 +838,7 @@ mpse2 <- mpse2 %>%
          )
 ```
 
-### visualization of different results by `ggdiffclade` {#chapter1.6.1}
+### visualization of different results by `ggdiffclade` {#chapter2.6.1}
 
 The color of discriminative taxa represent the taxa is more abundant in the corresponding group. The point size shows the negative logarithms (base 10) of pvalue. The bigger size of point shows more significant (lower pvalue), the *pvalue* was calculated in the first step test (default is *kruskal.test*).
 
@@ -962,7 +998,7 @@ pp
 ggsave(p6, filename="./Figures/Diffres.svg", device="svg", width = 12, height = 12)
 ```
 
-### visualization of different results by `ggdiffbox` {#chapter1.6.2}
+### visualization of different results by `ggdiffbox` {#chapter22.6.2}
 
 The left panel represents the relative abundance or abundance (according the standard_method) of biomarker, the right panel represents the confident interval of effect size (LDA or MDA) of biomarker.
 The bigger confident interval shows that the biomarker is more fluctuant, owing to the influence of samples number.
@@ -977,7 +1013,7 @@ diffbox
 
 \newpage
 
-### visualization of different results by `ggdifftaxbar` {#chapter1.6.3}
+### visualization of different results by `ggdifftaxbar` {#chapter2.6.3}
 
 `ggdifftaxbar` can visualize the abundance of biomarker in each samples of groups, the mean and median abundance of groups or subgroups are also showed. `output` parameter is the directory of output.
 
@@ -989,7 +1025,7 @@ ggdifftaxbar(obj=deres, xtextsize=1.5,
 
 <!--
 
-### visualization of different results by `ggeffectsize` {#chapter1.6.4}
+### visualization of different results by `ggeffectsize` {#chapter2.6.4}
 
 The result is similar with the result of `ggdiffbox`, the bigger confident interval shows that the biomarker is more fluctuant owing to the influence of samples number.
 
@@ -1011,7 +1047,7 @@ es_p
 
 -->
 
-## Interoperable with the existing computing ecosystem {#chapter1.7}
+## Interoperable with the existing computing ecosystem {#chapter2.7}
 
 Because the *MPSE* object *MicrobiotaProcess* inherits the *SummarizedExperiment* object [@SE], The related inherited methods for signature *SummarizedExperiment* can also be applied to the *MPSE*. For example, the *tidybulk* [@tidybulk] provides an R tidy framework for modular transcriptomic data analysis. It provides a *test_differential_abundance* to perform differential transcription testing using edgeR quasi-likelihood edgeR likelihood-ratio (LR), limma-voom, limma-voom-with-quality-weights or DESeq2. It can also be compatible with *MPSE*.
 
@@ -1208,13 +1244,13 @@ ggsave("./Figures/OTU.tree.svg", p, device = "svg", width = 7, height = 7)
 
 \newpage
 
-# the analysis of the other published pediatric CD stool samples {#chapter2} 
+# the analysis of the other published pediatric CD stool samples {#chapter3} 
 
 In the previous chapter, we described how to use *MicrobiotaProcess* to do the analysis of the 16s rDNA data. However, it also can be applied to metagenome or metatranscriptome species community data and the function data analysis. In this chapter, we used the example datasets about the other published pediatric CD stool microbial study [@Douglas2018CD] to show how to used *MicrobiotaProcess* to do the related analysis. The datasets were obtained from the github^[<https://github.com/LangilleLab/CD_RF_microbiome>]. However, to avoid duplication, we only show how to import the 16s dataset, we focused on the analysis of metagenomics and KEGG gene datasets.
 
-## Loading the 16s data and construction of MPSE class {#chapter2.1}
+## Loading the 16s data and construction of MPSE class {#chapter3.1}
 
-The chapter is similar with the \ref{chapter1}, so some operations can refer to the previous chapter \ref{chapter1}.
+The chapter is similar with the \ref{chapter3}, so some operations can refer to the previous chapter \ref{chapter3}.
 
 ```{r}
 cols <- c("orange", "deepskyblue")
@@ -1230,7 +1266,7 @@ mpse16s
 
 <!--
 
-### Alpha diversity analysis in 16s level {#chapter2.1.1}
+### Alpha diversity analysis in 16s level {#chapter3.1.1}
 
 ```{r, fig.width = 5, fig.height = 4, message = FALSE, alpha16s}
 mpse16s %<>% 
@@ -1247,7 +1283,7 @@ p <- mpse16s %>%
 p
 ```
 
-### Beta diversity analysis in 16s level {#chapter2.1.2}
+### Beta diversity analysis in 16s level {#chapter3.1.2}
 
 (ref:Diver16s) **The distance heatmap and boxplot and the PCoA plot**
 
@@ -1357,7 +1393,7 @@ mpse16s %>%
      )
 ```
 
-### Composition of the taxonomy in 16s level {#chapter2.1.3}
+### Composition of the taxonomy in 16s level {#chapter3.1.3}
 
 ```{r, fig.width = 7, fig.height = 12}
 mpse16s %<>% 
@@ -1512,9 +1548,9 @@ p
 
 -->
 
-## Loading the KEGG data {#chapter2.2}
+## Loading the KEGG data {#chapter3.2}
 
-The KEGG gene abundances were annotated based on the MGS data. It can also be imported as MPSE, and further analyzed using *MicrobiotaProcess*. Here, we only show how to identify the different gene using the *mp_diff_analysis* of *MicrobiotaProcess* (refer to chapter \ref{chapter2.3}). Other operations are similar with the analysis of 16s rDNA data (refer to chapter \ref{chapter1}).
+The KEGG gene abundances were annotated based on the MGS data. It can also be imported as MPSE, and further analyzed using *MicrobiotaProcess*. Here, we only show how to identify the different gene using the *mp_diff_analysis* of *MicrobiotaProcess* (refer to chapter \ref{chapter3.3}). Other operations are similar with the analysis of 16s rDNA data (refer to chapter \ref{chapter3}).
 
 ```{r}
 KO.da <- read.table("./data/CD_RF_microbiome/biscuit_mgs_KOs.tsv", header=TRUE, sep = "\t", row.names=1, check.names=F)
@@ -1524,7 +1560,7 @@ mpseKO <- MPSE(assays=list(Abundance = KO.da))
 mpseKO %<>% left_join(sample.da, by=c("Sample"="sample_id"))
 ```
 
-### Different analysis for KEGG genes abundance {#chapter2.2.1}
+### Different analysis for KEGG genes abundance {#chapter3.2.1}
 
 The metrics of the KEGG genes is the relative abundance, here we used *mp_diff_analysis* to identify the difference KEGG genes with 'force = TRUE and relative = FALSE', meaning the relative abundance will be used directly.
 
@@ -1586,9 +1622,9 @@ ggsave("./Figures/KO.svg", p, width=14, height=7, device = "svg")
 saveRDS(mpseKO, "./TmpRef/mpse_KO.rds")
 ```
 
-## Loading the MGS data {#chapter2.3}
+## Loading the MGS data {#chapter3.3}
 
-The taxa abundance data also can be analyzed by *MicrobiotaProcess*, Here we used the example data from output of *MetaPhlAn* [@MetaPhlAn] to show how to perform the related analysis using *MicrobiotaProcess*. The output of other taxa abundance can also be imported and converted to the *MPSE* object, and be further analyzed using *MicrobiotaProcess*, which can refer to chapter\ref{chapter2.2} and chapter\ref{chapter3}.
+The taxa abundance data also can be analyzed by *MicrobiotaProcess*, Here we used the example data from output of *MetaPhlAn* [@MetaPhlAn] to show how to perform the related analysis using *MicrobiotaProcess*. The output of other taxa abundance can also be imported and converted to the *MPSE* object, and be further analyzed using *MicrobiotaProcess*, which can refer to chapter\ref{chapter3.2} and chapter\ref{chapter4}.
 
 ```{r}
 # This is the output of MetaPhlAn2, which might need to specific the 'linenum'
@@ -1600,7 +1636,7 @@ mpseMGS %<>% left_join(sample.da, by=c("Sample"="sample_id"))
 mpseMGS
 ```
 
-### Alpha diversity analysis in MGS level {#chapter2.3.1}
+### Alpha diversity analysis in MGS level {#chapter4.3.1}
 
 The metric of Metagenomics data usually is relative abundance. But the some functions of `MicrobiotaProcess` need to require the abundance is count (in default). To process the relative abundance (not integer), We can specific 'force = TRUE', which meaning the corresponding functions will be calculated directly without rarefied.
 
@@ -1625,7 +1661,7 @@ p
 
 \newpage
 
-### Beta diversity analysis in MGS level {#chapter2.3.2}
+### Beta diversity analysis in MGS level {#chapter4.3.2}
 
 We used *mp_cal_dist* to calculated the distance between the samples, then used *mp_plot_dist* to display the distance with heatmap (Fig.\ref{fig:MGSBeta}.A)  and boxplot (Fig.\ref{fig:MGSBeta}.B), then the distance was used to perform the PCoA analysis (Fig.\ref{fig:MGSBeta}.C).
 
@@ -1749,7 +1785,7 @@ mpseMGS %<>%
 # mpseMGS %>% mp_extract_internal_attr(name = adonis)
 ```
 
-### Different analysis in MGS level {#chapter2.3.3}
+### Different analysis in MGS level {#chapter4.3.3}
 
 Here, we also used *mp_diff_analysis* to detect the difference taxa, we also specified the 'force = TRUE' and 'relative = FALSE', meaning the metric of abundance (.abundance) was used to perform the analysis directly without rarefied and calculated the relative abundance (Fig.\ref{fig:DiffMGS}).
 
@@ -1863,11 +1899,11 @@ saveRDS(mpseMGS, "./TmpRef/mpse_MGS.rds")
 
 \newpage
 
-# The analysis of the mosquito ecology data using MicrobiotaProcess {#chapter3}
+# The analysis of the mosquito ecology data using MicrobiotaProcess {#chapter4}
 
 MicrobiotaProcess also can be used to perform the other related ecology data analysis, besides the microbial community data. Here, we used an example data about a Mosquito ecology study [@mosquito] to show how to use MicrobiotaProcess to perform the analysis of the related ecology study. The data was obtained from the github^[<https://github.com/rgriff23/Mosquito_ecology>].
 
-## Loading data and Construction of MPSE object {#chapter3.1}
+## Loading data and Construction of MPSE object {#chapter4.1}
 
 The 1 to 14 columns are the sample metadata including the study site, and habitat, etc. and the others columns represent the abundance of mosquito species the in each sample.
 
@@ -1880,7 +1916,7 @@ mpse <- MPSE(assays=list(Abundance=t(abun.d)), colData=sample.d)
 mpse
 ```
 
-## Alpha diversity analysis of the Mosquito ecology study {#chapter3.2}
+## Alpha diversity analysis of the Mosquito ecology study {#chapter4.2}
 
 The `MicrobiotaProcess` provides some verbs of `dplyr`, which allows user to explore the `MPSE` class effectively and develop reproducible and human-readable pipelines
 
@@ -1934,7 +1970,7 @@ p.alpha <- p.alpha +
 p.alpha
 ```
 
-## Beta Diversity Analysis of the Mosquito ecology study {#chapter3.3}
+## Beta Diversity Analysis of the Mosquito ecology study {#chapter4.3}
 
 Here, we use the cca (constrained correspondence analysis) to test which environment factor is related to the Mosquito species in the habitat (Fig.\ref{fig:MosquitoCCA}).
 
@@ -2061,7 +2097,7 @@ p <- mpse %>%
 aplot::plot_list(f, p, tag_levels="A")
 ```
 
-## The distribution of Mosquito species in the study. {#chapter3.4}
+## The distribution of Mosquito species in the study. {#chapter4.4}
 
 We used *mp_cal_abundance* and *mp_plot_abundance* to calculated and visualized the abundance of the Mosquito species in the study (Fig.\ref{fig:mosquitoHeatmap}).
 
@@ -2185,7 +2221,7 @@ pp <- aplot::plot_list(p.alpha, p, widths = c(2.5, 3), nrow = 1)
 ggsave(filename="./Figures/Fig8.svg", pp, device="svg", width = 10, height = 5)
 ```
 
-# Session information {#chapter4}
+# Session information {#chapter5}
 
 Here is the output of sessionInfo() on the system on which this document was compiled:
 
@@ -2194,4 +2230,4 @@ options(width = 200)
 sessioninfo::session_info()
 ```
 
-# References {#chapter5}
+# References {#chapter6}
