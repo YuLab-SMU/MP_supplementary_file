@@ -87,7 +87,7 @@ BiocManager::install("MicrobiotaProcess")
 To reproduce the analysis in this document, the several extra packages also needed to be installed.
 
 ```r
-cranpkgs <- c("aplot", "ggpp", 
+cranpkgs <- c("aplot", "ggpp", "igraph", 
               "broom", "forcats",
               "ggrepel", "ggVennDiagram", 
               "patchwork", "shadowtext",
@@ -1053,7 +1053,7 @@ Because the *MPSE* object *MicrobiotaProcess* inherits the *SummarizedExperiment
 
 (ref:tidybulkPlot) **The results of different OTUs based on the edgeR_quasi_likelihood with tidybulk** A. The relative abundance heatmap of the different OTUs. B. The hierarchical cluster of samples based on the relative abundance of the different OTUs. C. The hierarchical cluster of OTUs based on the relative abundance of total OTUs, the different OTUs were labeled with their names. We found the cluster of different OTUs in the heatmap is consistent with the different OTUs in the background of total OTUs (C).
 
-```{r message=FALSE, warning = FALSE, fig.width = 14, fig.height = 10, fig.cap='(ref:tidybulkPlot)', tidybulkPlot}
+```{r message=FALSE, warning = FALSE, fig.width = 14.5, fig.height = 9, fig.cap='(ref:tidybulkPlot)', tidybulkPlot}
 library(tidybulk)
 library(edgeR)
 library(aplot)
@@ -1121,7 +1121,7 @@ f <- res %>%
      ) +
      labs(x = NULL, y = NULL)
 
-pp <- pp %>% insert_right(f, width = 0.2)
+pp <- pp %>% insert_right(f, width = 0.4)
 
 sample.tree <- res %>%
       select(-bray) %>%  # remove the bray, Because it was the result of all OTU,
