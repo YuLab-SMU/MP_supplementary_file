@@ -916,14 +916,15 @@ p3 <- p2 +
                        subset = RelRareAbundanceBySample > 0
                    ),
          starshape = 13,
-         starstroke = 0.25,
+         starstroke = 0.01,
          offset = 0.04,
          pwidth = 1.5,
-         grid.params = list(vline = TRUE, size = 0.01, linetype = 1)
+         grid.params = list(vline = TRUE, size = 0.001, color="snow2", linetype = 1)
       ) +
       scale_size_continuous(
          name="Relative Abundance (%)",
-         range = c(0.5, 3)
+         range = c(0.5, 3),
+         guide = guide_legend(override.aes = list(starstroke = 0.25))
       ) +
       scale_fill_manual(values=cols)
 # display the tip labels of taxa tree
@@ -958,9 +959,10 @@ p6 <- p5 +
          mapping = aes(size = -log10(fdr),
                        fill = Sign_Group,
                        ),
+         stroke = 0.01,
          shape = 21,
       ) +
-      scale_size_continuous(range=c(1, 3)) +
+      scale_size_continuous(range=c(1, 3), guide = guide_legend(override.aes = list(stroke = .25))) +
       scale_fill_manual(values=cols)
 
 p6 <- p6 + theme(
@@ -1636,7 +1638,7 @@ mpseMGS %<>% left_join(sample.da, by=c("Sample"="sample_id"))
 mpseMGS
 ```
 
-### Alpha diversity analysis in MGS level {#chapter4.3.1}
+### Alpha diversity analysis in MGS level {#chapter3.3.1}
 
 The metric of Metagenomics data usually is relative abundance. But the some functions of `MicrobiotaProcess` need to require the abundance is count (in default). To process the relative abundance (not integer), We can specific 'force = TRUE', which meaning the corresponding functions will be calculated directly without rarefied.
 
@@ -1661,7 +1663,7 @@ p
 
 \newpage
 
-### Beta diversity analysis in MGS level {#chapter4.3.2}
+### Beta diversity analysis in MGS level {#chapter3.3.2}
 
 We used *mp_cal_dist* to calculated the distance between the samples, then used *mp_plot_dist* to display the distance with heatmap (Fig.\ref{fig:MGSBeta}.A)  and boxplot (Fig.\ref{fig:MGSBeta}.B), then the distance was used to perform the PCoA analysis (Fig.\ref{fig:MGSBeta}.C).
 
@@ -1785,7 +1787,7 @@ mpseMGS %<>%
 # mpseMGS %>% mp_extract_internal_attr(name = adonis)
 ```
 
-### Different analysis in MGS level {#chapter4.3.3}
+### Different analysis in MGS level {#chapter3.3.3}
 
 Here, we also used *mp_diff_analysis* to detect the difference taxa, we also specified the 'force = TRUE' and 'relative = FALSE', meaning the metric of abundance (.abundance) was used to perform the analysis directly without rarefied and calculated the relative abundance (Fig.\ref{fig:DiffMGS}).
 
