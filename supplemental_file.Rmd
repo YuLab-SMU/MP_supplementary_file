@@ -17,7 +17,7 @@ link-citations: yes
 **Supplemental File of**
 
 \begingroup\Large
-**MicrobiotaProcess: A tidy framework facilitating microbiome or other related ecology data reproducible analysis**
+**MicrobiotaProcess: A comprehensive R package for managing and analyzing microbiome and other ecological data within the tidy framework**
 \endgroup
 
 **Shuangbin Xu, Li Zhan, Wenli Tang, Zehan Dai, Lang Zhou, Tingze Feng, Meijun Chen, Shanshan Liu, Xiaocong Fu, Tianzhi Wu, Erqiang Hu and Guangchuang Yu\* **
@@ -116,7 +116,7 @@ Here, we use the 43 pediatric IBD stool samples as example, which were obtained 
 
 ## Importing the output of dada2 {#chapter2.1}
 
-The datasets were downloaded from web^[<https://www.microbiomeanalyst.ca/MicrobiomeAnalyst/resources/data/ibd_data.zip>]. It contains `ibd_asv_table.txt`, which is feature table (*row features* X *column samples*), `ibd_meta.csv` (metadata file of samples), and `ibd_taxa.txt` (the taxonomic annotation of features). In the session, we use *mp_import_dada2* of *MicrobiotaProcess* to import the dataset, and return a *MPSE* object.
+The datasets were downloaded from web^[<https://www.microbiomeanalyst.ca/MicrobiomeAnalyst/resources/data/ibd_data.zip>]. These datasets contain `ibd_asv_table.txt` (feature table (*row features* X *column samples*)), `ibd_meta.csv` (metadata file of samples), and `ibd_taxa.txt` (the taxonomic annotation of features). In the session, we use *mp_import_dada2* of *MicrobiotaProcess* to import the dataset, and return an *MPSE* object.
 
 ```{r, message=FALSE, warning=FALSE, fold.plot=FALSE, fold.output=FALSE, LoadData}
 library(MicrobiotaProcess)
@@ -154,7 +154,7 @@ saveRDS(mpse, file="./TmpRef/mpse.rds")
 
 ## Other import functions {#chapter2.2}
 
-*MicrobiotaProcess* also presents some other import functions \ref{tab:importFuns} to parse the output of the upstream pipelines. In addition, some common object of R can also be converted to *MPSE* object, such as *phyloseq* [@phyloseq], *SummarizedExperiment* [@SE], *TreeSummarizedExperiment* [@TSE], *biom* [@biom] (output of *biomformat* by *read_biom*) \ref{chapter3.1}. 
+*MicrobiotaProcess* also presents some other import functions \ref{tab:importFuns} to parse the output of the upstream pipelines. In addition, some common object of R can also be converted to *MPSE* object, such as *phyloseq* [@phyloseq], *SummarizedExperiment* [@SE], *TreeSummarizedExperiment* [@TSE], *biom* [@biom] (output of *biomformat* by *read_biom*) referring to chapter \ref{chapter3.1}. 
 
 ```{r, echo=FALSE, results='asis', importFuns}
 
@@ -250,11 +250,11 @@ prare1 <- prare1 +
 ggsave(prare1, file = "./Figures/rarecurve.svg", device="svg", width=7, height=3)
 ```
 
-Since the curves in each sample were near saturation, the sequencing data were great enough with very few new species undetected
+<!-- Since the curves in each sample were near saturation, the sequencing data were great enough with very few new species undetected -->
 
-### Calculation and different analysis of alpha index {#chapter2.3.2}
+### Calculation and different analysis of alpha diversity {#chapter2.3.2}
 
-Alpha index can evaluate the richness and abundance of microbial communities. *MicrobiotaProcess* provides *mp_cal_alpha* to calculate alpha index. Six common diversity measures (*Observe*, *Chao1*, *ACE*, *Shannon*, *Simpson*, *Pielou*) are supported. And the different groups of samples can be tested and visualize by *mp_plot_alpha*. This following example shows how to use *mp_cal_alpha* and *mp_plot_alpha* of *MicrobiotaProcess* to analysis the alpha diversity of the community. The *RareAbundance* is rarefied (default), which will be used to calculate the alpha diversity index, users can specified the *force=TRUE* of *mp_cal_alpha* to calculated the index if the abundance is not be rarefied (\ref{chapter3.3.1}).
+Alpha diversity can evaluate the richness and evenness of microbial communities. *MicrobiotaProcess* provides *mp_cal_alpha* to calculate alpha index. Six common diversity measures (*Observe*, *Chao1*, *ACE*, *Shannon*, *Simpson*, *Pielou*) are supported. The result can be visualized by *mp_plot_alpha*. This following example shows how to use *mp_cal_alpha* and *mp_plot_alpha* of *MicrobiotaProcess* to analysis the alpha diversity of the community. The *RareAbundance* is rarefied (default), which will be used to calculate the alpha diversity index, users can specify the *force=TRUE* of *mp_cal_alpha* to calculated the alpha diversity if the abundance is not be rarefied (referring to chapter \ref{chapter3.3.1}).
 
 (ref:AlphaBox) **The raincloud plot of alpha diversity index** The horizontal coordinate represents each group (by *.group* argument of *mp_plot_alpha*), the vertical coordinate represents the alpha diversity index. 
 
@@ -281,7 +281,7 @@ ggsave(p_alpha, file = "./Figures/alpha.svg", device = "svg", width = 7, height 
 
 ### Statistics and visualization of specific levels {#chapter2.4.1}
 
-*MicrobiotaProcess* presents the *mp_cal_abundance* and *mp_plot_abundance* for the calculation and visualization of composition of microbial communities. After the *mp_cal_abundance* done, you can get the abundance of specific levels of class by *mp_extract_abundance* \ref{chapter2.5.4}. 
+*MicrobiotaProcess* presents the *mp_cal_abundance* and *mp_plot_abundance* for the calculation and visualization of composition of microbial communities. After the *mp_cal_abundance* done, you can get the abundance of specific levels of class by *mp_extract_abundance* (referring to chapter \ref{chapter2.5.4}). 
 
 (ref:Abundance1) **The relative abundance of each sample in *class* level**
 
@@ -440,7 +440,7 @@ ggsave(hclass1, filename = "./Figures/Abunheat.svg", device = "svg", width = 7, 
 
 ### Venn or Upset plot {#chapter2.4.2}
 
-The Venn or UpSet plot can help us to obtain the difference between groups in overview. MicrobiotaProcess provides `mp_cal_venn` (`mp_plot_venn`) and `mp_cal_upset` (`mp_plot_upset`) to perform the Venn and Upset analysis.
+The Venn or UpSet plot can help us to obtain the difference between groups in overview. *MicrobiotaProcess* provides *mp_cal_venn* (*mp_plot_venn*) and *mp_cal_upset* (*mp_plot_upset*) to perform the Venn and Upset analysis.
 
 (ref:VennUpsetPlot) **The venn diagram and upset plot for groups in OTU/ASV level**
 
@@ -508,7 +508,7 @@ ggsave(p.up.venn, filename = "./Figures/upset.svg", device = "svg", width = 5, h
 
 ### PCA analysis {#chapter2.5.1}
 
-`PCA` (Principal component analysis) and `PCoA` (Principal Coordinate Analysis) are general statistical procedures to compare dissimilarity of samples. And `PCoA` can based on the phylogenetic or count-based distance metrics, such as `Bray-Curtis`, `Jaccard`, `Unweighted-UniFrac` and `weighted-UniFrac`. `MicrobiotaProcess` presents the `mp_cal_dist`, `mp_cal_pca`, `mp_cal_pcoa`, `mp_cal_dca`, `mp_cal_nmds`, `mp_cal_cca`, `mp_cal_rda`, `mp_adonis`, `mp_anosim`, `mp_mrpp`, `mp_envfit` and `mp_mantel` for the analysis.
+`PCA` (Principal component analysis) and `PCoA` (Principal Coordinate Analysis) are general statistical procedures to compare dissimilarity of samples. And `PCoA` can based on the phylogenetic or count-based distance metrics, such as `Bray-Curtis`, `Jaccard`, `Unweighted-UniFrac` and `weighted-UniFrac`. *MicrobiotaProcess* presents the *mp_cal_dist*, *mp_cal_pca*, *mp_cal_pcoa*, *mp_cal_dca*, *mp_cal_nmds*, *mp_cal_cca*, *mp_cal_rda*, *mp_adonis*, *mp_anosim*, *mp_mrpp*, *mp_envfit* and *mp_mantel* for the analysis.
 
 (ref:PCAplot) **The PCA plot of the community**. Each point represents one sample, the size of point represents the observe OTU of the sample. The color of point represents the group name of the sample, based on the first and second component (A), based on the first and third component (B).
 
@@ -697,7 +697,7 @@ aplot::plot_list(pdist1, pdist2, widths = c(3, 1), nrow=1, tag_levels = "A")
 
 ### Permutational Multivariate Analysis of Variance {#chapter2.5.3}
 
-We also can perform the Permutational Multivariate Analysis of Variance using `mp_adonis` wrapping the `adonis` of `vegan` [@vegan].
+We also can perform the Permutational Multivariate Analysis of Variance using *mp_adonis* wrapping the *adonis* of *vegan* [@vegan].
 
 ```{r} 
 mpse2 %<>% mp_adonis(
@@ -711,7 +711,7 @@ mpse2 %>%
     mp_fortify()
 ```
 
-From the result, we found the `pvalue` of the analysis of `adonis` is smaller than 0.05 for the `Group`, meaning the dissimilarity of samples between the `Group` is significant, which is consistent with the \ref{chapter2.5.2}.
+From the result, we found the *pvalue* of the analysis of *adonis* is smaller than 0.05 for the `Group`, meaning the dissimilarity of samples between the `Group` is significant, which is consistent with the \ref{chapter2.5.2}.
 
 ### hierarchical cluster analysis of samples {#chapter2.5.4}
 
@@ -795,7 +795,7 @@ ggsave(cplot1, filename = "./Figures/sample.clust.svg", device = "svg", width = 
 
 ## biomarker discovery {#chapter2.6}
 
-This package provides `mp_diff_analysis` to detect the biomarker. And the result (with `action = "get"`) can be visualized by `ggdiffbox`, `ggdiffclade`, `ggeffectsize`, `ggdifftaxbar` and `mp_plot_diff_res`, or displayed manually using `ggtree` [@ggtree2017] and `ggtreeExtra` [@ggtreeExtra].
+This package provides `mp_diff_analysis` to detect the biomarker. And the result (with `action = "get"`) can be visualized by *ggdiffbox*, *ggdiffclade*, *ggeffectsize*, *ggdifftaxbar* and *mp_plot_diff_res* (with `action = "add"`), or displayed manually using `ggtree` [@ggtree2017] and `ggtreeExtra` [@ggtreeExtra].
 
 ```{r warning=FALSE, message=FALSE, DErun}
 # for the kruskal_test and wilcox_test
@@ -819,7 +819,7 @@ deres <- mpse2 %>%
             ldascore = 3,
             action = "get"
          )
-
+# The result of different analysis was added to the taxatree with action = 'add'
 mpse2 <- mpse2 %>%
          mp_diff_analysis(
             .abundance = RareAundance,
@@ -842,7 +842,7 @@ mpse2 <- mpse2 %>%
 
 The color of discriminative taxa represent the taxa is more abundant in the corresponding group. The point size shows the negative logarithms (base 10) of pvalue. The bigger size of point shows more significant (lower pvalue), the *pvalue* was calculated in the first step test (default is *kruskal.test*).
 
-(ref:DiffClade) **The taxa tree clade plot of different analysis result**.
+(ref:DiffClade) **The taxa tree clade plot of different analysis result (with action = 'get')**.
 
 ```{r fig.width=12, fig.height=12, fig.align="center", warning=FALSE, message=FALSE, fig.cap="(ref:DiffClade)", plotclade}
 diffclade_p <- ggdiffclade(
@@ -880,9 +880,9 @@ diffclade_p
 
 \newpage
 
-We also can visualized the result with `ggtree` [@ggtree2017] and `ggtreeExtra` [@ggtreeExtra].
+We also can visualized the result (default, with `action = 'add'`) via `ggtree` [@ggtree2017] and `ggtreeExtra` [@ggtreeExtra].
 
-(ref:DiffAllplot) **The taxa tree of the community with the relative abundance of each OTU/ASV on sample and the LDA of different OTU/ASV**. The taxa tree is built with the taxa of all samples. The high light color of taxa tree represents the phyla of the clade. The external point layer represents the relative abundance of each OTU on sample. The external bar layer represents the LDA of the different OTU. The colored points represent the different taxa, the size represents the *pvalue* or *fdr*.
+(ref:DiffAllplot) **The taxa tree of the community with the relative abundance of each OTU/ASV on sample and the LDA of different OTU/ASV**. The taxa tree was built with the taxa of all samples. The high light color of taxa tree represents the phyla of the clade. The external point layer represents the relative abundance of each OTU on sample. The external bar layer represents the LDA of the different OTU. The colored points represent the different taxa, the size of colored point represents the *pvalue* or *fdr*.
 
 ```{r, fig.width = 10, fig.height=10, fig.align="center", fig.cap = '(ref:DiffAllplot)', DiffAllplot}
 taxa.tree <- mpse2 %>% mp_extract_tree(type='taxatree')
@@ -1000,7 +1000,7 @@ pp
 ggsave(p6, filename="./Figures/Diffres.svg", device="svg", width = 12, height = 12)
 ```
 
-### visualization of different results by `ggdiffbox` {#chapter22.6.2}
+### visualization of differential results (with action = "get") by `ggdiffbox` {#chapter22.6.2}
 
 The left panel represents the relative abundance or abundance (according the standard_method) of biomarker, the right panel represents the confident interval of effect size (LDA or MDA) of biomarker.
 The bigger confident interval shows that the biomarker is more fluctuant, owing to the influence of samples number.
@@ -1015,7 +1015,7 @@ diffbox
 
 \newpage
 
-### visualization of different results by `ggdifftaxbar` {#chapter2.6.3}
+### visualization of differential results (with action = "get") by `ggdifftaxbar` {#chapter2.6.3}
 
 `ggdifftaxbar` can visualize the abundance of biomarker in each samples of groups, the mean and median abundance of groups or subgroups are also showed. `output` parameter is the directory of output.
 
@@ -1051,9 +1051,9 @@ es_p
 
 ## Interoperable with the existing computing ecosystem {#chapter2.7}
 
-Because the *MPSE* object *MicrobiotaProcess* inherits the *SummarizedExperiment* object [@SE], The related inherited methods for signature *SummarizedExperiment* can also be applied to the *MPSE*. For example, the *tidybulk* [@tidybulk] provides an R tidy framework for modular transcriptomic data analysis. It provides a *test_differential_abundance* to perform differential transcription testing using edgeR quasi-likelihood edgeR likelihood-ratio (LR), limma-voom, limma-voom-with-quality-weights or DESeq2. It can also be compatible with *MPSE*.
+Because the *MPSE* object *MicrobiotaProcess* inherits the *SummarizedExperiment* object [@SE], The related inherited methods for signature *SummarizedExperiment* can also be applied to the *MPSE*. For example, the *tidybulk* [@tidybulk] provides an R tidy framework for modular transcriptomic data analysis. It provides a *test_differential_abundance* to perform differential transcription testing using edgeR quasi-likelihood edgeR likelihood-ratio (LR), limma-voom, limma-voom-with-quality-weights or DESeq2. It is also compatible with *MPSE*.
 
-(ref:tidybulkPlot) **The results of different OTUs based on the edgeR_quasi_likelihood with tidybulk** A. The relative abundance heatmap of the different OTUs. B. The hierarchical cluster of samples based on the relative abundance of the different OTUs. C. The hierarchical cluster of OTUs based on the relative abundance of total OTUs, the different OTUs were labeled with their names. We found the cluster of different OTUs in the heatmap is consistent with the different OTUs in the background of total OTUs (C).
+(ref:tidybulkPlot) **The results of different OTUs based on the edgeR_quasi_likelihood with tidybulk** (A). The relative abundance heatmap of the different OTUs. (B). The hierarchical cluster of samples based on the relative abundance of the different OTUs. (C). The hierarchical cluster of OTUs based on the relative abundance of total OTUs, the different OTUs were labeled with their names. We found the cluster of different OTUs in the heatmap is consistent with the different OTUs in the background of total OTUs (C).
 
 ```{r message=FALSE, warning = FALSE, fig.width = 14.5, fig.height = 9, fig.cap='(ref:tidybulkPlot)', tidybulkPlot}
 library(tidybulk)
@@ -1204,7 +1204,7 @@ design <- "
 plot_list(pp, sample.tree, p, design = design, tag_levels = "A")  
 ```
 
-We compared the different result between the *edgeR* [@edgeR] and *MicrobiotaProcess*. We found the number of the different OTUs based on edgeR is more than the MicrobiotaProcess. We think this is because we didn't remove the low-abundance OTUs. This operation is generally needed in standard whole-transcriptome workflows. However, if it is preformed in the microbiome analysis, many low-abundance OTUs will be removed. More different OTUs were identified by the operation using edgeR [@edgeR].
+We compared the different result between the *edgeR* [@edgeR] and *MicrobiotaProcess*. We found the number of the different OTUs based on edgeR is more than the MicrobiotaProcess. We think this is because we didn't remove the low-abundance OTUs in the analysis using *tidybulk*. This operation is generally needed in standard whole-transcriptome workflows. However, if it is preformed in the microbiome analysis, many low-abundance OTUs will be removed. More different OTUs were identified by the operation using edgeR [@edgeR].
 
 (ref:CompareDEotus) **The comparison of the different analysis result between the edgeR and MicrobiotaProcess** 
 
@@ -1248,7 +1248,7 @@ ggsave("./Figures/OTU.tree.svg", p, device = "svg", width = 7, height = 7)
 
 # the analysis of the other published pediatric CD stool samples {#chapter3} 
 
-In the previous chapter, we described how to use *MicrobiotaProcess* to do the analysis of the 16s rDNA data. However, it also can be applied to metagenome or metatranscriptome species community data and the function data analysis. In this chapter, we used the example datasets about the other published pediatric CD stool microbial study [@Douglas2018CD] to show how to used *MicrobiotaProcess* to do the related analysis. The datasets were obtained from the github^[<https://github.com/LangilleLab/CD_RF_microbiome>]. However, to avoid duplication, we only show how to import the 16s dataset, we focused on the analysis of metagenomics and KEGG gene datasets.
+In the previous chapter, we described how to use *MicrobiotaProcess* to do the analysis of the 16s rDNA data. However, it also can be applied to metagenome or metatranscriptome species community data and the function data analysis. In this chapter, we used the example datasets about the other published pediatric CD stool microbial study [@Douglas2018CD] to show how to used *MicrobiotaProcess* to do the related analysis. The datasets were obtained from the github^[<https://github.com/LangilleLab/CD_RF_microbiome>]. To avoid duplication, we only show how to import the 16s dataset, we focused on the analysis of metagenomics and KEGG gene datasets.
 
 ## Loading the 16s data and construction of MPSE class {#chapter3.1}
 
@@ -1577,7 +1577,7 @@ mpseKO %<>%
    )
 ```
 
-Then we can perform the KEGG pathway enrichment analysis using clusterProfiler [@clusterProfiler] and MicrobiomeProfiler [@MicrobiomeProfiler] developed by our team. 
+Then we can perform the KEGG pathway enrichment analysis using clusterProfiler [@clusterProfiler] and MicrobiomeProfiler [@MicrobiomeProfiler] developed by us. 
 
 ```{r, message = FALSE, warning = FALSE, fig.show='hide'}
 # perform KEGG pathway analysis with clusterProfiler and MicrobiomeProfiler
@@ -1667,7 +1667,7 @@ p
 
 We used *mp_cal_dist* to calculated the distance between the samples, then used *mp_plot_dist* to display the distance with heatmap (Fig.\ref{fig:MGSBeta}.A)  and boxplot (Fig.\ref{fig:MGSBeta}.B), then the distance was used to perform the PCoA analysis (Fig.\ref{fig:MGSBeta}.C).
 
-(ref:MGSBeta) **The distance heatmap and boxplot and the PCoA plot based on MGS data**
+(ref:MGSBeta) **The distance heatmap and boxplot and the PCoA plot based on the MGS data**
 
 ```{r, fig.width = 8, fig.height = 10, fig.cap="(ref:MGSBeta)", MGSBeta}
 mpseMGS %<>%
@@ -1791,7 +1791,7 @@ mpseMGS %<>%
 
 Here, we also used *mp_diff_analysis* to detect the difference taxa, we also specified the 'force = TRUE' and 'relative = FALSE', meaning the metric of abundance (.abundance) was used to perform the analysis directly without rarefied and calculated the relative abundance (Fig.\ref{fig:DiffMGS}).
 
-(ref:DiffMGS) **The result of different analysis based on MGS data**
+(ref:DiffMGS) **The result of differential analysis based on the MGS data**
 
 ```{r, message = FALSE, fig.width = 10, fig.height = 10, fig.cap = "(ref:DiffMGS)", DiffMGS}
 mpseMGS %<>%
@@ -1879,7 +1879,7 @@ p3
 
 Next, we extract the abundance of the different species, then using ggplot2 [@ggplot2] to visualize them (Fig.\ref{fig:DiffBoxMGS}).
 
-(ref:DiffBoxMGS) **The abundance boxplot of the different species between the CD and control group**
+(ref:DiffBoxMGS) **The abundance boxplot of the differential species between the CD and control group**
 
 ```{r, fig.width=7, fig.height=5, fig.align = "center", fig.cap = "(ref:DiffBoxMGS)", DiffBoxMGS}
 deT <- mpseMGS %>% mp_extract_tree() %>% dplyr::filter(!is.na(fdr) & isTip, keep.td=F) %>% dplyr::pull(label)
@@ -1976,7 +1976,7 @@ p.alpha
 
 Here, we use the cca (constrained correspondence analysis) to test which environment factor is related to the Mosquito species in the habitat (Fig.\ref{fig:MosquitoCCA}).
 
-(ref:MosquitoCCA) **The CCA plot of the Mosquito ecology study**. Each point represents one sample, the size of the points represents the observe species of the corresponding sample, the color of the points represents the habitat of the corresponding sample, the shape of points represents the Region of the corresponding sample. And the arrows represent the environment factors, the marked ones by star represent significant related to the Mosquito communities in the study (\* 0.05, \*\* 0.01, \*\*\* 0.001).
+(ref:MosquitoCCA) **The CCA plot of the Mosquito ecology study (A) without the result of *mp_envfit* (B) with the result of *mp_envfit*.** Each point represents one sample, the size of the points represents the observe species of the corresponding sample, the color of the points represents the habitat of the corresponding sample, the shape of points represents the Region of the corresponding sample. And the arrows represent the environment factors, the marked ones by star represent significant related to the Mosquito communities in the study (\* 0.05, \*\* 0.01, \*\*\* 0.001).
 
 ```{r, message = FALSE, warning = FALSE}
 mpse %<>%
@@ -2103,7 +2103,7 @@ aplot::plot_list(f, p, tag_levels="A")
 
 We used *mp_cal_abundance* and *mp_plot_abundance* to calculated and visualized the abundance of the Mosquito species in the study (Fig.\ref{fig:mosquitoHeatmap}).
 
-(ref:mosquitoHeatmap) **The heatmap of the abundance and relative abundance of the Mosquito species.**
+(ref:mosquitoHeatmap) **The heatmap of the abundance (A) and relative abundance (B) of the Mosquito species.**
 
 ```{r, message = FALSE, warning = FALSE , fig.width = 14, fig.height=6, fig.cap = "(ref:mosquitoHeatmap)", mosquitoHeatmap}
 cols2 <- c("deepskyblue", "yellow", "#FF9933")
@@ -2204,7 +2204,7 @@ p.rel <- mpse %>%
 aplot::plot_list(p.count, p.rel, tag_levels="A")    
 ```
 
-Then We can use *mp_diff_analysis* to identify the species that have significant difference abundance between the **field** and **forest**. We found the Cx.sal (*Culex salinarius*) and Ps.col (*Psorophora columbiae*) were significantly enriched in **field**, However, the Ae.albo (*Aedes albopicta*), Ae.cin (*Aedes cinereus*), Ps.fer (*Psorophora ferox*), Ae.tris (*Aedes triseriatus*), Ae.can (*Aedes canadensis*), Ae.hen (*Aedes hendersoni*), Ae.atl (*Aedes atlanticus*) and Ae.dup (*Aedes dupreei*) were significantly enriched in the **forest**
+Then We can use *mp_diff_analysis* to identify the species that have significant differential abundance between the **field** and **forest**. We found the Cx.sal (*Culex salinarius*) and Ps.col (*Psorophora columbiae*) were significantly enriched in **field**, However, the Ae.albo (*Aedes albopicta*), Ae.cin (*Aedes cinereus*), Ps.fer (*Psorophora ferox*), Ae.tris (*Aedes triseriatus*), Ae.can (*Aedes canadensis*), Ae.hen (*Aedes hendersoni*), Ae.atl (*Aedes atlanticus*) and Ae.dup (*Aedes dupreei*) were significantly enriched in the **forest**
 
 ```{r}
 mpse %>% 
