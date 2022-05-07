@@ -1,0 +1,2195 @@
+---
+bibliography: references.bib
+biblio-style: apalike
+highlight_bw: yes
+output:
+  bookdown::pdf_document2:
+    toc: false
+    includes:
+      in_header: header.tex
+    dev: "cairo_pdf"
+    latex_engine: xelatex
+    fig_caption: yes
+geometry: margin=0.45in
+link-citations: yes
+---
+
+**Supplemental File A of**
+
+\begingroup\Large
+**MicrobiotaProcess: A comprehensive R package for managing and analyzing microbiome and other ecological data within the tidy framework**
+\endgroup
+
+**Shuangbin Xu, Li Zhan, Wenli Tang, Zehan Dai, Lang Zhou, Tingze Feng, Meijun Chen, Shanshan Liu, Xiaocong Fu, Tianzhi Wu, Erqiang Hu and Guangchuang Yu\* **
+
+^\*^correspondence: Guangchuang Yu \<gcyu1@smu.edu.cn\>
+
+\renewcommand{\figurename}{Fig.}
+\newcommand{\beginsupplement}{%
+\setcounter{table}{0}
+\renewcommand{\thetable}{SA.\arabic{table}}%
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{SA.\arabic{figure}}%
+}
+
+\beginsupplement
+
+```{r, echo=FALSE, message=FALSE, results='hide'}
+require(kableExtra)
+options(knitr.table.fromat = "latex")
+knitr::opts_chunk$set(fig.pos= "!ht")
+#knitr::opts_chunk$set(out.width="90%")
+knitr::opts_chunk$set(fig.align="center", warning = FALSE, message = FALSE)
+usepackage_latex("float")
+usepackage_latex("makecell")
+usepackage_latex("booktabs")
+
+Biocpkg <- function (pkg){
+    sprintf("[%s](http://bioconductor.org/packages/%s)", pkg, pkg)
+}
+
+CRANpkg <- function(pkg){
+    cran <- "https://CRAN.R-project.org/package"
+    fmt <- "[%s](%s=%s)"
+    sprintf(fmt, pkg, cran, pkg)
+}
+
+knitr::knit_hooks$set(crop = knitr::hook_pdfcrop)
+knitr::opts_chunk$set(crop = TRUE)
+```
+
+```{r setup, echo = FALSE, results = 'hide', message = FALSE}
+suppressPackageStartupMessages({
+  library(SummarizedExperiment) # SummarizedExperiment container, a container contains one or more assays.
+  library(MicrobiotaProcess) # an R tidy framework for microbiome or other related ecology data analysis.
+  library(ggplot2) # Create Elegant Data Visualisations Using the Grammar of Graphics.
+  library(coin) # Conditional Inference Procedures in a Permutation Test Framework.
+  library(ggnewscale) # Multiple Fill and Colour Scales in 'ggplot2'.
+  library(forcats) # Helpers for reordering factor levels and tools for modifying factor levels.
+  library(ggtree) # visualizing phylogenetic tree and heterogenous associated data based on grammar of graphics.
+  library(ggtreeExtra) # plot associated data on the external layer based on grammar of graphics.
+  library(clusterProfiler)
+  library(enrichplot)
+  library(MicrobiomeProfiler)
+  library(curatedMetagenomicData)
+  library(randomForest)
+})
+```
+
+# Installation 
+
+To install `MicrobiotaProcess` package, please enter the following command in R:
+
+```r
+if (!requireNamespace("BiocManager", quietly = TRUE))
+   install.packages("BiocManager")
+BiocManager::install("MicrobiotaProcess")
+```
+
+To reproduce the analysis in this document, the several extra packages also needed to be installed.
+
+```r
+cranpkgs <- c("aplot", "ggpp", "igraph", 
+              "broom", "forcats", 'pROC',
+              "ggrepel", "ggVennDiagram", 
+              "patchwork", "shadowtext",
+              "ggupset", "ggnewscale")
+
+for (i in cranpkgs){
+    if (!requireNamespace(i, quietly = TRUE)){
+        install.packages(i)
+    }
+}
+
+Biocpkgs <- c("SummarizedExperiment", "clusterProfiler", 
+              "edgeR", "enrichplot", "tidybulk", "curatedMetagenomicData",
+              "ggtree", "ggtreeExtra", "MicrobiomeProfiler")
+
+for (i in Biocpkgs){
+    if (!requireNamespace(i, quietly = TRUE)){
+        BiocManager::install(i)
+    }
+}
+```
+
+# Analysis of 16s rDNA dataset about 43 pediatric CD stool samples from iHMP {#chapter2}
+
+Here, we use the 43 pediatric IBD stool samples as example, which were obtained from the Integrative Human Microbiome Project Consortium (iHMP) [@iHMP]. 
+
+## Importing the output of dada2 {#chapter2.1}
+
+The datasets were downloaded from web^[<https://www.microbiomeanalyst.ca/MicrobiomeAnalyst/resources/data/ibd_data.zip>]. These datasets contain `ibd_asv_table.txt` (feature table (*row features* X *column samples*)), `ibd_meta.csv` (metadata file of samples), and `ibd_taxa.txt` (the taxonomic annotation of features). In the session, we use *mp_import_dada2* of *MicrobiotaProcess* to import the dataset, and return an *MPSE* object.
+
+```{r, message=FALSE, warning=FALSE, fold.plot=FALSE, fold.output=FALSE, LoadData}
+library(MicrobiotaProcess)
+otuda <- read.table("./data/IBD_data/ibd_asv_table.txt", header=T, 
+                    check.names=F, comment.char="", row.names=1, sep="\t")
+# building the output format of removeBimeraDenovo of dada2
+otuda <- data.frame(t(otuda), check.names=F)
+sampleda <- read.csv("./data/IBD_data/ibd_meta.csv", row.names=1, comment.char="")
+taxda <- read.table("./data/IBD_data/ibd_taxa.txt", header=T, 
+                    row.names=1, check.names=F, comment.char="")
+# the feature names should be the same with rownames of taxda. 
+taxda <- taxda[match(colnames(otuda), rownames(taxda)),]
+ref.tree <- treeio::read.tree('./data/IBD_data/ibd_repseq.tree')
+mpse <- mp_import_dada2(seqtab = otuda, taxatab = taxda, sampleda = sampleda)
+# view the reads depth of samples and the prevalence of the OTUs. In this example, 
+# mpse %>% mp_extract_assay(.abundant=Abundance) %>% rowSums() %>% sort %>% head(100)
+# mpse %>% mp_extract_assay(.abundant=Abundance) %>% colSums() %>% sort %>% head()
+# Or
+# head(sort(rowSums(assay(mpse, "Abundance"))), 100)
+# head(sort(colSums(assay(mpse, "Abundance"))))
+# In this example, we can find some OTUs have very low frequency in the samples.
+# and some taxonomy are unreasonable, for example, the probability of chloroplasts 
+# in the intestine should be low. We can also remove the features.
+mpse2 <- mpse %>% 
+         dplyr::filter(!Phylum %in% c("p__un_k__Bacteria", "p__Chloroflexi") & 
+                       !Class %in% "c__Chloroplast" & 
+                       !Family %in% "f__mitochondria" 
+         ) %>% 
+         mp_filter_taxa(.abundance = Abundance, min.abun = 1, min.prop = 0.1)
+otutree(mpse2) <- ref.tree
+mpse2
+```
+
+```{r, echo = FALSE}
+saveRDS(mpse, file="./TmpRef/mpse.rds")
+```
+
+## Other import functions {#chapter2.2}
+
+*MicrobiotaProcess* also presents some other import functions \ref{tab:importFuns} to parse the output of the upstream pipelines. In addition, some common object of R can also be converted to *MPSE* object, such as *phyloseq* [@phyloseq], *SummarizedExperiment* [@SE], *TreeSummarizedExperiment* [@TSE], *biom* [@biom] (output of *biomformat* by *read_biom*) referring to session \ref{chapter3.1}. 
+
+```{r, echo=FALSE, results='asis', importFuns}
+
+x <- "MicrobiotaProcess\tmp_import_qiime2\tImport function to load the output of qiime2\n
+MicrobiotaProcess\tmp_import_qiime\tImport function to read the now legacy-format QIIME OTU table (tsv format)\n
+MicrobiotaProcess\tmp_import_metaphlan\tImport function to read the output of MetaPhlAn\n
+"
+
+xx <- base::strsplit(x, "\n\n")[[1]]
+y <- base::strsplit(xx, "\t") %>% do.call("rbind", .)
+y <- as.data.frame(y)
+colnames(y) <- c("Package", "Import Function", "Description")
+
+suppressPackageStartupMessages(require(kableExtra))
+caption = "List of import functions provided by MicrobiotaProcess"
+knitr::kable(y, caption = caption, booktabs = T) %>%
+  collapse_rows(columns = 1, latex_hline = "major", valign ="middle") %>%
+  kable_styling(latex_options = c("striped", "hold_position")) #%>% landscape
+```
+
+## alpha diversity analysis {#chapter2.3}
+
+### rarefaction visualization {#chapter2.3.1}
+
+Rarefaction, based on sampling technique, was used to compensate for the effect of sample size on the number of units observed in a sample. *MicrobiotaProcess* provided *mp_cal_rarecurve* and *mp_plot_rarecurve* to calculate and plot the curves.
+
+(ref:rarecurve1) **This exampls show *MicrobiotaProcess* provided *mp_cal_rarecurve* and *mp_plot_rarecurve* to calculate and visualize the rarefaction curve.** The horizontal coordinate represents the sequencing depth of samples, the vertical coordinate shows the Alpha diversity index (such as Observe OTU, Chao1 and ACE). The *mp_plot_rarecurve* provides three types of visualization. (A) the rarefaction curve for each sample. (B) the rarefaction curve for each sample with colored group (specified *.group* argument in *mp_plot_rarecurve*). (C) the rarefaction curve for each group with standard error of the mean (specified *.group* argument and *plot.group=TRUE* in *mp_plot_rarecurve*)
+
+```{r class.source = 'fold-show', fold.output=FALSE, fold.plot=FALSE, fig.width=7, fig.height=6, fig.align="center",warning=FALSE, message=FALSE, fig.cap='(ref:rarecurve1)', rarecurve1}
+library(MicrobiotaProcess)
+library(patchwork)
+cols <- c("orange", "deepskyblue")
+mpse2 %<>% 
+    mp_rrarefy(.abundance=Abundance) %>%
+    mp_cal_rarecurve(.abundance=RareAbundance, chunks=500)
+
+p_rare <- mpse2 %>%
+          mp_plot_rarecurve(
+            .rare = RareAbundanceRarecurve, 
+            .alpha = c(Observe, Chao1, ACE),
+          ) +
+          theme(
+            legend.key.width = unit(0.3, "cm"),
+            legend.key.height = unit(0.3, "cm"),
+            legend.spacing.y = unit(0.01,"cm"),
+            legend.text = element_text(size=4)
+          )
+
+prare1 <- mpse2 %>%
+          mp_plot_rarecurve(
+            .rare = RareAbundanceRarecurve, 
+            .alpha = c(Observe, Chao1, ACE),
+            .group = Group
+          ) +
+          scale_fill_manual(values = cols)+
+          scale_color_manual(values = cols)+
+          theme_bw()+
+          theme(
+            axis.text=element_text(size=8), panel.grid=element_blank(),
+            strip.background = element_rect(colour=NA,fill="grey"),
+            strip.text.x = element_text(face="bold")
+          ) 
+
+prare2 <- mpse2 %>%
+          mp_plot_rarecurve(
+            .rare = RareAbundanceRarecurve,
+            .alpha = c(Observe, Chao1, ACE),
+            .group = Group,
+            plot.group = TRUE
+          ) +
+          scale_color_manual(values = cols)+
+          scale_fill_manual(values = cols) +
+          theme_bw()+
+          theme(
+            axis.text=element_text(size=8), panel.grid=element_blank(),
+            strip.background = element_rect(colour=NA,fill="grey"),
+            strip.text.x = element_text(face="bold")
+          )
+(p_rare / prare1 / prare2) + patchwork::plot_annotation(tag_levels="A")
+```
+
+\newpage
+
+```{r echo = FALSE}
+prare1 <- prare1 + 
+          theme(
+            legend.position=c(0.1, 0.8), 
+            legend.key.width = unit(.3, "cm"), 
+            legend.key.height = unit(.3, 'cm'), 
+            legend.text = element_text(size = 6)
+          )
+ggsave(prare1, file = "./Figures/rarecurve.svg", device="svg", width=7, height=3)
+```
+
+<!-- Since the curves in each sample were near saturation, the sequencing data were great enough with very few new species undetected -->
+
+### Calculation and different analysis of alpha diversity {#chapter2.3.2}
+
+Alpha diversity can evaluate the richness and evenness of microbial communities. *MicrobiotaProcess* provides *mp_cal_alpha* to calculate alpha index. Six common diversity measures (*Observe*, *Chao1*, *ACE*, *Shannon*, *Simpson*, *Pielou*) are supported. In addition *MicrobiotaProcess* also provided *mp_cal_pd_metric* to calculate some phylogenetic community structure metrics, such as PD (Faith's Phylogenetic Diversity), NRI (Nearest Relative Index), NTI (Nearest Taxon Index), IAC (Imbalance of abundances at the clade level), PAE (Phylogenetic-Abundance Evenness), HAED (Entropic measure of diversity of evolutionary distinctiveness among individuals), EAED (Equitability of HAED) [@PhylogeneticMetric2; @PhylogeneticMetric]. The PAE and HAED both provide the measures of the phylogenetic diversity incorporating the species abundance of community [@PhylogeneticMetric]. The result can be visualized by *mp_plot_alpha*. This following example shows how to use *mp_cal_alpha* and *mp_plot_alpha* of *MicrobiotaProcess* to analysis the alpha diversity of the community. The *RareAbundance* is rarefied (default), which will be used to calculate the alpha diversity index, users can specify the *force=TRUE* of *mp_cal_alpha* to calculated the alpha diversity if the abundance is not be rarefied (referring to session \ref{chapter3.3.1}).
+
+(ref:AlphaBox) **The raincloud plot of alpha diversity index** The horizontal coordinate represents each group (by *.group* argument of *mp_plot_alpha*), the vertical coordinate represents the alpha diversity index. 
+
+```{r fig.width=8, fig.height=3, fig.align="center", warning=FALSE, message=FALSE, fig.cap='(ref:AlphaBox)', AlphaBox}
+library(MicrobiotaProcess)
+mpse2 %<>% mp_cal_alpha(.abundance = RareAbundance)
+p_alpha <- mpse2 %>% 
+       mp_plot_alpha(
+          .alpha = c(Observe, Chao1, ACE, Shannon, Simpson, Pielou),
+          .group = Group,
+       ) +
+       scale_fill_manual(values=cols) +
+       scale_color_manual(values=cols) +
+       theme(
+         legend.position="none",
+         strip.background = element_rect(colour=NA, fill="grey")
+       )
+p_alpha
+```
+
+```{r echo = FALSE}
+ggsave(p_alpha, file = "./Figures/alpha.svg", device = "svg", width = 7, height = 3.8)
+```
+
+(ref:AlphaBox2) The raincloud plot of phylogenetic diversity index. The horizontal coordinate represents each group (by .group argument of mp_plot_alpha), the vertical coordinate represents the phylogenetic diversity index.
+
+```{r, fig.width=8, fig.height=3, fig.align="center", warning=FALSE, message=FALSE, fig.cap='(ref:AlphaBox2)', AlphaBox2}
+mpse2 %<>% mp_cal_pd_metric(.abundance = RareAbundance, metric = all)
+p.pd_alpha <- mpse2 %>%
+        mp_plot_alpha(
+           .alpha = c("PAE", "NRI", "NTI", "PD", "HAED", "EAED", "IAC"),
+           .group = Group,
+        ) +
+        scale_fill_manual(values=cols)+
+        scale_color_manual(values=cols) +
+        theme(legend.position="none",
+              strip.background = element_rect(colour=NA, fill="grey"))
+p.pd_alpha    
+```
+
+\newpage
+
+<!--
+
+These metrics might provide new clues for the diagnosis of disease. We used each the significant differential metric (100 random samples) to calculate the AUC, then found the vast majority of AUC scores are greater than 0.65.
+
+(ref:PdAUC) The box plot of the AUC score based on the significant differential alpha diversity metrics.
+
+```{r, fig.width = 5.6, fig.height = 4, fig.align = 'center', warning = FALSE, message = FALSE, fig.cap = '(ref:PdAUC)', PdAUC}
+generate_random_sample <- function(dat, prob=2/3){
+    dat %>%
+    dplyr::group_split(Group) %>%
+    lapply(function(x)x[sample(nrow(x), size=prob * nrow(x)),]) %>%
+    dplyr::bind_rows()
+}
+
+mpse2 %>%
+mp_extract_sample %>%
+select(Sample, Observe, IAC, NRI, HAED, PD, Group) %>%
+tibble::column_to_rownames(var='Sample') -> dat
+
+pd.roc.res <- replicate(100,
+             pROC::roc(formula=Group ~ Observe+IAC+NRI+HAED+PD,
+                   data = generate_random_sample(dat),
+                   levels=c('Control', 'CD'),
+                   quiet = TRUE,
+               ) %>%
+             lapply(function(x)as.numeric(x$auc)) %>%
+             unlist()
+       )
+
+pd.roc.p <- pd.roc.res %>%
+magrittr::set_colnames(value=paste0('Sample', seq_len(100))) %>%
+tibble::as_tibble(rownames='Metrics') %>%
+tidyr::pivot_longer(cols=!Metrics, names_to='Sample', values_to='AUC') %>%
+ggplot(aes(x=AUC, y=Metrics, fill=Metrics)) +
+geom_boxplot() +
+geom_jitter(height=.3, color='grey') +
+theme_bw() +
+theme(legend.position='none') +
+ylab(NULL)
+pd.roc.p
+```
+
+-->
+
+## Taxonomy composition analysis {#chapter2.4}
+
+### Statistics and visualization of specific levels {#chapter2.4.1}
+
+*MicrobiotaProcess* presents the *mp_cal_abundance* and *mp_plot_abundance* for the calculation and visualization of composition of microbial communities. After the *mp_cal_abundance* done, you can get the abundance of specific levels of class by *mp_extract_abundance* (referring to session \ref{chapter2.5.4}). 
+
+(ref:Abundance1) **The relative abundance of each sample in *class* level**
+
+```{r fig.width=8.5, fig.height=4, fig.align="center", warning=FALSE, message=FALSE, fig.cap="(ref:Abundance1)", Abundance1}
+library(ggplot2)
+library(MicrobiotaProcess)
+# The relative abundance of all taxonomy for samples will be calculated
+mpse2 %<>% mp_cal_abundance(.abundance = RareAbundance)
+# The relative abundance of all taxonomy for group will be calculated
+mpse2 %<>% mp_cal_abundance(.abundance = RareAbundance, .group = Group)
+# The 30 most abundant taxonomy will be visualized. 
+pclass <- mpse2 %>%
+      mp_plot_abundance(
+         .abundance = RareAbundance,
+         .group = Group,
+         taxa.class = Class, 
+         topn = 30
+      ) +
+      xlab(NULL) +
+      ylab("relative abundance (%)") +
+      theme(
+         legend.key.width = unit(0.3, "cm"), 
+         legend.key.height = unit(0.3, "cm") 
+      ) +
+      xlab(NULL) +
+      ylab("relative abundance (%)") +
+      theme(
+         legend.key.width = unit(0.3, "cm"), 
+         legend.key.height = unit(0.3, "cm"), 
+         legend.text = element_text(size=6)
+      )
+pclass
+```
+
+```{r, echo = FALSE}
+ggsave(pclass, filename = "./Figures/AbundanceBar.svg", device = "svg", height=4, width = 8.5)
+```
+
+The relative abundance of groups also can be visualized by providing *.group* argument and setting *plot.group=TRUE* in the *mp_plot_abundance*. If you want to view the raw abundance (count or others) of taxa, you can set the *relative* parameter of *mp_plot_abundance* to *FALSE*.
+
+(ref:Abundance2) **This example show how to displayed the abundance (count or other) of sample and the relative abundance of groups**. The Abundance (count by rarefied) of each sample (A) and the relative abundance of group (B), these results show the *Gammaproteobacteria* of *CD* group might be more abundant than the *control* group.
+
+```{r fig.width=12, fig.height=6, fig.cap='(ref:Abundance2)', warning=FALSE, message=FALSE, fig.align="center", Abundance2}
+# Show the abundance in different groups.
+fclass <- mpse2 %>%
+          mp_plot_abundance(
+             .abundance = RareAbundance,
+             .group = Group,
+             taxa.class = Class,
+             topn = 30,
+             plot.group = TRUE
+          ) +
+          xlab(NULL) +
+          ylab("relative abundance (%)") +
+          theme(legend.position = "none")
+
+pclass2 <- mpse2 %>%
+          mp_plot_abundance(
+             .abundance = RareAbundance, 
+             .group = Group,
+             relative = FALSE,
+             taxa.class = Class,
+             topn = 30
+          ) +
+          xlab(NULL) +
+          ylab("count reads") +
+          theme(
+             legend.key.width = unit(0.3, "cm"),
+             legend.key.height = unit(0.3, "cm"),
+             legend.text = element_text(size=6)
+          )          
+
+aplot::plot_list(pclass2, fclass, widths=c(10, 1), tag_levels = "A")
+```
+
+The abundance of features also can be visualized by `mp_plot_abundance` with heatmap plot by setting `geom="heatmap"`.
+
+(ref:AbundanceHeatmap) **The heatmap of abundance for each sample in *class* level.** The color (continuous) of heatmap represents the abundance of taxon, the color of bar represents the group name of sample, the horizontal coordinate represents the sample, and the vertical coordinate represents the taxon.
+
+```{r, fig.width = 12, fig.height = 4, fig.align = "center", fig.cap = '(ref:AbundanceHeatmap)', warning=FALSE, message=FALSE, AbundanceHeatmap}
+hclass1 <- mpse2 %>%
+          mp_plot_abundance(
+             .abundance = RareAbundance,
+             .group = Group,
+             taxa.class = Class,
+             topn = 30,
+             geom = "heatmap"
+          ) %>%
+          set_scale_theme(
+            x = list(scale_fill_viridis_c(option = "H"),
+                     theme(
+                       axis.text.x = element_text(size = 6),
+                       axis.text.y = element_text(size = 7),
+                       legend.title = element_text(size = 7),
+                       legend.text = element_text(size = 5),
+                       legend.key.width = unit(0.3, "cm"),
+                       legend.key.height = unit(0.3, "cm")
+                     )
+                ),
+            aes_var = RelRareAbundance
+          ) %>%
+          set_scale_theme(
+            x = list(scale_fill_manual(values = cols),
+                     theme(
+                       legend.key.height = unit(0.3, "cm"),
+                       legend.key.width = unit(0.3, "cm"),
+                       legend.spacing.y = unit(0.02, "cm"),
+                       legend.text = element_text(size = 7),
+                       legend.title = element_text(size = 9)
+                     )
+                ),
+            aes_var = Group
+          )
+
+hclass2 <- mpse2 %>%
+          mp_plot_abundance(
+             .abundance = RareAbundance,
+             .group = Group,
+             taxa.class = Class,
+             topn = 30, 
+             geom = 'heatmap',
+             relative = FALSE
+          ) %>%
+          set_scale_theme(
+            x = list(scale_fill_viridis_c(option = "H"),
+                     theme(
+                       axis.text.x = element_text(size = 6),
+                       axis.text.y = element_text(size = 7),
+                       legend.title = element_text(size = 7),
+                       legend.text = element_text(size = 5),
+                       legend.key.width = unit(0.3, "cm"),
+                       legend.key.height = unit(0.3, "cm")
+                     )
+                ),
+            aes_var = RareAbundance
+          ) %>%
+          set_scale_theme(
+            x = list(scale_fill_manual(values = cols),
+                     theme(
+                       legend.key.height = unit(0.3, "cm"),
+                       legend.key.width = unit(0.3, "cm"),
+                       legend.spacing.y = unit(0.02, "cm"),
+                       legend.text = element_text(size = 7),
+                       legend.title = element_text(size = 9)
+                     )
+                ),
+            aes_var = Group
+          )
+
+p <- aplot::plot_list(hclass1, hclass2, nrow = 1, tag_levels = "A")
+p
+```
+
+```{r, echo = FALSE}
+ggsave(hclass1, filename = "./Figures/Abunheat.svg", device = "svg", width = 7, height = 5)
+```
+
+### Venn or Upset plot {#chapter2.4.2}
+
+The Venn or UpSet plot can help us to obtain the difference between groups in overview. *MicrobiotaProcess* provides *mp_cal_venn* (*mp_plot_venn*) and *mp_cal_upset* (*mp_plot_upset*) to perform the Venn and Upset analysis.
+
+(ref:VennUpsetPlot) **The venn diagram and upset plot for groups in OTU/ASV level**
+
+```{r, fig.width=5, fig.height=5, fig.align="center", warning=FALSE, message=FALSE, fig.cap="(ref:VennUpsetPlot)", VennUpsetPlot}
+mpse2 %<>% 
+    mp_cal_venn(
+      .abundance = RareAbundance,
+      .group = Group
+    ) 
+
+venn_p <- mpse2 %>% 
+    mp_plot_venn(
+      .group = Group,
+      set_size = 2.5,
+      label_size = 2,
+      edge_size = 2.5
+    ) +
+    scale_colour_manual(values = cols) +
+    scale_fill_viridis_c(guide = guide_colorbar(barwidth=.3, barheight=2)) +
+    theme(
+      legend.title = element_text(size = 8), 
+      legend.text = element_text(size = 6) 
+    )
+
+mpse2 %<>%
+    mp_cal_upset(
+      .abundance = RareAbundance,
+      .group = Group
+    )
+
+upset_p <- mpse2 %>%
+    mp_plot_upset(
+      .group = Group
+    ) +
+    theme_bw() +
+    theme(
+      plot.background = element_blank(),
+      panel.border = element_blank(),
+      panel.grid = element_blank(),
+      axis.line.x.bottom = element_line(size = .5),
+      axis.line.y.left = element_line(size = .5)
+    ) +
+    ggupset::theme_combmatrix(
+      combmatrix.label.extra_spacing = 40
+    )
+
+library(ggpp)
+p.up.venn <- upset_p + 
+             ggpp::annotate(
+               "plot_npc", 
+               npcx = "right", 
+               npcy = "top", 
+               label = venn_p,
+               vp.width = 0.6,
+               vp.height = 0.4
+             )
+p.up.venn
+```
+
+```{r echo = FALSE}
+ggsave(p.up.venn, filename = "./Figures/upset.svg", device = "svg", width = 5, height = 5)
+```
+
+## beta analysis {#chapter2.5}
+
+### PCA analysis {#chapter2.5.1}
+
+`PCA` (Principal component analysis) and `PCoA` (Principal Coordinate Analysis) are general statistical procedures to compare dissimilarity of samples. And `PCoA` can based on the phylogenetic or count-based distance metrics, such as `Bray-Curtis`, `Jaccard`, `Unweighted-UniFrac` and `weighted-UniFrac`. *MicrobiotaProcess* presents the *mp_cal_dist*, *mp_cal_pca*, *mp_cal_pcoa*, *mp_cal_dca*, *mp_cal_nmds*, *mp_cal_cca*, *mp_cal_rda*, *mp_adonis*, *mp_anosim*, *mp_mrpp*, *mp_envfit* and *mp_mantel* for the analysis.
+
+(ref:PCAplot) **The PCA plot of the community**. Each point represents one sample, the size of point represents the observe OTU of the sample. The color of point represents the group name of the sample, based on the first and second component (A), based on the first and third component (B).
+
+```{r , fig.width=10, fig.height=4, fig.align="center", warning=FALSE, message=FALSE, fig.cap="(ref:PCAplot)", PCAplot}
+library(MicrobiotaProcess)
+library(patchwork)
+# hellinger transform
+mpse2 %<>% 
+    mp_decostand(
+        .abundance = Abundance, 
+        method = "hellinger"
+    )
+
+mpse2 %<>% mp_cal_pca(.abundance = hellinger)
+# Visulizing the result
+pcaplot1 <- mpse2 %>%
+            mp_plot_ord(
+              .ord = pca, 
+              .group = Group,
+              .starshape = Group,
+              .size = Observe
+            ) +
+            scale_fill_manual(values = cols) +
+            scale_size_continuous(
+              range = c(1, 3), 
+              guide = guide_legend(override.aes = list(starshape = 15))
+            ) +
+            theme(
+              legend.key.width = unit(0.3, "cm"),
+              legend.key.height = unit(0.3, "cm"),
+              legend.text = element_text(size = 6),
+              legend.title = element_text(size = 7)
+            )
+# .dim = c(1, 3) to show the first and third principal components.
+pcaplot2 <- mpse2 %>%
+            mp_plot_ord(
+              .ord = pca, 
+              .dim = c(1, 3), 
+              .group = Group,
+              .starshape = Group,
+              .size = Observe
+            ) +
+            scale_fill_manual(values = cols) + 
+            scale_size_continuous(
+              range = c(1, 3),
+              guide = guide_legend(override.aes = list(starshape = 15))
+            ) +
+            theme(
+              legend.key.width = unit(0.3, "cm"),
+              legend.key.height = unit(0.3, "cm"),
+              legend.text = element_text(size = 6),
+              legend.title = element_text(size = 7)
+            )
+
+(pcaplot1 | pcaplot2) + plot_annotation(tag_levels = "A")
+```
+
+### PCoA analysis {#chapter2.5.2}
+
+(ref:PCoAplot) **The PCoA plot based on Bray-Curtis distance**. 
+
+```{r, fig.width=10, fig.height=4, fig.align="center", warning=FALSE, message=FALSE, fig.cap="(ref:PCoAplot)", PCoAplot}
+# distmethod
+# "unifrac",  "wunifrac", "manhattan", "euclidean", "canberra", "bray", "kulczynski" ...(vegdist, dist)
+mpse2 %<>%
+    mp_cal_dist(
+      .abundance = hellinger,
+      distmethod = "bray"
+    )
+
+# PCoA analysis
+mpse2 %<>% 
+    mp_cal_pcoa(
+      .abundance = hellinger,
+      distmethod = "bray"
+    )
+pcoaplot1 <- mpse2 %>%
+             mp_plot_ord(
+               .ord = pcoa,
+               .group = Group,
+               .starshape = Group,
+               .color = Group,
+               .size = Observe,
+               ellipse = TRUE,
+               show.legend = FALSE
+            ) +
+            scale_color_manual(
+               values = cols 
+            ) +
+            scale_fill_manual(values = cols) +
+            scale_size_continuous(
+               range = c(1, 3),
+               guide = guide_legend(override.aes = list(starshape = 15))
+            ) +
+            theme(
+               legend.key.width = unit(0.3, "cm"),
+               legend.key.height = unit(0.3, "cm"),
+               legend.text = element_text(size=6),
+               legend.title = element_text(size=7)
+            )
+# first and third principal co-ordinates
+pcoaplot2 <- mpse2 %>%
+             mp_plot_ord(
+               .ord = pcoa, 
+               .group = Group,
+               .starshape = Group,
+               .color = Group,
+               .size = Observe,
+               ellipse = TRUE,
+               .dim = c(1, 3),
+               show.legend = FALSE
+             ) +
+             scale_color_manual(
+               values = cols
+             ) +
+             scale_fill_manual(
+               values = cols
+             ) +
+             scale_size_continuous(
+               range = c(1, 3),
+               guide = guide_legend(override.aes = list(starshape = 15))
+             ) +
+             theme(
+               legend.key.width = unit(0.3, "cm"),
+               legend.key.height = unit(0.3, "cm"),
+               legend.text = element_text(size = 6),
+               legend.title = element_text(size = 7)
+             )
+(pcoaplot1 | pcoaplot2) + plot_annotation(tag_levels = "A")
+```
+
+```{r, echo = FALSE}
+ggsave(pcoaplot1, filename="./Figures/pcoa.svg", width = 5, height = 4, device = "svg")
+```
+
+The result of distance between the samples also can be visualized by `mp_plot_dist` with heatmap or boxplot.
+
+(ref:distplot) **The distance heatmap and the boxplot for each sample**. The size and color of the heatmap represent the distance of each sample, the color of bar represent the group of sample (A). The boxplot represent the distance pairs of sample among the group, it show the dissimilarity of sample between the *control* and *CD* is significant, which is consistent with the result of 
+Permutational Multivariate Analysis of Variance in session \ref{chapter2.5.3}.
+
+```{r, fig.width = 10, fig.height = 6, fig.align="center", message = FALSE, fig.cap = '(ref:distplot)', distplot}
+pdist1 <- mpse2 %>%
+          mp_plot_dist(
+            .distmethod = bray, 
+            .group = Group
+          ) %>%
+          set_scale_theme(
+            x = scale_fill_manual(
+                  values=cols,
+                  guide = guide_legend(
+                             keywidth = 0.5,
+                             keyheight = 0.5,
+                             label.theme=element_text(size=6)
+                    )
+                ),
+            aes_var = Group
+          ) %>%
+          set_scale_theme(
+            x = list(scale_size_continuous(range = c(1, 3)),
+                     scale_color_viridis_c(option = "H"),
+                     theme(
+                       legend.key.width = unit(0.3, "cm"),
+                       legend.text = element_text(size = 6),
+                       legend.title = element_text(size = 7)
+                     )
+                ),
+            aes_var = bray
+          )
+
+pdist2 <- mpse2 %>%
+          mp_plot_dist(
+            .distmethod = bray,
+            .group = Group,
+            group.test = TRUE
+          ) +
+          scale_color_manual(
+            values = c("orange", "#00A08A", "deepskyblue")
+          ) +
+          scale_fill_manual(
+            values = c("orange", "#00A08A", "deepskyblue")
+          )
+aplot::plot_list(pdist1, pdist2, widths = c(3, 1), nrow=1, tag_levels = "A")
+```
+
+\newpage
+
+### Permutational Multivariate Analysis of Variance {#chapter2.5.3}
+
+We also can perform the Permutational Multivariate Analysis of Variance using *mp_adonis* wrapping the *adonis* of *vegan* [@vegan].
+
+```{r} 
+mpse2 %<>% mp_adonis(.abundance = hellinger, distmethod = "bray", 
+            .formula = ~Group, permutation = 9999, action = "add")
+mpse2 %>% mp_extract_internal_attr(name=adonis) %>% mp_fortify()
+```
+
+From the result, we found the *pvalue* of the analysis of *adonis* is smaller than 0.05 for the `Group`, meaning the dissimilarity of samples between the `Group` is significant, which is consistent with the \ref{chapter2.5.2}.
+
+### hierarchical cluster analysis of samples {#chapter2.5.4}
+
+`beta diversity` metrics can assess the differences between microbial communities. It can be visualized with `PCA` or `PCoA`, this can also be visualized with hierarchical clustering based on ggplot2 [@ggplot2], ggtree [@ggtree2017] and ggtreeExtra [@ggtreeExtra]
+
+(ref:HClustplot) **The hierarchical clustering plot of samples based on Bray-Curtis distance calculated with abundance of OTU/ASV and the relative Abundance of phyla for samples**
+
+```{r fig.width=7, fig.height=5, fig.align="center", warning=FALSE, message=FALSE, fig.cap="(ref:HClustplot)", HClustplot}
+library(ggplot2)
+library(MicrobiotaProcess)
+library(ggtree)
+library(ggtreeExtra)
+mpse2 %<>% 
+    mp_cal_clust(.abundance = hellinger, distmethod = "bray", action = "add")
+hcsample <- mpse2 %>% mp_extract_internal_attr(name=SampleClust)
+# rectangular layout + relative abundance of phyla
+phy.tb <- mpse2 %>%
+          mp_extract_abundance(
+            taxa.class = Phylum, 
+            topn = 30
+          ) %>%
+          tidyr::unnest(cols=RareAbundanceBySample) %>% 
+          dplyr::rename(Phyla="label")
+cplot1 <- ggtree(hcsample, layout = "rectangular") +
+          geom_treescale(fontsize = 2) +
+          geom_tippoint(mapping=aes(color=Group)) +
+          geom_fruit(
+            data = phy.tb,
+            geom = geom_col,
+            mapping = aes(x = RelRareAbundanceBySample, y = Sample, fill = Phyla),
+            orientation = "y",
+            offset = 0.08,
+            pwidth = 3,
+            width = .6,
+            axis.params = list(
+              axis = "x",
+              title = "The relative abundance of phyla (%)",
+              title.size = 3,
+              title.height = 0.04,
+              text.size = 2,
+              vjust = 1
+            )
+          ) +
+          geom_tiplab(as_ylab = TRUE) +
+          scale_color_manual(
+            values = cols, 
+            guide = guide_legend(
+              keywidth = .5, 
+              keyheight = .5, 
+              title.theme = element_text(size = 8),
+              label.theme = element_text(size = 6)
+            )
+          ) +
+          scale_fill_manual(
+            values=c(colorRampPalette(RColorBrewer::brewer.pal(12,"Set2"))(6)),
+            guide = guide_legend(
+              keywidth = .5,
+              keyheight = .5,
+              title.theme = element_text(size = 8),
+              label.theme = element_text(size = 6)
+            )
+          ) +
+          scale_x_continuous(expand = c(0, 0.01)) 
+cplot1
+```
+
+```{r, echo = FALSE}
+ggsave(cplot1, filename = "./Figures/sample.clust.svg", device = "svg", width = 7, height = 5)
+```
+
+\newpage
+
+## biomarker discovery {#chapter2.6}
+
+This package provides `mp_diff_analysis` to detect the biomarker. And the result (with `action = "get"`) can be visualized by *ggdiffbox*, *ggdiffclade*, *ggeffectsize*, *ggdifftaxbar* and *mp_plot_diff_res* *mp_plot_diff_cladogram* (with `action = "add"`), or displayed manually using `ggtree` [@ggtree2017] and `ggtreeExtra` [@ggtreeExtra].
+
+(ref:DeCladogram) **The cladogram of significant differential taxa** The hight light represents the differential taxa is enriched in the corresponding group. We found the species from Proteobacteria were enriched in the CD group, the species (OTU_42) from Actinobacteria were enriched in Control group.
+
+```{r warning=FALSE, message=FALSE, fig.width = 10, fig.height=10, fig.align='center', fig.cap='(ref:DeCladogram)', DeCladogram}
+# for the kruskal_test and wilcox_test
+library(coin)
+library(MicrobiotaProcess)
+
+# get result (diffAnalysisClass) of the different analysis with action = 'get'.
+deres <- mpse2 %>%
+         mp_diff_analysis(
+            .abundance = RareAundance,
+            .group = Group,
+            first.test.method = "kruskal_test",
+            filter.p = "pvalue",
+            first.test.alpha = 0.05,
+            strict = TRUE,
+            second.test.method = "wilcox_test",
+            second.test.alpha = 0.05,
+            subcl.min = 3,
+            subcl.test = TRUE,
+            ml.method = "lda",
+            ldascore = 3,
+            action = "get"
+         )
+# The result of different analysis was added to the taxatree with action = 'add'
+mpse2 <- mpse2 %>%
+         mp_diff_analysis(
+            .abundance = RareAundance,
+            .group = Group,
+            first.test.method = "kruskal_test",
+            filter.p = "pvalue",
+            first.test.alpha = 0.05,
+            strict = TRUE,
+            second.test.method = "wilcox_test",
+            second.test.alpha = 0.05,
+            subcl.min = 3,
+            subcl.test = TRUE,
+            ml.method = "lda",
+            ldascore = 3,
+            action = "add"
+         )
+
+p.clado <- mpse2 %>% 
+   mp_plot_diff_cladogram(
+     taxa.class = Order, 
+     removeUnknown = TRUE,
+     as.tiplab = FALSE, 
+     tip.annot = TRUE, 
+     label.size=2.6
+   ) + 
+   scale_fill_diff_cladogram(values=cols)
+p.clado
+```
+
+### visualization of different results by `ggdiffclade` {#chapter2.6.1}
+
+The color of discriminative taxa represent the taxa is more abundant in the corresponding group. The point size shows the negative logarithms (base 10) of pvalue. The bigger size of point shows more significant (lower pvalue), the *pvalue* was calculated in the first step test (default is *kruskal.test*).
+
+(ref:DiffClade) **The taxa tree clade plot of different analysis result (with action = 'get')**.
+
+```{r eval = FALSE, fig.width=12, fig.height=12, fig.align="center", warning=FALSE, message=FALSE, fig.cap="(ref:DiffClade)", DiffClade}
+diffclade_p <- ggdiffclade(
+                   obj=deres, 
+                   alpha=0.3, 
+                   linewd=0.15,
+                   skpointsize=0.6, 
+                   layout="radial",
+                   taxlevel=3, 
+                   removeUnkown = TRUE,
+                   reduce = FALSE # This argument is to remove the branch of unknown taxonomy.
+               ) +
+               scale_fill_manual(
+                   values = cols
+               ) +
+               guides(color = guide_legend(
+                                  keywidth = 0.1, 
+                                  keyheight = 0.2,
+                                  order = 3,
+                                  ncol=1)
+               ) +
+               theme(
+                   panel.background = element_rect(fill=NA),
+                   legend.position = "right", 
+                   plot.margin = ggplot2::margin(0,0,0,0),
+                   legend.key.width = unit(0.2, "cm"),
+                   legend.key.height = unit(0.2, "cm"),
+                   legend.spacing.y = unit(0.02, "cm"), 
+                   legend.title = element_text(size=7),
+                   legend.text = element_text(size=6), 
+                   legend.box.spacing = unit(0.02,"cm")
+               )
+diffclade_p
+```
+
+We also can visualized the result (default, with `action = 'add'`) via `ggtree` [@ggtree2017] and `ggtreeExtra` [@ggtreeExtra].
+
+(ref:DiffAllplot) **The taxa tree of the community with the relative abundance of each OTU/ASV on sample and the LDA of different OTU/ASV**. The taxa tree was built with the taxa of all samples. The high light color of taxa tree represents the phyla of the clade. The external point layer represents the relative abundance of each OTU on sample. The external bar layer represents the LDA of the different OTU. The colored points represent the different taxa, the size of colored point represents the *pvalue* or *fdr*.
+
+```{r, fig.width = 10, fig.height=10, fig.align="center", fig.cap = '(ref:DiffAllplot)', DiffAllplot}
+taxa.tree <- mpse2 %>% mp_extract_tree(type='taxatree')
+p1 <- ggtree(
+        taxa.tree,
+        layout="radial",
+        size = 0.3
+      ) +
+      geom_point(
+        data = td_filter(!isTip),
+        fill="white",
+        size=1,
+        shape=21
+      )
+# display the high light of phylum clade.
+p2 <- p1 +
+      geom_hilight(
+        data = td_filter(nodeClass == "Phylum"),
+        mapping = aes(node = node, fill = label)
+      )
+# display the relative abundance of features(OTU)
+p3 <- p2 +
+      ggnewscale::new_scale("fill") +
+      geom_fruit(
+         data = td_unnest(RareAbundanceBySample),
+         geom = geom_star,
+         mapping = aes(
+                       x = fct_reorder(Sample, Group, .fun=min),
+                       size = RelRareAbundanceBySample,
+                       fill = Group,
+                       subset = RelRareAbundanceBySample > 0
+                   ),
+         starshape = 13,
+         starstroke = 0.01,
+         offset = 0.04,
+         pwidth = 1.5,
+         grid.params = list(vline = TRUE, size = 0.001, color="snow2", linetype = 1)
+      ) +
+      scale_size_continuous(
+         name="Relative Abundance (%)",
+         range = c(0.5, 3),
+         guide = guide_legend(override.aes = list(starstroke = 0.25))
+      ) +
+      scale_fill_manual(values=cols)
+# display the tip labels of taxa tree
+p4 <- p3 + geom_tiplab(size=2, offset=12.8)
+# display the LDA of significant OTU.
+p5 <- p4 +
+      ggnewscale::new_scale("fill") +
+      geom_fruit(
+         geom = geom_col,
+         mapping = aes(
+                       x = LDAmean,
+                       fill = Sign_Group,
+                       subset = !is.na(LDAmean)
+                       ),
+         orientation = "y",
+         offset = 0.5,
+         pwidth = 1,
+         axis.params = list(axis = "x",
+                            title = "Log10(LDA)",
+                            title.height = 0.005,
+                            title.size = 2,
+                            text.size = 1.8,
+                            vjust = 1),
+         grid.params = list(linetype = 3)
+      )
+
+# display the significant (FDR) taxonomy after kruskal.test (default)
+p6 <- p5 +
+      ggnewscale::new_scale("size") +
+      geom_point(
+         data=td_filter(!is.na(Sign_Group)),
+         mapping = aes(size = -log10(fdr),
+                       fill = Sign_Group,
+                       ),
+         stroke = 0.01,
+         shape = 21,
+      ) +
+      scale_size_continuous(range=c(1, 3), guide = guide_legend(override.aes = list(stroke = .25))) +
+      scale_fill_manual(values=cols)
+
+p6 <- p6 + theme(
+           legend.key.height = unit(0.3, "cm"),
+           legend.key.width = unit(0.3, "cm"),
+           legend.spacing.y = unit(0.02, "cm"),
+           legend.text = element_text(size = 7),
+           legend.title = element_text(size = 9),
+          )
+p6
+```
+
+To decreases coding burden, we also developed *mp_plot_diff_res* to visualize the result of different analysis.
+
+(ref:DiffAllplot2) seel also Fig. \ref{fig:DiffAllplot}
+
+```{r, eval = FALSE, fig.width = 10, fig.height=10, fig.align="center", fig.cap = '(ref:DiffAllplot2)', DiffAllplot2}
+library(ggplot2)
+pp <- mpse2 %>% 
+    mp_plot_diff_res() +
+    scale_fill_manual(
+      values = cols
+    ) +
+    scale_fill_manual(
+      aesthetics = "fill_new",
+      values = cols
+    )
+pp
+```
+
+\newpage
+
+```{r, echo = FALSE}
+ggsave(p6, filename="./Figures/Diffres.svg", device="svg", width = 12, height = 12)
+```
+
+### visualization of differential results (with action = "get") by `ggdiffbox` {#chapter2.6.2}
+
+The left panel represents the relative abundance or abundance (according the standard_method) of biomarker, the right panel represents the confident interval of effect size (LDA or MDA) of biomarker.
+The bigger confident interval shows that the biomarker is more fluctuant, owing to the influence of samples number.
+
+(ref:DiffBoxplot) **The boxplot and the LDA score of different taxa.** The left panel represents the relative abundance of the different taxa, the right panel represents the LDA effect size (95% confidence interval) of different taxa.
+
+```{r fig.width=6, fig.height=8, fig.align="center", warning=FALSE, message=FALSE, fig.cap="(ref:DiffBoxplot)", DiffBoxplot}
+diffbox <- ggdiffbox(obj=deres, box_notch=FALSE, 
+		     colorlist=cols, l_xlabtext="relative abundance")
+diffbox
+```
+
+\newpage
+
+### visualization of differential results (with action = "get") by `ggdifftaxbar` {#chapter2.6.3}
+
+`ggdifftaxbar` can visualize the abundance of biomarker in each samples of groups, the mean and median abundance of groups or subgroups are also showed. `output` parameter is the directory of output.
+
+```{r}
+ggdifftaxbar(obj=deres, xtextsize=1.5, 
+             output="IBD_biomarkder_barplot",
+             coloslist=cols)
+```
+
+## Significant differential balance nodes for the diagnosis of some related diseases {#chapter2.7}
+
+*MicrobiotaProcess* provided *mp_balance_clade* to calculate the balance of internal nodes of phylogenetic tree with the abundance (geometric mean, mean or median) of tips. Then we can use *mp_diff_analysis* to identify the signal balance nodes. We found the some signal balance nodes contains the species that were not detected in differential analysis, such as OTU_97/OTU_454 (from Clostridiaceae SMB53), OTU_233/OTU_152 (Lachnospiraceae Lachnospira) etc, which suggested the balance transform can be used to identified the groups of related bacterial taxa. In addition, the signal balance nodes also can be used for the classifying samples (refer to the first session of supplemental file B).
+
+(ref:SignBalanceCladogram) The significant differential balance cladogram between the CD and Control group. The external heatmap represents the differential balance clades (up and down). The external point layer represents the relative abundance of each OTU on each sample. The external bar layer represents the mean LDA of the differential OTUs.
+
+```{r, fig.width = 14, fig.height = 14, fig.align = 'center', fig.cap = '(ref:SignBalanceCladogram)', warning=FALSE, message=FALSE, SignBalanceCladogram}
+mpse3 <- mpse2 %>% dplyr::filter(Class != 'c__un_p__Proteobacteria')
+mpse3 %>%
+    mp_balance_clade(
+      .abundance = Abundance,
+      force = TRUE,
+      relative = FALSE,
+      pseudonum = 1,
+      balance_fun='geometric.mean'
+    ) -> mpse.balance.node
+
+mpse.balance.node %>%
+    mp_diff_analysis(
+      .abundance = Abundance,
+      force = TRUE,
+      relative = FALSE,
+      .group = Group,
+      fc.method = 'compare_mean'
+    ) %>%
+    mp_extract_feature %>%
+    dplyr::filter(!is.na(Sign_Group)) -> ba.node.sign
+
+bla.sign.da.mean <- mpse3 %>%
+    mp_balance_clade(
+      .abundance = Abundance,
+      force = TRUE,
+      relative = FALSE,
+      pseudonum = 1,
+      balance_fun='mean'
+    ) %>%
+    mp_diff_analysis(
+      .abundance = Abundance,
+      force = TRUE,
+      relative = FALSE,
+      .group = Group,
+      fc.method = 'compare_mean'
+    ) %>%
+    mp_extract_feature %>%
+    dplyr::filter(!is.na(Sign_Group)) %>%
+    select(OTU, AbundanceBySample) %>%
+    tidyr::unnest(AbundanceBySample) %>%
+    select(OTU, Sample, Abundance, Group) %>%
+    tidyr::pivot_wider(id_cols=c('Sample', 'Group'), values_from=Abundance, names_from=OTU) %>%
+    dplyr::mutate_at('Group', as.factor)
+
+bla.sign.da.median <- mpse3 %>%
+    mp_balance_clade(
+      .abundance = Abundance,
+      force = TRUE,
+      relative = FALSE,
+      pseudonum = 1,
+      balance_fun='median'
+    ) %>%
+    mp_diff_analysis(
+      .abundance = Abundance,
+      force = TRUE,
+      relative = FALSE,
+      .group = Group,
+      fc.method = 'compare_mean'
+    ) %>%
+    mp_extract_feature %>%
+    dplyr::filter(!is.na(Sign_Group)) %>%
+    select(OTU, AbundanceBySample) %>%
+    tidyr::unnest(AbundanceBySample) %>%
+    select(OTU, Sample, Abundance, Group) %>%
+    tidyr::pivot_wider(id_cols=c('Sample', 'Group'), values_from=Abundance, names_from=OTU) %>%
+    dplyr::mutate_at('Group', as.factor)
+
+p1 <- mpse3 %>% mp_extract_otutree %>%
+      ggtree(layout = 'circular', size = .25, color = '#bed0d1') +
+      geom_tiplab(
+        size = 1.2,
+        align = TRUE,
+        linesize = .05,
+        linetype = 3,
+        offset = .9
+      )
+
+ba.node.sign2 <- ba.node.sign %>%
+                 tidyr::unnest(Balance_offspring) %>%
+                 tidyr::unnest(offspringTiplabel)
+
+sample.da.CD <- mpse3 %>% mp_extract_sample %>%
+    dplyr::select(Sample, Group)
+
+bla.sign.da <- ba.node.sign %>%
+    select(OTU, AbundanceBySample) %>%
+    tidyr::unnest(AbundanceBySample) %>%
+    select(OTU, Sample, Abundance, Group) %>%
+    tidyr::pivot_wider(id_cols=c('Sample', 'Group'), values_from=Abundance, names_from=OTU) %>%
+    dplyr::mutate_at('Group', as.factor) 
+
+otu.sign.da <- mpse3 %>% mp_extract_feature() %>%
+    filter(!is.na(Sign_Group)) %>%
+    tidyr::unnest(RareAbundanceBySample) %>%
+    select(OTU, RelRareAbundanceBySample, Sample, Group) %>%
+    tidyr::pivot_wider(id_cols=c('Sample', 'Group'), names_from='OTU', values_from=RelRareAbundanceBySample) %>%
+    dplyr::mutate_at('Group', as.factor)
+
+p2 <- p1 +
+    geom_fruit(
+      data = ba.node.sign2,
+      geom = geom_tile,
+      mapping = aes(
+        x = OTU,
+        y = offspringTiplabel,
+        fill = Clade
+      ),
+      axis.params = list(axis='none', text.angle=-45, vjust=1, hjust=0, text.size=2),
+      grid.params = list(),
+      pwidth = .5,
+      offset = .01
+    ) +
+    scale_fill_manual(values = c('#00D617', '#E6A519')) +
+    scale_y_continuous(limits=c(-1, NA))
+
+p3 <- p2 + #%<+% abunda +
+   ggnewscale::new_scale_fill() +
+   geom_fruit(
+     data = td_filter(RelRareAbundanceBySample > 0, .f=td_unnest(RareAbundanceBySample)),
+     geom = geom_star,
+     mapping = aes(
+       x = fct_reorder(Sample, Group, .fun=min),
+       fill = Group,
+       size = RelRareAbundanceBySample
+     ),
+     offset = .15,
+     pwidth = 1.5,
+     starshape = 13,
+     starstroke = .05,
+     grid.params = list(vline=TRUE, size = 0.1, color="snow2", linetype = 1)
+   ) +
+   scale_fill_manual(values = cols) +
+   scale_size_continuous(
+     name = 'Relative Abundance(%)',
+     range = c(.5, 4),
+     guide = guide_legend(overide.aes = list(starstroke = .5))
+   )
+
+sign.otu <- mpse3 %>%
+    mp_extract_feature() %>%
+    filter(!is.na(Sign_Group)) %>%
+    select(OTU, LDAmean, Sign_Group) %>%
+    dplyr::left_join(
+      mpse3 %>% mp_extract_taxonomy(),
+      by = 'OTU'
+    )
+
+p4 <- p3 %<+% sign.otu +
+   ggnewscale::new_scale_fill() +
+   geom_fruit(
+      data = td_filter(!is.na(Sign_Group)),
+      geom = geom_tile,
+      mapping = aes(fill=Phylum),
+      width = .1,
+      offset = .1
+   ) +
+   ggnewscale::new_scale_fill() +
+   geom_fruit(
+      data = td_filter(!is.na(Sign_Group)),
+      geom = geom_col,
+      mapping = aes(x = LDAmean, fill = Sign_Group),
+      orientation = "y",
+      offset = 0.05,
+      pwidth = 1,
+      axis.params = list(axis = "x",
+                         title = "Log10(LDA)",
+                         title.height = 0.005,
+                         title.size = 2,
+                         text.size = 1.8,
+                         vjust = 1),
+      grid.params = list(linetype = 3) ,
+      show.legend = FALSE
+   ) +
+   scale_fill_manual(values = cols) +
+   theme(
+     legend.key.width = unit(.3, 'cm'),
+     legend.key.height = unit(.3, 'cm'),
+     legend.text = element_text(size=6),
+     legend.title = element_text(size=8),
+     legend.margin = ggplot2::margin(-.25, 0, 0, 0, 'cm')
+   )
+p4
+```
+
+\newpage
+
+## Performing differential analysis among multiple groups {#chapter2.8}
+
+It is the same to perform the differential analysis between two groups using mp_diff_analysis. For example, we perform the following example to show this. The dataset was from a colorectal cancer study [@Zeller_2014], which was obtained with curatedMetagenomicData. The samples were from stools of the CRC, the Adenoma and the Control individuals. Though the analysis of mp_diff_analysis, we found *Fusobacterium gonidiaformans*, *Porphyromonas asaccharolytica*, *Parvimonas micra*, *Peptostreptococcus stomatis* and *Escherichia coli* were significantly enriched in CRC (colorectal cancer), *Ruminococcus lactaris* was significantly enriched in Adenoma (colorectal adenoma), but *Bifidobacterium longum*, *Bifidobacterium catenulatum*, *Blautia wexlerae* and *Anaerostipes hadrus* was significantly decreased in CRC and Adenoma.
+
+(ref:MultipleGroupTree) **The cladogram of significant differential taxa** The hight light represents the differential taxa is enriched in the corresponding group.
+
+```{r, message = FALSE, warnings = FALSE, fig.width = 10, fig.height = 10, fig.align = "center", fig.cap='(ref:MultipleGroupTree)', MultipleGroupTree}
+xx <- curatedMetagenomicData('ZellerG_2014.relative_abundance', dryrun=F)
+xx[[1]] %>% as.mpse -> mpse.crc.ZellerG_2014
+
+mpse.crc.ZellerG_2014 %<>% mp_diff_analysis(
+    .abundance = Abundance,
+    .group = disease,
+    force = TRUE,
+    relative = FALSE,
+    first.test.alpha = 0.05,
+    filter.p = "pvalue"
+)
+
+p.cladogram <- mpse.crc.ZellerG_2014 %>%
+     mp_plot_diff_cladogram(
+       .group = disease,
+       .size = pvalue,
+       taxa.class = Genus,
+       hilight.alpha = .3,
+       bg.tree.size = .15,
+       bg.point.stroke = .1,
+       bg.point.size = 1.5,
+       label.size = 2.6,
+       tip.annot = FALSE,
+       as.tiplab = FALSE
+     ) +
+     scale_fill_diff_cladogram(
+       values = c('red', 'orange', 'deepskyblue'),
+     ) +
+     scale_size_continuous(
+       range = c(1, 4)
+     )
+
+p.cladogram
+```
+
+## Interoperable with the existing computing ecosystem {#chapter2.9}
+
+Because the *MPSE* object of *MicrobiotaProcess* inherits the *SummarizedExperiment* object [@SE], The related inherited methods for signature *SummarizedExperiment* can also be applied to the *MPSE*. For example, the *tidybulk* [@tidybulk] provides an R tidy framework for modular transcriptomic data analysis. It provides a *test_differential_abundance* to perform differential transcription testing using edgeR quasi-likelihood edgeR likelihood-ratio (LR), limma-voom, limma-voom-with-quality-weights or DESeq2. It is also compatible with *MPSE*.
+
+(ref:tidybulkPlot) **The results of different OTUs based on the edgeR_quasi_likelihood with tidybulk** (A). The relative abundance heatmap of the different OTUs. (B). The hierarchical cluster of samples based on the relative abundance of the different OTUs. (C). The hierarchical cluster of OTUs based on the relative abundance of total OTUs, the different OTUs were labeled with their names. We found the cluster of different OTUs in the heatmap is consistent with the different OTUs in the background of total OTUs (C).
+
+```{r message=FALSE, warning = FALSE, fig.width = 14.5, fig.height = 9, fig.cap='(ref:tidybulkPlot)', tidybulkPlot}
+library(tidybulk)
+library(edgeR)
+library(aplot)
+library(shadowtext)
+library(ggrepel)
+mpse2 %<>% test_differential_abundance(.abundance = Abundance, .formula = ~Group)
+# extract the different OTUs from the MPSE class
+res <- mpse2 %>% dplyr::filter(FDR <= .05 & abs(logFC) >= 2)
+pp <- res %>%
+      mp_plot_abundance(
+        .abundance = RareAbundance,
+        force = TRUE,
+        relative = TRUE,
+        feature.dist = "bray",
+        geom = "heatmap",
+        topn = "all",
+        .group = Group
+      ) %>%
+      set_scale_theme(
+        x = list(scale_fill_viridis_c(option = "H"),
+                 theme(
+                   axis.text.x = element_text(size = 6),
+                   axis.text.y = element_text(size = 6),
+                   legend.title = element_text(size = 7),
+                   legend.text = element_text(size = 5),
+                   legend.key.width = unit(0.3, "cm"),
+                   legend.key.height = unit(0.3, "cm")
+                 )
+            ),
+        aes_var = RelRareAbundance
+      ) %>%
+      set_scale_theme(
+        x = list(scale_fill_manual(values = cols),
+                 theme(
+                   legend.key.height = unit(0.3, "cm"),
+                   legend.key.width = unit(0.3, "cm"),
+                   legend.spacing.y = unit(0.02, "cm"),
+                   legend.text = element_text(size = 7),
+                   legend.title = element_text(size = 9)
+                 )
+            ),
+        aes_var = Group
+      )
+f <- res %>%
+     mp_extract_taxonomy %>%
+     ggplot() +
+     geom_text(
+       mapping = aes(y=OTU, x=0, label=Genus, color=Phylum),
+       hjust = 0,
+       size = 2
+     ) +
+     scale_x_continuous(expand=c(0, 0, 0, 0.1)) +
+     theme_bw() +
+     theme(
+       legend.text = element_text(size = 5),
+       legend.title = element_text(size = 7),
+       legend.key.width = unit(0.3, "cm"),
+       legend.key.height = unit(0.3, "cm"),
+       panel.background = element_blank(),
+       panel.grid = element_blank(),
+       axis.text = element_blank(),
+       axis.ticks = element_blank(),
+       panel.border = element_blank()
+     ) +
+     labs(x = NULL, y = NULL)
+pp <- pp %>% insert_right(f, width = 0.4)
+sample.tree <- res %>%
+      select(-bray) %>%  # remove the bray, Because it was the result of all OTU,
+      mp_cal_clust(.abundance = RelRareAbundanceBySample, distmethod = "bray") %>%
+      ggtree(layout = igraph::layout_with_kk, color = "#afb7b8") +
+      geom_nodepoint(color = "#afb7b8", size = .5) +
+      geom_tippoint(aes(fill = Group), shape = 21, size=3) +
+      geom_text_repel(
+        data = td_filter(isTip),
+        mapping = aes(label = label),
+        size = 2,
+        max.overlaps = 30,
+        colour = "black",
+        bg.colour = "white"
+      ) +
+      scale_fill_manual(
+        values = cols,
+        guide = guide_legend(
+           title.theme = element_text(size = 7),
+           label.theme = element_text(size = 5),
+        )
+      )
+p <- mpse2 %>%
+      mp_cal_dist(
+         .abundance = RelRareAbundanceBySample,
+         distmethod = "bray",
+         cal.feature.dist = T
+      ) %>%
+      hclust() %>%
+      ggtree(layout = igraph::layout_with_kk, color = "#bed0d1") +
+      geom_nodepoint(color = "#bed0d1", size = .5)
+# The data.frame contained results of test_differential_abundance
+otu.tab <- mpse2 %>% mp_extract_feature()
+p <- p %<+% otu.tab +
+     geom_tippoint(
+       mapping = aes(fill = logFC, size = -log10(FDR)),
+       shape = 21,
+       color = "grey"
+     ) +
+     scale_fill_viridis_c(
+       option="C",
+       guide = guide_colorbar(
+          title.theme = element_text(size = 7),
+          label.theme = element_text(size = 5),
+          barheight = unit(1.5, "cm"),
+          barwidth = unit(.3, "cm")
+       )
+     ) +
+     scale_size_continuous(
+       range = c(.5, 6),
+       guide = guide_legend(
+          key.width = .3,
+          key.height = .3,
+          label.theme = element_text(size = 5),
+          title.theme = element_text(size = 7)
+       )
+     ) +
+     geom_text_repel(
+       data = td_filter(FDR <= .05 & abs(logFC) >= 2),
+       mapping = aes(x = x, y = y, label = label),
+       size = 2,
+       min.segment.length = 0.1,
+       segment.size = .25,
+       segment.colour = 'grey18',
+       colour = "black",
+       bg.colour = 'white'
+       #max.overlaps = 60,
+     )
+design <- "
+  12
+  13
+  13
+"
+px <- plot_list(pp, sample.tree, p, design = design, tag_levels = "A")  
+px
+```
+
+\newpage
+
+We compared the different result between the *edgeR* [@edgeR] and *MicrobiotaProcess*. We found the number of the different OTUs based on edgeR is more than the MicrobiotaProcess. We think this is because we didn't remove the low-abundance OTUs in the analysis using *tidybulk*. This operation is generally needed in standard whole-transcriptome workflows. However, if it is preformed in the microbiome analysis, many low-abundance OTUs will be removed. More different OTUs were identified by the operation using edgeR [@edgeR].
+
+(ref:CompareDEotus) **The comparison of the different analysis result between the edgeR and MicrobiotaProcess** 
+
+```{r, warning = FALSE, fig.width = 4, fig.heigh = 2, fig.align = "center", fig.cap='(ref:CompareDEotus)', CompareDEotus}
+DE.method <- list(
+    EdgeR = mpse2 %>% 
+            mp_extract_feature %>% 
+            dplyr::filter(FDR<=0.05 & abs(logFC)>=2) %>% 
+            pull(OTU), 
+    MP = mpse2 %>% 
+         mp_extract_feature %>% 
+         dplyr::filter(pvalue <=0.05) %>% 
+         pull(OTU)
+)
+library(ggVennDiagram)
+ggVennDiagram(DE.method, edge_size = 3, set_size = 4) + 
+    scale_color_manual(values=c("pink", "gold")) + 
+    scale_fill_viridis_c(option="C")
+```
+
+Then we extract the same different OTUs, we found the abundance of same OTUs belonged to *Bifidobacterium*, *Faecalibacterium*, *Roseburia* and *Coprobacillus* were significantly decreased in CD group compared to the Control group, the abundance of several OTUs belonged to *Escherichia*, *Klebsiella* and *Haemophilus*, which belonged to Gammaproteobacteria, were significantly enriched in CD group.
+
+```{r}
+mpse2 %>% 
+    mp_extract_feature(addtaxa=T) %>% 
+    dplyr::filter(OTU %in% do.call(intersect, base::unname(DE.method)))
+```
+
+```{r, echo = FALSE}
+saveRDS(mpse2, "./data/IBD_data/mpse2.RDS")
+sample.tree$layers[[3]]$aes_params$size <- 6
+sample.tree$layer[[4]]$aes_params$size <- 3.5
+p$layer[[4]]$aes_params$size <- 2.8
+p$layer[[4]]$aes_params$segment.size <- .4
+ggsave("./Figures/OTU_heatmap.svg", pp, device = "svg", width = 6, height = 7)
+ggsave("./Figures/sample.tree.svg", sample.tree, device = "svg", width = 6, height = 5.6)
+ggsave("./Figures/OTU.tree.svg", p, device = "svg", width = 7, height = 7)
+```
+
+\newpage
+
+# the analysis of the other published pediatric CD stool samples {#chapter3} 
+
+In the previous session, we described how to use *MicrobiotaProcess* to do the analysis of the 16s rDNA data. However, it also can be applied to metagenome or metatranscriptome species community data and the function data analysis. In this session, we used the example datasets about the other published pediatric CD stool microbial study [@Douglas2018CD] to show how to used *MicrobiotaProcess* to do the related analysis. The datasets were obtained from the github^[<https://github.com/LangilleLab/CD_RF_microbiome>]. To avoid duplication, we only show how to import the 16s dataset, we focused on the analysis of metagenomics and KEGG gene datasets.
+
+## The parsing of the 16s data and construction of MPSE class {#chapter3.1}
+
+The session is similar with the session \ref{chapter2}, some operations can refer to the previous session \ref{chapter2}.
+
+```{r}
+cols <- c("orange", "deepskyblue")
+cols2 <- c("deepskyblue", "yellow", "#FF9933")
+sample.da <- read.table("./data/CD_RF_microbiome/biscuit_metadata.txt", header=TRUE, check.names=FALSE, sep="\t")
+sample.da %<>% dplyr::select(1:5)
+biom <- biomformat::read_biom("./data/CD_RF_microbiome/otu_table_w_tax_BISCUIT.biom")
+mpse16s <- biom %>% as.MPSE 
+mpse16s
+mpse16s %<>% dplyr::left_join(sample.da, by=c("Sample"="sample_id"))
+mpse16s
+```
+
+## Functional characterization using the KEGG dataset {#chapter3.2}
+
+The KEGG gene abundances were annotated based on the MGS data. It can also be imported as MPSE, and further analyzed using *MicrobiotaProcess*. Here, we only show how to identify the different gene using the *mp_diff_analysis* of *MicrobiotaProcess* (refer to session \ref{chapter2.6}). Other operations are similar with the analysis of 16s rDNA data (refer to session \ref{chapter2}).
+
+```{r}
+KO.da <- read.table("./data/CD_RF_microbiome/biscuit_mgs_KOs.tsv", 
+            header=TRUE, sep = "\t", row.names=1, check.names=F)
+# Building the MPSE object.
+mpseKO <- MPSE(assays=list(Abundance = KO.da))
+# merge the sample metadata information.
+mpseKO %<>% left_join(sample.da, by=c("Sample"="sample_id"))
+```
+
+### Differential analysis of KEGG genes abundance {#chapter3.2.1}
+
+The metrics of the KEGG genes is the relative abundance, here we used *mp_diff_analysis* to identify the difference KEGG genes with 'force = TRUE and relative = FALSE', meaning the relative abundance will be used directly.
+
+```{r, message = FALSE, warning = FALSE}
+mpseKO %<>% mp_diff_analysis(
+     .abundance = Abundance,
+     force = TRUE,
+     relative = FALSE,
+     .group = disease,
+     filter.p = "pvalue"
+   )
+```
+
+Then we can perform the KEGG pathway enrichment analysis using clusterProfiler [@clusterProfiler] and MicrobiomeProfiler [@MicrobiomeProfiler] developed by our team. 
+
+```{r, message = FALSE, warning = FALSE, fig.show='hide'}
+# perform KEGG pathway analysis with clusterProfiler and MicrobiomeProfiler
+com.xx <- mpseKO %>%
+    mp_extract_feature() %>% # Extracting the feature metadata information
+    dplyr::filter(!is.na(Sign_disease)) %>% # Extracting the differential features
+    compareCluster(OTU~Sign_disease, data=., fun=enrichKO)
+# visualizing the enriched pathway with dotplot
+p.dot <- dotplot(com.xx) + 
+         scale_color_gradientn(
+           colours = c("#b3eebe", "#46bac2", "#371ea3"),
+           guide = guide_colorbar(reverse=TRUE, order=1)
+         ) +
+         labs(x = NULL) +
+         guides(size = guide_legend(override.aes=list(shape=1))) +
+         theme(
+           panel.grid.major.y = element_line(linetype='dotted', color='#808080'),
+           panel.grid.major.x = element_blank()
+         )
+# with network plot
+set.seed(1024)
+p.net <- cnetplot(
+           com.xx,
+           layout = "fr",
+           cex_label_category = 1.8
+         ) +
+         scale_fill_manual(
+           values = cols
+         )
+p <- aplot::plot_list(p.net, p.dot, widths = c(3, 1), tag_levels="A")
+p
+```
+
+(ref:enrichKEGG) **The result of KEGG pathway enrichment analysis**
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, fig.width = 12, fig.height=6, fig.align = "center", fig.cap = '(ref:enrichKEGG)', enrichKEGG}
+p
+ggsave("./Figures/KO.svg", p, width=14, height=7, device = "svg")
+saveRDS(mpseKO, "./data/CD_RF_microbiome/mpse_KO.rds")
+```
+
+\newpage
+
+The KEGG enrichment results showed that the KEGG pathways of the CD stool group were significantly enriched in the Biosynthesis of amino acids and Glycine, serine, and threonine metabolism, and Pyruvate metabolism (Fig. \ref{fig:enrichKEGG}). This result is not revealed in the original paper [@Douglas2018CD], but it is consistent with a recent some other related studies, which found that Crohn’s Disease microbiomes had an increased potential to synthesize amino acids and Pyruvate metabolism [@Heinken2021IBD; @Bjerrum2017; @Polunin2013]. In addition, we used some other differential abundance methods (ANCOMBC, edgeR, LEfSe, Limma, metagenomSeq) to identify the differential KEGG genes, but the two pathways were not found simultaneously in the enrichment results based on the differential genes identified by other methods (refer to the second session of supplemental file B). We think this is because the *mp_diff_analysis* of *MicrobiotaProcess* achieves a better false positive rate (refer to the third session of supplemental file B).
+
+\newpage
+
+## The species characterization of the metagenomics data {#chapter3.3}
+
+The taxa abundance data from metagenomics study also can be analyzed by *MicrobiotaProcess*, Here we used the example data from output of *MetaPhlAn* [@MetaPhlAn] to show how to perform the related analysis using *MicrobiotaProcess*. The output of other taxa abundance can also be imported and converted to the *MPSE* object, and further analyzed by *MicrobiotaProcess*, which can refer to session\ref{chapter3.2} and session\ref{chapter4}.
+
+```{r}
+# This is the output of MetaPhlAn2, which might need to specific the 'linenum'
+# base on the first several rows whether to contain the metadata information
+mpseMGS <- mp_import_metaphlan("./data/CD_RF_microbiome/metaphlan2_out_merged_species.tsv", linenum=1)
+# rename the column names of MPSE.
+colnames(mpseMGS) <- mpseMGS %>% mp_extract_sample %>% pull(2)
+mpseMGS %<>% left_join(sample.da, by=c("Sample"="sample_id"))
+mpseMGS
+```
+
+### Alpha diversity analysis in MGS level {#chapter3.3.1}
+
+The metric of Metagenomics data usually is relative abundance. But the some functions of `MicrobiotaProcess` need to require the abundance is count (in default). To process the relative abundance (not integer), We can specific 'force = TRUE', which meaning the corresponding functions will be calculated directly without rarefied.
+
+(ref:MGSalpha) **The alpha diversity boxplot based on MGS data**
+
+```{r, fig.width = 5, fig.height = 4, fig.align = 'center', fig.cap="(ref:MGSalpha)", message = FALSE, MGSalpha}
+mpseMGS %<>% mp_cal_alpha(
+      .abundance = Abundance,
+      force = TRUE
+    )
+p <- mpseMGS %>% mp_plot_alpha(
+       .group = disease,
+       .alpha = c(Observe, Shannon, Pielou)
+     ) +
+     scale_color_manual(values = cols) +
+     scale_fill_manual(values = cols) +
+     theme(legend.position = "none")
+p
+```
+
+\newpage
+
+### Beta diversity analysis in MGS level {#chapter3.3.2}
+
+We used *mp_cal_dist* to calculated the distance between the samples, then used *mp_plot_dist* to display the distance with heatmap (Fig.\ref{fig:MGSBeta}.A)  and boxplot (Fig.\ref{fig:MGSBeta}.B), then the distance was used to perform the PCoA analysis (Fig.\ref{fig:MGSBeta}.C).
+
+(ref:MGSBeta) **The distance heatmap and boxplot and the PCoA plot based on the MGS data**
+
+```{r, echo=FALSE, fig.width = 8, fig.height = 10, fig.align = 'center', message=FALSE, warning=FALSE, fig.cap="(ref:MGSBeta)", MGSBeta}
+mpseMGS %<>% mp_decostand(
+      .abundance = Abundance,
+      method = "hellinger"
+    )
+mpseMGS %<>% mp_cal_dist(
+      .abundance = hellinger,
+      distmethod = "bray"
+    )
+mpseMGS %<>% mp_cal_pcoa(
+      .abundance = hellinger,
+      distmethod = "bray"
+    )
+p1 <- mpseMGS %>% mp_plot_dist(
+        .distmethod = bray,
+        .group=c(disease, response)
+      ) %>%
+      set_scale_theme(
+        x = scale_fill_manual(
+              values = cols,
+              guide = guide_legend(
+                          keywidth = 0.5,
+                          keyheight = 0.5,
+                          label.theme=element_text(size=6)
+                 )              
+            ),
+        aes_var = disease
+      ) %>%
+      set_scale_theme(
+        x = scale_fill_manual(
+              values=cols2,
+              guide = guide_legend(
+                          keywidth = 0.5,
+                          keyheight = 0.5,
+                          label.theme=element_text(size=6)
+                 )              
+            ),
+        aes_var = response
+      ) %>%
+      set_scale_theme(
+        x = scale_size_continuous(
+              range = c(1, 3),
+              guide = guide_legend(
+                          keywidth = 0.5,
+                          keyheight = 0.5,
+                          label.theme=element_text(size=6)
+                 )              
+            ),
+        aes_var = bray
+      )  
+p2 <- mpseMGS %>% mp_plot_dist(
+        .distmethod = bray,
+        .group = disease,
+        group.test = TRUE
+      ) +
+      scale_color_manual(
+        values = c("orange", "#00A08A", "deepskyblue")
+      ) +
+      scale_fill_manual(
+        values = c("orange", "#00A08A", "deepskyblue")
+      )
+p3 <- mpseMGS %>% mp_plot_ord(
+        .ord = pcoa,
+        .group = disease,
+        .size = Observe,
+        .starshape = response,
+        show.side = FALSE
+      ) +
+      scale_starshape_manual(values = c(1, 13, 15)) +
+      scale_fill_manual(
+        values=cols,
+        guide=guide_legend(
+          keywidth = 0.3,
+          keyheight = 0.3,
+          label.element = element_text(size = 6),
+          override.aes = list(size = 2, starshape = 15)
+        )
+      ) +
+      scale_size_continuous(
+        range = c(1, 3),
+        guide = guide_legend(
+          keywidth = 0.3,
+          keyheight = 0.3,
+          label.element = element_text(size = 6),
+          override.aes = list(starshape = 15)
+        )
+      )
+design <- "\n111\n111\n111\n233\n233\n"
+pp <- aplot::plot_list(p1, p2, p3, design = design, tag_levels = "A")
+pp
+```
+
+Then we used *mp_adonis* to perform the Permutational Multivariate Analysis of Variance based on the distance. 
+
+```{r}
+mpseMGS %<>% mp_adonis(
+       .abundance = Abundance,
+       .formula = ~ disease + response,
+       distmethod = "bray",
+       permutation = 9999,
+       action = "add"
+     ) 
+# the result can be extracted with mp_extract_internal_attr
+mpseMGS %>% mp_extract_internal_attr(name = adonis) %>% mp_fortify()
+```
+
+### Different analysis in MGS level {#chapter3.3.3}
+
+Here, we also used *mp_diff_analysis* to detect the difference taxa, we also specified the 'force = TRUE' and 'relative = FALSE', meaning the metric of abundance (.abundance) was used to perform the analysis directly without rarefied and calculated the relative abundance (Fig.\ref{fig:DiffMGS}).
+
+(ref:DiffMGS) **The result of differential analysis based on the MGS data**
+
+```{r, message = FALSE, warning = FALSE, fig.width = 10, fig.height = 10, fig.align = 'center', fig.cap = "(ref:DiffMGS)", DiffMGS}
+mpseMGS %<>%
+    mp_diff_analysis(
+       .abundance = Abundance,
+       force = TRUE,
+       relative = FALSE,
+       .group = disease,
+       filter.p = "pvalue"
+    )
+library(forcats)
+trda <- mpseMGS %>% mp_extract_tree()
+p <- ggtree(trda, layout = 'radial') +
+     geom_tiplab(size = 1.8, offset = 11) +
+     geom_hilight(
+         data = td_filter(nodeClass == 'Phylum'),
+         mapping = aes(
+           node = node,
+           fill = label
+         )
+     )
+p2 <- p +
+      ggnewscale::new_scale_fill() +
+      geom_fruit(
+         data = td_unnest(AbundanceBySample, names_repair=tidyr::tidyr_legacy),
+         geom = geom_star,
+         mapping = aes(
+            x = fct_reorder(Sample, disease, .fun=min),
+            size = Abundance,
+            fill = disease,
+            subset = Abundance > 0
+         ),
+         starshape = 13,
+         offset = 0.02,
+         pwidth = 1,
+         grid.params = list(linetype=2)
+      ) +
+      scale_size_continuous(name="Relative Abundance (%)",range = c(1, 3)) +
+      scale_fill_manual(values = cols)
+p3 <- p2 +
+      ggnewscale::new_scale("fill") +
+      geom_fruit(
+         geom = geom_col,
+         mapping = aes(
+                       x = LDAmean,
+                       fill = Sign_disease,
+                       subset = !is.na(LDAmean)
+                       ),
+         orientation = "y",
+         offset = .05,
+         pwidth = 0.5,
+         width = 0.5, # the parameter of geom_col
+         axis.params = list(axis = "x",
+                            title = "Log10(LDA)",
+                            title.height = 0.001,
+                            title.size = 2,
+                            text.size = 1.8,
+                            vjust = 1),
+         grid.params = list(linetype = 1)
+      ) + 
+      ggnewscale::new_scale("size") +
+      geom_point(
+         data=td_filter(!is.na(Sign_disease)),
+         mapping = aes(size = -log10(pvalue),
+                       fill = Sign_disease
+                   ),
+         shape = 21
+      ) +
+      scale_size_continuous(range=c(0.5, 3)) +
+      scale_fill_manual(values=cols) +
+      theme(
+           legend.key.height = unit(0.3, "cm"),
+           legend.key.width = unit(0.3, "cm"),
+           legend.spacing.y = unit(0.02, "cm"),
+           legend.text = element_text(size = 7),
+           legend.title = element_text(size = 9),
+      ) 
+p3
+```
+
+\newpage
+
+Next, we extract the abundance of the different species, then using ggplot2 [@ggplot2] to visualize them (Fig.\ref{fig:DiffBoxMGS}).
+
+(ref:DiffBoxMGS) **The abundance boxplot of the differential species between the CD and control group**
+
+```{r, fig.width=7, fig.height=5, fig.align = "center", fig.cap = "(ref:DiffBoxMGS)", DiffBoxMGS}
+deT <- mpseMGS %>% mp_extract_tree() %>% dplyr::filter(!is.na(Sign_disease) & isTip, keep.td=F) %>% dplyr::pull(label)
+mpseMGS %>% 
+    mp_extract_abundance(taxa.class="OTU") %>% 
+    dplyr::filter(label %in% deT) %>% 
+    tidyr::unnest(AbundanceBySample) %>% 
+    ggplot(mapping=aes(x=disease, y=Abundance, fill=disease)) + 
+    geom_boxplot() + 
+    facet_wrap(facets = vars(label), nrow = 1, scales = "free", strip.position = "right") + 
+    ggsignif::geom_signif(comparisons=list(c("CD", "CN"))) +
+    scale_fill_manual(values=cols, guide="none") +
+    labs(x=NULL, y="relative abundance (%)")
+```
+
+```{r echo = FALSE}
+saveRDS(mpseMGS, "./TmpRef/mpse_MGS.rds")
+```
+
+\newpage
+
+# The analysis of the mosquito ecology data using MicrobiotaProcess {#chapter4}
+
+MicrobiotaProcess also can be used to perform the other related ecology data analysis, besides the microbial community data. Here, we used an example data about a Mosquito ecology study [@mosquito] to show how to use MicrobiotaProcess to perform the analysis of the related ecology study. The data was obtained from the github^[<https://github.com/rgriff23/Mosquito_ecology>].
+
+## Loading data and Construction of MPSE object {#chapter4.1}
+
+The 1 to 14 columns are the sample metadata including the study site, and habitat, etc. and the others columns represent the abundance of mosquito species the in each sample.
+
+```{r}
+data <- read.csv("./data/Mosquito_ecology/data.csv", row.names=1)
+abun.d <- data[, 14:36]
+sample.d <- data[, 1:13]
+# We implements `MPSE` function to build the `MPSE` object, which requires the abundance table (matrix-like).
+mpse <- MPSE(assays=list(Abundance=t(abun.d)), colData=sample.d)
+mpse
+```
+
+## Alpha diversity analysis of the Mosquito ecology study {#chapter4.2}
+
+The `MicrobiotaProcess` provides some verbs of `dplyr`, which allows user to explore the `MPSE` class effectively and develop reproducible and human-readable pipelines
+
+(ref:MosquitoaAlpha) **The raincloud plot of the alpha diversity of the Mosquito ecology community.** The result of the alpha diversity analysis about the Mosquito ecology study showed that the Mosquito species richness gradually increases from field to forest (field \-\-> near field \-\-> edge \-\-> near field \-\-> forest).
+
+```{r, message = FALSE}
+cols = c("lightgoldenrod1", "orange","chartreuse2", "chartreuse4", "darkgreen")
+# Adjusting the order of Habitat
+mpse %<>% 
+   dplyr::mutate(
+     Habitat = factor(
+       Habitat, 
+       levels = c("Field", "NearField", "Edge", "NearForest", "Forest")
+    )
+   )
+mpse
+# force=TRUE meaning the Abundance will be used to calculate the alpha index without rarefaction
+mpse %<>% mp_cal_alpha(.abundance=Abundance, force=TRUE)
+# test the relationship between the Observe Species and Habitat or Shannon and Habitat.
+tb1 <- mpse %>% mp_extract_sample() %>% lm(formula=Observe ~ Habitat, data=.) %>% anova() %>% broom::tidy()
+tb2 <- mpse %>% mp_extract_sample() %>% lm(formula=Shannon ~ Habitat, data=.) %>% anova() %>% broom::tidy()
+```
+
+The result of ANOVA test revealed that the richness of the mosquito species was significantly associated with the **habitat**. Then the result was visualized by *mp_plot_alpha* (Fig.\ref{fig:MosquitoaAlpha}).
+
+```{r, message = FALSE, warning = FALSE, fig.width = 5.2, fig.height = 4.6, fig.cap = '(ref:MosquitoaAlpha)', MosquitoaAlpha}
+p.alpha <- mpse %>%
+     mp_plot_alpha(.group = Habitat, .alpha = c(Observe, Shannon), test = NULL) +
+     scale_fill_manual(values = cols) +
+     scale_color_manual(values = cols) +
+     theme(legend.position = "none")
+library(ggpp)
+# building the table layer
+tb1 %<>% dplyr::slice(1) %>% select(statistic, p.value) %>% round(3)
+tb2 %<>% dplyr::slice(1) %>% select(statistic, p.value) %>% round(3)
+df <- tibble(npcx=c(0.9, 0.9), npcy=c(0.05, 0.05), tb=list(tb1, tb2), Measure=c("Observe", "Shannon"))
+
+p.alpha <- p.alpha + 
+           geom_table_npc(
+             data = df, 
+             mapping = aes(
+               npcx = npcx,
+               npcy = npcy,
+               label = tb
+             ),
+             table.theme = ttheme_gtminimal
+           )
+p.alpha
+```
+
+## Beta Diversity Analysis of the Mosquito ecology study {#chapter4.3}
+
+Here, we use the cca (constrained correspondence analysis) to test which environment factor is related to the Mosquito species in the habitat (Fig.\ref{fig:MosquitoCCA}).
+
+```{r, message = FALSE, warning = FALSE}
+mpse %<>%
+    mutate(NormAbun=sqrt(Abundance)/TrapNights) %>%
+    mp_cal_cca(
+       .abundance  = NormAbun,
+       .formula = ~DeciduousForest+
+           EvergreenForest+
+           Grassland+
+           MixedForest+
+           ShrubScrub+
+           Condition(
+             BarrenLand+
+             Building+
+             Pavement+
+             CultivatedCrops
+           )
+    )
+mpse
+```
+
+The raw result of pCCA was added the *internal_attr*, which can be extract by *mp_extract_internal_attr* with specific *name=cca*. Then it can be performed the significance test using the functions of *vegan* [@vegan], such as *anova.cca*, *permutest*.
+
+```{r, message = FALSE, warning = FALSE}
+# Extract the raw result of cca analysis
+# And significance test with anova
+
+mpse %>% 
+    mp_extract_internal_attr(name=cca) %>%
+    anova()
+```
+
+Further we used *mp_envfit* to identity the environment variables that were significantly associated with the mosquito communities.
+
+```{r, message = FALSE, warning = FALSE}
+# fits environmental vectors onto cca
+mpse %<>% 
+    mp_envfit(
+       .ord = cca, 
+       .env = c(
+          DeciduousForest, 
+          EvergreenForest, 
+          Grassland, 
+          MixedForest, 
+          ShrubScrub 
+        ),
+       action = "add", 
+       permutation = 9999
+    )
+
+# Extract the raw result of envfit analysis
+mpse %>% mp_extract_internal_attr(name=cca_envfit) %>% mp_fortify() 
+```
+
+Then we used *mp_plot_ord* to visualize the result of pCCA (Fig.\ref{fig:MosquitoCCA}).
+
+(ref:MosquitoCCA) **The CCA plot of the Mosquito ecology study (A) without the result of *mp_envfit* (B) with the result of *mp_envfit*.** Each point represents one sample, the size of the points represents the observe species of the corresponding sample, the color of the points represents the habitat of the corresponding sample, the shape of points represents the Region of the corresponding sample. And the arrows represent the environment factors, the marked ones by star represent significant related to the Mosquito communities in the study (\* 0.05, \*\* 0.01, \*\*\* 0.001). 
+
+```{r, message = FALSE, warning = FALSE, fig.width=12, fig.height=4.6, fig.align = 'center', fig.cap = '(ref:MosquitoCCA)', MosquitoCCA}
+# visualization only pCCA
+f <- mpse %>%
+     mp_plot_ord(
+       .ord = cca,
+       .group = Habitat,
+       .size = Observe,
+       .starshape = Region,
+       show.side = FALSE,
+       show.envfit = FALSE,
+       colour = 'black',
+       bg.colour = 'white'
+     ) +
+     scale_starshape_manual(values=c(1, 13, 15)) +
+     scale_fill_manual(
+        values = cols,
+        guide = guide_legend(
+          override.aes = list(starshape=15)
+        )
+     ) +
+     scale_size_continuous(
+       range = c(1, 3),
+       guide = guide_legend(override.aes = list(starshape=15))
+     ) +
+     theme(
+        legend.key.height = unit(0.3, "cm"),
+        legend.key.width = unit(0.3, "cm"),
+        legend.spacing.y = unit(0.02, "cm"),
+        legend.text = element_text(size = 7),
+        legend.title = element_text(size = 9),
+     )
+# visualization with envfit result
+p <- mpse %>% 
+     mp_plot_ord(
+       .ord = cca, 
+       .group = Habitat, 
+       .size = Observe,
+       .starshape = Region,
+       show.side = FALSE, 
+       show.envfit = TRUE,
+       colour = "black",
+       bg.colour = "white"
+     ) +
+     scale_starshape_manual(values=c(1, 13, 15)) +
+     scale_fill_manual(
+        values = cols, 
+        guide = guide_legend(
+          override.aes = list(starshape=15)
+        )
+     ) +
+     scale_size_continuous(
+       range = c(1, 3),
+       guide = guide_legend(override.aes = list(starshape=15))
+     ) + 
+     theme(
+        legend.key.height = unit(0.3, "cm"),
+        legend.key.width = unit(0.3, "cm"),
+        legend.spacing.y = unit(0.02, "cm"),
+        legend.text = element_text(size = 7),
+        legend.title = element_text(size = 9),              
+     )
+ff <- aplot::plot_list(f, p, tag_levels="A")
+ff
+```
+
+## The distribution of Mosquito species in the study. {#chapter4.4}
+
+We used *mp_cal_abundance* and *mp_plot_abundance* to calculated and visualized the abundance of the Mosquito species in the study (Fig.\ref{fig:mosquitoHeatmap}).
+
+(ref:mosquitoHeatmap) **The heatmap of the abundance (A) and relative abundance (B) of the Mosquito species.**
+
+```{r, message = FALSE, warning = FALSE , fig.width = 14, fig.height=6, fig.cap = "(ref:mosquitoHeatmap)", mosquitoHeatmap}
+cols2 <- c("deepskyblue", "yellow", "#FF9933")
+# The theme and scale of fill of heatmap
+Abund.char <- list(
+           scale_fill_viridis_c(option = "H"),
+           theme(
+             axis.text.x = element_text(size = 6),
+             axis.text.y = element_text(size = 8),
+             legend.title = element_text(size = 7),
+             legend.text = element_text(size = 5),
+             legend.key.width = unit(0.3, "cm"),
+             legend.key.height = unit(0.3, "cm")
+           )
+      )
+# The theme and legend of annotate bar of 'Habitat' variable
+Habitat.char <- list(
+           scale_fill_manual(values = cols),
+           theme(
+             legend.key.height = unit(0.3, "cm"),
+             legend.key.width = unit(0.3, "cm"),
+             legend.spacing.y = unit(0.02, "cm"),
+             legend.text = element_text(size = 7),
+             legend.title = element_text(size = 9)
+           )
+      )
+# The theme and legend of annotate bar of 'Region' variable
+Region.char <- list(
+           scale_fill_manual(values = cols2),
+           theme(
+             legend.key.height = unit(0.3, "cm"),
+             legend.key.width = unit(0.3, "cm"),
+             legend.spacing.y = unit(0.02, "cm"),
+             legend.text = element_text(size = 7),
+             legend.title = element_text(size = 9)
+           )
+      )
+# visualization of the count abundance.
+p.count <- mpse %>%
+    mp_cal_abundance(
+      .abundance = Abundance,
+      force = T,
+      relative = F
+    ) %>%
+    mp_plot_abundance(
+      .abundance = Abundance,
+      force = T,
+      relative = F,
+      geom = "heatmap",
+      topn = "all",
+      .group = c(Habitat, Region)
+    ) %>%
+    set_scale_theme(
+      x = Abund.char,
+      aes_var = Abundance
+    ) %>%
+    set_scale_theme(
+      x = Habitat.char,
+      aes_var = Habitat
+    ) %>%
+    set_scale_theme(
+      x = Region.char,
+      aes_var = Region
+    )
+# visualization of the relative abundance
+p.rel <- mpse %>%
+    mp_cal_abundance(
+      .abundance = Abundance,
+      force = T,
+      relative = T
+    ) %>%
+    mp_plot_abundance(
+      .abundance = Abundance,
+      force = T,
+      relative = T,
+      geom = "heatmap",
+      topn = "all",
+      .group = c(Habitat, Region)
+    ) %>%
+    set_scale_theme(
+      x = Abund.char,
+      aes_var = RelAbundance
+    ) %>%
+    set_scale_theme(
+      x = Habitat.char,
+      aes_var = Habitat
+    ) %>%
+    set_scale_theme(
+      x = Region.char,
+      aes_var = Region
+    )
+ff <- aplot::plot_list(p.count, p.rel, tag_levels="A")
+ff
+```
+
+Then We can use *mp_diff_analysis* to identify the species that have significant differential abundance between the **field** and **forest**. We found the Cx.sal (*Culex salinarius*) and Ps.col (*Psorophora columbiae*) were significantly enriched in **field**, However, the Ae.albo (*Aedes albopicta*), Ae.cin (*Aedes cinereus*), Ps.fer (*Psorophora ferox*), Ae.tris (*Aedes triseriatus*), Ae.can (*Aedes canadensis*), Ae.hen (*Aedes hendersoni*), Ae.atl (*Aedes atlanticus*) and Ae.dup (*Aedes dupreei*) were significantly enriched in the **forest**
+
+```{r}
+mpse %>% 
+    dplyr::filter(Habitat %in% c("Field", "Forest")) %>% 
+    dplyr::mutate(Habitat = as.vector(Habitat)) %>%
+    mp_diff_analysis(.abundance=Abundance, force=T, relative=T, .group=Habitat) %>%
+    mp_extract_feature() %>% 
+    dplyr::filter(fdr<=0.05 & !is.na(Sign_Habitat)) %>% 
+    print(width=200)
+```
+
+```{r, echo = FALSE}
+saveRDS(mpse, "./TmpRef/mosquito_mpse.rds")
+pp <- aplot::plot_list(p.alpha, p, widths = c(2.5, 3), nrow = 1)
+ggsave(filename="./Figures/Fig8.svg", pp, device="svg", width = 10, height = 5)
+```
+
+# Session information {#chapter5}
+
+Here is the output of sessionInfo() on the system on which this document was compiled:
+
+```{r, echo=FALSE}
+options(width = 200)
+sessioninfo::session_info()
+```
+
+# References {#chapter6}
