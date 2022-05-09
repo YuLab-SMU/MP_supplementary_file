@@ -904,6 +904,8 @@ p.clado <- mpse2 %>%
 p.clado
 ```
 
+\newpage
+
 ### visualization of different results by `ggdiffclade` {#chapter2.6.1}
 
 The color of discriminative taxa represent the taxa is more abundant in the corresponding group. The point size shows the negative logarithms (base 10) of pvalue. The bigger size of point shows more significant (lower pvalue), the *pvalue* was calculated in the first step test (default is *kruskal.test*).
@@ -1322,6 +1324,8 @@ p.cladogram <- mpse.crc.ZellerG_2014 %>%
 
 p.cladogram
 ```
+
+\newpage
 
 ## Interoperable with the existing computing ecosystem {#chapter2.9}
 

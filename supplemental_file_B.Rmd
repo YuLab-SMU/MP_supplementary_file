@@ -171,10 +171,6 @@ otu.sign.da <- mpse3 %>% mp_extract_feature() %>%
     tidyr::pivot_wider(id_cols=c('Sample', 'Group'), names_from='OTU', values_from=RelRareAbundanceBySample) %>%
     dplyr::mutate_at('Group', as.factor)
 
-# xx <- curatedMetagenomicData('GuptaA_2019.relative_abundance', dryrun=F)
-# mpse.crc.GuptaA <- xx[[1]] %>% as.MPSE
-mpse.crc.GuptaA <- readRDS('./data/curatedMetagenomicData/mpse.crc_GuptaA_2019.RDS')
-
 # xx <- curatedMetagenomicData('HallAB_2017.relative_abundance', dryrun=F)
 # mpse.ibd.HallAB <- xx[[1]] %>% as.MPSE
 mpse.ibd.HallAB <- readRDS('./data/curatedMetagenomicData/mpse.ibd_HallAB_2017.RDS')
@@ -183,114 +179,11 @@ mpse.ibd.HallAB <- readRDS('./data/curatedMetagenomicData/mpse.ibd_HallAB_2017.R
 # mpse.ibd.IjazUZ <- xx[[1]] %>% as.MPSE
 mpse.ibd.IjazUZ <- readRDS('./data/curatedMetagenomicData/mpse.ibd_IjazUZ_2017.RDS')
 
-sample.da.GuptaA <- mpse.crc.GuptaA %>% mp_extract_sample %>%
-    dplyr::select(Sample, disease)
-
 sample.da.HallAB <- mpse.ibd.HallAB %>% mp_extract_sample %>%
     dplyr::select(Sample, disease)
 
 sample.da.IjazUZ <- mpse.ibd.IjazUZ %>% mp_extract_sample %>%
     dplyr::select(Sample, disease)
-
-mpse.crc.GuptaA %>%
-    mp_diff_analysis(
-       .abundance = Abundance,
-       force = TRUE,
-       relative = FALSE,
-       .group = disease,
-       fc.method = 'compare_mean'
-    ) %>%
-    mp_extract_feature() %>%
-    dplyr::filter(!is.na(Sign_disease)) %>%
-    select(OTU, AbundanceBySample) %>%
-    tidyr::unnest(AbundanceBySample) %>%
-    select(OTU, Sample, Abundance, disease) %>%
-    tidyr::pivot_wider(
-       id_cols = c('Sample', 'disease'), 
-       values_from = Abundance, 
-       names_from = OTU
-    ) %>%
-    dplyr::mutate_at('disease', as.factor) ->
-    otu.sign.da.crc.GuptaA
-
-mpse.crc.GuptaA %>%
-    mp_balance_clade(
-      .abundance = Abundance,
-      force = TRUE,
-      relative = FALSE,
-      pseudonum = 1,
-      balance_fun='geometric.mean'
-    ) -> mpse.balance.node.gm.crc.GuptaA
-
-mpse.balance.node.gm.crc.GuptaA %>%
-    mp_diff_analysis(
-      .abundance = Abundance,
-      force = TRUE,
-      relative = FALSE,
-      .group = disease,
-      fc.method = 'compare_mean'
-    ) %>%
-    mp_extract_feature %>%
-    dplyr::filter(!is.na(Sign_disease)) %>%
-    select(OTU, AbundanceBySample) %>%
-    tidyr::unnest(AbundanceBySample) %>%
-    select(OTU, Sample, Abundance, disease) %>%
-    tidyr::pivot_wider(id_cols=c('Sample', 'disease'), values_from=Abundance, names_from=OTU) %>%
-    dplyr::mutate_at('disease', as.factor) ->
-    bla.sign.da.gm.crc.GuptaA
-
-mpse.crc.GuptaA %>%
-    mp_balance_clade(
-      .abundance = Abundance,
-      force = TRUE,
-      relative = FALSE,
-      pseudonum = 1,
-      balance_fun='mean'
-    ) -> mpse.balance.node.mean.crc.GuptaA
-
-mpse.balance.node.mean.crc.GuptaA %>%
-    mp_diff_analysis(
-      .abundance = Abundance,
-      force = TRUE,
-      relative = FALSE,
-      .group = disease,
-      fc.method = 'compare_mean'
-    ) %>%
-    mp_extract_feature %>%
-    dplyr::filter(!is.na(Sign_disease)) %>%
-    select(OTU, AbundanceBySample) %>%
-    tidyr::unnest(AbundanceBySample) %>%
-    select(OTU, Sample, Abundance, disease) %>%
-    tidyr::pivot_wider(id_cols=c('Sample', 'disease'), values_from=Abundance, names_from=OTU) %>%
-    dplyr::mutate_at('disease', as.factor) ->
-    bla.sign.da.mean.crc.GuptaA
-
-mpse.crc.GuptaA %>%
-    mp_balance_clade(
-      .abundance = Abundance,
-      force = TRUE,
-      relative = FALSE,
-      pseudonum = 1,
-      balance_fun='median'
-    ) -> mpse.balance.node.median.crc.GuptaA
-
-mpse.balance.node.median.crc.GuptaA %>%
-    mp_diff_analysis(
-      .abundance = Abundance,
-      force = TRUE,
-      relative = FALSE,
-      .group = disease,
-      fc.method = 'compare_mean',
-      #ldascore = 3
-    ) %>%
-    mp_extract_feature %>%
-    dplyr::filter(!is.na(Sign_disease)) %>%
-    select(OTU, AbundanceBySample) %>%
-    tidyr::unnest(AbundanceBySample) %>%
-    select(OTU, Sample, Abundance, disease) %>%
-    tidyr::pivot_wider(id_cols=c('Sample', 'disease'), values_from=Abundance, names_from=OTU) %>%
-    dplyr::mutate_at('disease', as.factor) ->
-    bla.sign.da.median.crc.GuptaA
 
 ###
 ###
@@ -523,32 +416,6 @@ make_rf_by_random_sample <- function(dat, prob=2/3, sample.da, group){
     return (res)
 }
 
-otu.auc.crc.GuptaA <- withr::with_seed(123,
-    replicate(100,
-      make_rf_by_random_sample(dat=otu.sign.da.crc.GuptaA, prob = 1/2,  sample.da=sample.da.GuptaA, group='disease')
-   )
-)
-
-bla.auc.crc.GuptaA <- withr::with_seed(123,
-    replicate(100,
-      make_rf_by_random_sample(dat=bla.sign.da.gm.crc.GuptaA, prob = 1/2, sample.da.GuptaA, group='disease')
-   )
-)
-
-bla.auc.mean.crc.GuptaA <- withr::with_seed(123,
-    replicate(100,
-      make_rf_by_random_sample(dat=bla.sign.da.mean.crc.GuptaA, prob = 1/2, sample.da.GuptaA, group='disease')
-    )
-)
-
-bla.auc.median.crc.GuptaA <- withr::with_seed(123,
-    replicate(100,
-      make_rf_by_random_sample(dat = bla.sign.da.median.crc.GuptaA, prob = 1/2, sample.da.GuptaA, group='disease')
-    )
-)
-
-###
-###
 otu.auc.ibd.HallAB <- withr::with_seed(123,
     replicate(100,
       make_rf_by_random_sample(dat=otu.sign.da.ibd.HallAB, prob = 1/2, sample.da.HallAB, group='disease')
@@ -638,15 +505,6 @@ dd.cd <- data.frame(
       tidyr::pivot_longer(cols=!study, names_to = 'Type', values_to = 'AUC')
 
 
-dd.crc <- data.frame(
-        SignOTU = otu.auc.crc.GuptaA,
-        SignBalance.gm = bla.auc.crc.GuptaA,
-        SignBalance.mean = bla.auc.mean.crc.GuptaA,
-        SignBalance.median = bla.auc.median.crc.GuptaA
-      ) %>%
-      dplyr::mutate(study='CRC.GuptaA') %>%
-      tidyr::pivot_longer(cols=!study, names_to = 'Type', values_to = 'AUC') #%>%
-      #dplyr::select(-test)
 dd.ibd.HallAB <- data.frame(
         SignOTU = otu.auc.ibd.HallAB,
         SignBalance.gm = bla.auc.ibd.HallAB,
@@ -665,7 +523,7 @@ dd.ibd.IjazUZ <- data.frame(
       dplyr::mutate(study='IBD.IjazUZ') %>%
       tidyr::pivot_longer(cols=!study, names_to = 'Type', values_to = 'AUC')
 
-dd <- dplyr::bind_rows(dd.cd, dd.crc, dd.ibd.HallAB, dd.ibd.IjazUZ)
+dd <- dplyr::bind_rows(dd.cd, dd.ibd.HallAB, dd.ibd.IjazUZ)
 
 
 comparelist <- dd %>%
@@ -677,7 +535,7 @@ comparelist <- dd %>%
 
 Sign.Balance.AUC.p <- ggplot(dd, aes(x=Type, y=AUC, fill=Type)) +
      geom_boxplot() +
-     geom_jitter(color='grey', width=.2, show.legend = FALSE, alpha = .6) +
+     geom_jitter(color='grey', width=.2, show.legend = FALSE, alpha = .5) +
      ggsignif::geom_signif(
        comparisons = comparelist,
        test = 'wilcox.test',
@@ -690,7 +548,7 @@ Sign.Balance.AUC.p <- ggplot(dd, aes(x=Type, y=AUC, fill=Type)) +
      xlab(NULL) +
      facet_grid(~study) +
      theme(
-       strip.background.x = element_rect(color = NA, fill = 'grey50'),
+       strip.background.x = element_rect(color = NA, fill = 'grey'),
        strip.text.x = element_text(face = 'bold'),
        legend.position = c(.86, .2),
        axis.text.x = element_blank(),
@@ -829,7 +687,7 @@ compare.enrich.p <- dotplot(enrich.res, x = 'Sign_disease') +
    theme(
      axis.text.x = element_text(angle = -45, hjust=0),
      strip.text.x = element_text(face = 'bold', size = 9),
-     strip.background.x = element_rect(fill = 'grey60', color = NA),
+     strip.background.x = element_rect(fill = 'grey', color = NA),
      panel.grid.major.y = element_line(linetype='dotted', color='#808080'),
      panel.grid.major.x = element_blank()
    )
