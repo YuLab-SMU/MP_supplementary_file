@@ -77,9 +77,11 @@ suppressPackageStartupMessages({
 })
 ```
 
-# Comparing the performance of the models built based on significant differential balance nodes (geometric.mean, mean and median methods) and significant differential OTUs.
+# Comparing the performance of the models built based on significant differential clades and significant differential OTUs.
 
-(ref:SignBalanceROC) **The AUC boxplot of different study based on the significant different balance nodes and OTUs**. We found the performance of the models built based on significant differential balance nodes were almost equal to the model based on significant differential OTUs, and even better in some cases. 
+To evaluate the supervised classification accuracy with clinical outcomes based on differential clades and differential OTUs, we built the randomForest model and assessed the classifier performance for some diseases [@Hall2017; @ijaz_distinct_2017] (Half of the samples are used for training and the other half for is used for prediction, which was repeated sampling 100 times, and finally the AUC score was calculated) with the significant differential clades and OTUs respectively.
+
+(ref:SignBalanceROC) **The AUC boxplot of different study based on the significant differential clades and OTUs**. We found the performance of the models built based on significant differential clades were almost better than the model based on significant differential OTUs. 
 
 ```{r, fig.width = 9, fig.height = 4.5, fig.align = 'center', warning=FALSE, message=FALSE, fig.cap = '(ref:SignBalanceROC)', SignBalanceROC}
 mpse2 <- readRDS('./data/IBD_data/mpse2.RDS')
@@ -533,7 +535,8 @@ comparelist <- dd %>%
                apply(2, list) %>%
                unlist(recursive = FALSE)
 
-Sign.Balance.AUC.p <- ggplot(dd, aes(x=Type, y=AUC, fill=Type)) +
+Sign.Balance.AUC.p <- dd %>% #dplyr::filter(study != "CD") %>%
+    ggplot(aes(x=Type, y=AUC, fill=Type)) +
      geom_boxplot() +
      geom_jitter(color='grey', width=.2, show.legend = FALSE, alpha = .5) +
      ggsignif::geom_signif(
@@ -544,6 +547,7 @@ Sign.Balance.AUC.p <- ggplot(dd, aes(x=Type, y=AUC, fill=Type)) +
        size = .25,
        tip_length = .01
      ) +
+     scale_fill_manual(values = c("#264653", "#2A9D8F", "#E9C46A", "#F4A261")) +
      theme_bw() +
      xlab(NULL) +
      facet_grid(~study) +
@@ -556,6 +560,39 @@ Sign.Balance.AUC.p <- ggplot(dd, aes(x=Type, y=AUC, fill=Type)) +
      )
 Sign.Balance.AUC.p
 ```
+
+```{r echo=FALSE}
+Sign.Balance.AUC.p2 <- dd %>% 
+     dplyr::filter(study == "CD" & Type %in% c("SignBalance.gm", "SignOTU")) %>%
+     ggplot(aes(x=Type, y=AUC, fill=Type)) +
+     geom_boxplot() +
+     geom_jitter(color='grey', width=.2, show.legend = FALSE, alpha = .5) +
+     ggsignif::geom_signif(
+       comparisons = list(c("SignBalance.gm", "SignOTU")),
+       test = 'wilcox.test',
+       step_increase = .05,
+       textsize = 3.88,
+       size = .25,
+       tip_length = .01
+     ) +
+     scale_fill_manual(values = c("#264653", "#F4A261")) +
+     theme_bw() +
+     xlab(NULL) +
+     facet_grid(~study) +
+     theme(
+       strip.background.x = element_rect(color = NA, fill = 'grey'),
+       strip.text.x = element_text(face = 'bold'),
+       panel.grid = element_blank(),
+       axis.text.x = element_blank(),
+       axis.ticks.x = element_blank(),
+       legend.key.height = unit(.3, 'cm'),
+       legend.key.width = unit(.3, "cm"),
+       legend.text = element_text(size=7),
+       legend.title = element_text(size=9)       
+     )
+ggsave(Sign.Balance.AUC.p2, filename = './Figures/Sign.Balance.AUC.svg', device='svg', width=3.4, height=4.8)
+```
+
 
 # The comparison of KEGG enrichment results based on the results of common methods of differential analysis.
 
@@ -701,7 +738,7 @@ compare.enrich.p
 
 # The simulation results of biomarker discovery using *mp_diff_analysis* of **MicrobiotaProcess**
 
-To estimate the performance of *mp_diff_analysis* for microbiome census data, we constructed a collection of simulated datasets based on lognormal, and normal distributions. To evaluate the sample size, half of the datasets with different distributions have 100 samples and 1000 features, and the other half have 20 samples and 1000 features. All samples in the dataset are divided into 2 categories, and each category is further divided into two sub-categories. At the same time, there are 1000 features in each dataset, half of which are sampled from a specified distribution with different mean between two categories (group) (denoted as positive features), and the other half are from the same mean sampled from the specified distribution (denoted as negative features). Since the mean and variance of the features might be affect the sensitivity and specificity of the detection, positive features are constructed using a range of different means and standard deviations (Please refer to the detailed description below). The false positive rate (FPR) and false negative rate (FNR) were used as methods for evaluating results. False positive rate is the number of erroneously detected positive features divided by the total number of positive features. False negative rate  is the number of erroneously detected negative features divided by the total number of negative features. The lower FPR and FNR, the better the performance. The source codes are available from the repository^[<https://github.com/YuLab-SMU/MP_supplementary_file/tree/main/supplemental_fileB_codes>] 
+To estimate the performance of *mp_diff_analysis* and other tools for microbiome census data, we constructed a collection of simulated datasets based on lognormal, and normal distributions. To evaluate the sample size, half of the datasets with different distributions have 100 samples and 1000 features, and the other half have 20 samples and 1000 features. All samples in the dataset are divided into 2 categories, and each category is further divided into two sub-categories. At the same time, there are 1000 features in each dataset, half of which are sampled from a specified distribution with different mean between two categories (group) (denoted as positive features), and the other half are from the same mean sampled from the specified distribution (denoted as negative features). Since the mean and variance of the features might be affect the sensitivity and specificity of the detection, positive features are constructed using a range of different means and standard deviations (Please refer to the detailed description below). The false positive rate (FPR) and false negative rate (FNR) were used as methods for evaluating results. False positive rate is the number of erroneously detected positive features divided by the total number of positive features. False negative rate  is the number of erroneously detected negative features divided by the total number of negative features. The lower FPR and FNR, the better the performance. The source codes are available from the repository^[<https://github.com/YuLab-SMU/MP_supplementary_file/tree/main/supplemental_fileB_codes>] 
 
 ## Simulation datasets from lognormal distribution
 

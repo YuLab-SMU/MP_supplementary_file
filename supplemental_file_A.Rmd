@@ -153,6 +153,9 @@ mpse2
 ```
 
 ```{r, echo = FALSE}
+if (!dir.exists(file.path("./TmpRef"))){
+    dir.create("./TmpRef")
+}
 saveRDS(mpse, file="./TmpRef/mpse.rds")
 ```
 
@@ -906,6 +909,10 @@ p.clado
 
 \newpage
 
+```{r echo=FALSE}
+ggsave(p.clado, filename="./Figures/diff_cladogram.cd.svg", device="svg", width = 10, height = 10)
+```
+
 ### visualization of different results by `ggdiffclade` {#chapter2.6.1}
 
 The color of discriminative taxa represent the taxa is more abundant in the corresponding group. The point size shows the negative logarithms (base 10) of pvalue. The bigger size of point shows more significant (lower pvalue), the *pvalue* was calculated in the first step test (default is *kruskal.test*).
@@ -1092,11 +1099,16 @@ ggdifftaxbar(obj=deres, xtextsize=1.5,
 
 ## Significant differential balance nodes for the diagnosis of some related diseases {#chapter2.7}
 
-*MicrobiotaProcess* provided *mp_balance_clade* to calculate the balance of internal nodes of phylogenetic tree with the abundance (geometric mean, mean or median) of tips. Then we can use *mp_diff_analysis* to identify the signal balance nodes. We found the some signal balance nodes contains the species that were not detected in differential analysis, such as OTU_97/OTU_454 (from Clostridiaceae SMB53), OTU_233/OTU_152 (Lachnospiraceae Lachnospira) etc, which suggested the balance transform can be used to identified the groups of related bacterial taxa. In addition, the signal balance nodes also can be used for the classifying samples (refer to the first session of supplemental file B).
+*MicrobiotaProcess* provided *mp_balance_clade* to calculate the balance of clades of phylogenetic tree with the abundance (geometric mean, mean or median) of tips. Then we can use *mp_diff_analysis* to identify the significantly differential clades.
 
 (ref:SignBalanceCladogram) The significant differential balance cladogram between the CD and Control group. The external heatmap represents the differential balance clades (up and down). The external point layer represents the relative abundance of each OTU on each sample. The external bar layer represents the mean LDA of the differential OTUs.
 
 ```{r, fig.width = 14, fig.height = 14, fig.align = 'center', fig.cap = '(ref:SignBalanceCladogram)', warning=FALSE, message=FALSE, SignBalanceCladogram}
+library(ggplot2)
+library(ggsci)
+library(ggtree)
+library(forcats)
+
 mpse3 <- mpse2 %>% dplyr::filter(Class != 'c__un_p__Proteobacteria')
 mpse3 %>%
     mp_balance_clade(
@@ -1107,79 +1119,69 @@ mpse3 %>%
       balance_fun='geometric.mean'
     ) -> mpse.balance.node
 
-mpse.balance.node %>%
+mpse.balance.node %<>%
     mp_diff_analysis(
       .abundance = Abundance,
       force = TRUE,
       relative = FALSE,
       .group = Group,
       fc.method = 'compare_mean'
-    ) %>%
-    mp_extract_feature %>%
+    ) 
+
+mpse.balance.node %>%
+    mp_extract_feature() %>%
     dplyr::filter(!is.na(Sign_Group)) -> ba.node.sign
 
-bla.sign.da.mean <- mpse3 %>%
-    mp_balance_clade(
-      .abundance = Abundance,
-      force = TRUE,
-      relative = FALSE,
-      pseudonum = 1,
-      balance_fun='mean'
-    ) %>%
-    mp_diff_analysis(
-      .abundance = Abundance,
-      force = TRUE,
-      relative = FALSE,
-      .group = Group,
-      fc.method = 'compare_mean'
-    ) %>%
-    mp_extract_feature %>%
-    dplyr::filter(!is.na(Sign_Group)) %>%
-    select(OTU, AbundanceBySample) %>%
-    tidyr::unnest(AbundanceBySample) %>%
-    select(OTU, Sample, Abundance, Group) %>%
-    tidyr::pivot_wider(id_cols=c('Sample', 'Group'), values_from=Abundance, names_from=OTU) %>%
-    dplyr::mutate_at('Group', as.factor)
+ba.node.sign %>%
+    dplyr::filter(node %in% c(434, 426, 343, 388)) %>%
+    tidyr::unnest(Balance_offspring) %>%
+    tidyr::unnest(offspringTiplabel) %>%
+    select(offspringTiplabel, node) %>%
+    dplyr::mutate_at('node', as.character) %>%
+    dplyr::rename(BalanceNode = 'node') -> Hight.BalanceNode
 
-bla.sign.da.median <- mpse3 %>%
-    mp_balance_clade(
-      .abundance = Abundance,
-      force = TRUE,
-      relative = FALSE,
-      pseudonum = 1,
-      balance_fun='median'
-    ) %>%
-    mp_diff_analysis(
-      .abundance = Abundance,
-      force = TRUE,
-      relative = FALSE,
-      .group = Group,
-      fc.method = 'compare_mean'
-    ) %>%
-    mp_extract_feature %>%
-    dplyr::filter(!is.na(Sign_Group)) %>%
-    select(OTU, AbundanceBySample) %>%
-    tidyr::unnest(AbundanceBySample) %>%
-    select(OTU, Sample, Abundance, Group) %>%
-    tidyr::pivot_wider(id_cols=c('Sample', 'Group'), values_from=Abundance, names_from=OTU) %>%
-    dplyr::mutate_at('Group', as.factor)
-
-p1 <- mpse3 %>% mp_extract_otutree %>%
-      ggtree(layout = 'circular', size = .25, color = '#bed0d1') +
+p1 <- mpse3 %>% mp_extract_otutree() %>%
+      ggtree(
+        layout = 'circular', 
+        size = .25, 
+        color = '#bed0d1'
+      ) %<+% Hight.BalanceNode +
       geom_tiplab(
+        data = td_filter(!is.na(BalanceNode)),
+        size = 1.2,
+        mapping = aes(color=BalanceNode),
+        align = TRUE,
+        linesize = .5,
+        linetype = 3,
+        offset = 1.45
+      ) +
+      scale_color_npg(guide=guide_legend(overide.aes=list(size = 2.6))) +
+      geom_tiplab(
+        data = td_filter(is.na(BalanceNode)),
         size = 1.2,
         align = TRUE,
         linesize = .05,
         linetype = 3,
         offset = .9
+      ) +
+      geom_point(
+        data = td_filter(node %in% ba.node.sign$node),
+        size = .3,
+        color = 'red'
+      ) +
+      ggrepel::geom_text_repel(
+        data = td_filter(node %in% ba.node.sign$node),
+        mapping = aes(label = node),
+        bg.color = 'white',
+        size = 2,
+        segment.size = .1,
+        min.segment.length = 0,
+        max.overlaps = 24,
       )
 
 ba.node.sign2 <- ba.node.sign %>%
                  tidyr::unnest(Balance_offspring) %>%
                  tidyr::unnest(offspringTiplabel)
-
-sample.da.CD <- mpse3 %>% mp_extract_sample %>%
-    dplyr::select(Sample, Group)
 
 bla.sign.da <- ba.node.sign %>%
     select(OTU, AbundanceBySample) %>%
@@ -1212,7 +1214,7 @@ p2 <- p1 +
     scale_fill_manual(values = c('#00D617', '#E6A519')) +
     scale_y_continuous(limits=c(-1, NA))
 
-p3 <- p2 + #%<+% abunda +
+p3 <- p2 + 
    ggnewscale::new_scale_fill() +
    geom_fruit(
      data = td_filter(RelRareAbundanceBySample > 0, .f=td_unnest(RareAbundanceBySample)),
@@ -1279,6 +1281,127 @@ p4 <- p3 %<+% sign.otu +
      legend.margin = ggplot2::margin(-.25, 0, 0, 0, 'cm')
    )
 p4
+```
+
+```{r echo=FALSE}
+saveRDS(ba.node.sign, './TmpRef/balance_diff_nodes.rds')
+saveRDS(mpse.balance.node, './TmpRef/balance_input_CD.rds')
+```
+
+\newpage
+
+We found the some differential clades contains the species that were not detected the closely related species that were not detected on the previous differential analysis, such as OTU_454/OTU_97 (both belong to Clostridiaceae SMB53), OTU_152/OTU_233 (both belong to Lachnospira), which suggested the balance transform can improve the detection of differential signals by accumulating the small consilient differences at a broad resolution.
+
+(ref:SignalClades) **The balance scores of significantly differential clades and the relative abundance of their original OTUs** (A) the relative abundance, the taxonomy information and the compositional clades annotation of the original OTUs. (B) The balance scores of significantly differential clades.
+
+```{r, warning = FALSE, message = FALSE, fig.width = 9.5, fig.height=7, fig.align = 'center', fig.cap = '(ref:SignalClades)', SignalClades}
+no.sig.OTUs.da <- mpse.balance.node %>% mp_extract_feature() %>%
+    dplyr::filter(!is.na(Sign_Group)) %>%
+    select(OTU, node, Balance_offspring) %>%
+    tidyr::unnest(Balance_offspring) %>%
+    dplyr::filter(node %in% c(434, 426, 343, 388)) %>%
+    tidyr::unnest(offspringTiplabel) %>%
+    dplyr::arrange(node)
+
+no.sig.OTUs <- no.sig.OTUs.da %>% dplyr::pull(offspringTiplabel)
+
+no.sig.otu.genus <- mpse2 %>%
+    mp_extract_taxonomy %>%
+    dplyr::filter(OTU %in% no.sig.OTUs) %>%
+    select(OTU, Genus) %>%
+    dplyr::mutate(Genus=gsub("g__Clostridium_f__Clostridiaceae", "g__Clostridium", Genus))
+
+theme_annot <- function(){
+    th <- list(
+        labs(x=NULL, y=NULL),
+        theme_bw(),
+        theme(
+          axis.text = element_blank(),
+          axis.ticks = element_blank(),
+          panel.grid = element_blank(),
+          panel.border = element_blank(),
+          legend.key.height = unit(.3, 'cm'),
+          legend.key.width = unit(.3, "cm"),
+          legend.text = element_text(size=7),
+          legend.title = element_text(size=9)
+        )
+    )
+    return(th)
+}
+
+mpse2 %>%
+    filter(OTU %in% no.sig.OTUs) %>%
+    as_tibble() %>%
+    ggplot(
+      aes(
+        y = fct_reorder(Sample, Group, .fun = min),
+        x = fct_relevel(OTU, no.sig.OTUs),
+        fill = RelRareAbundanceBySample,
+        size = RelRareAbundanceBySample
+      )
+    ) +
+    geom_tile(color='grey', size=.5, fill=NA) +
+    geom_point(
+      data = td_filter(RelRareAbundanceBySample!=0),
+      shape=21
+    ) +
+    scale_fill_gradient2() +
+    theme_bw() +
+    theme(axis.text.x=element_text(angle=45, hjust=1), panel.grid=element_blank()) +
+    labs(x=NULL, y=NULL, size="RelAbun", fill='RelAbun') -> f1
+
+mpse2 %>%
+    mp_extract_sample() %>%
+    ggplot(aes(y=Sample, fill=Group, x="Group")) +
+    geom_tile() +
+    scale_fill_manual(values = c('orange', 'deepskyblue')) +
+    theme_annot() +
+    labs(x=NULL, y=NULL) -> f2
+
+no.sig.OTUs.da %>%
+    ggplot(aes(x=fct_reorder(offspringTiplabel, node, .fun=min),
+               y='BalanceNode',
+               fill=as.character(node))) +
+    geom_tile() +
+    scale_fill_uchicago() +
+    theme_annot() +
+    labs(x=NULL, y=NULL, fill='BalanceNode') -> f3
+
+no.sig.otu.genus %>% ggplot(aes(x=OTU,y="Genus",fill=Genus)) +
+    geom_tile() +
+    labs(fill = 'Genus') +
+    coord_cartesian(expand=F) +
+    theme_annot() +
+    scale_fill_npg() -> f4
+
+ff <- f1 %>%
+      aplot::insert_right(f2, width = .1) %>%
+      aplot::insert_top(f3, height = .03) %>%
+      aplot::insert_top(f4, height = .028)
+
+f.box <- mpse.balance.node %>%
+    dplyr::filter(node %in% c(434, 426, 343, 388)) %>%
+    as_tibble() %>%
+    tidyr::unnest(Balance_offspring) %>%
+    dplyr::filter(Clade == 'up') %>%
+    ggplot(aes(y = Group, x = Abundance, fill = Group)) +
+    geom_boxplot(orientation = 'y') +
+    geom_jitter(color = 'grey', height = .2) +
+    facet_wrap(pseudolabel~., ncol = 1, strip.position = 't', scales = 'free') +
+    scale_fill_manual(values = c('orange', 'deepskyblue')) +
+    ggsignif::geom_signif(comparisons = list(c('CD', 'Control')), orientation = 'y') +
+    scale_y_discrete(position = 'r') +
+    ylab(NULL) +
+    xlab('Balance Score') +
+    theme_bw() +
+    theme(
+      legend.position = 'none',
+      panel.grid = element_blank(),
+      strip.background = element_rect(fill='grey', color=NA),
+      strip.text = element_text(face='bold')
+    )
+
+aplot::plot_list(ff, f.box, tag_levels = "A", widths=c(4.5, 5))
 ```
 
 \newpage
@@ -1378,7 +1501,7 @@ pp <- res %>%
         aes_var = Group
       )
 f <- res %>%
-     mp_extract_taxonomy %>%
+     mp_extract_taxonomy() %>%
      ggplot() +
      geom_text(
        mapping = aes(y=OTU, x=0, label=Genus, color=Phylum),
