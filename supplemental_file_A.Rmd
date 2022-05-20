@@ -89,7 +89,7 @@ BiocManager::install("MicrobiotaProcess")
 To reproduce the analysis in this document, the several extra packages also needed to be installed.
 
 ```r
-cranpkgs <- c("aplot", "ggpp", "igraph", 
+cranpkgs <- c("aplot", "ggpp", "igraph",  
               "broom", "forcats", 'pROC',
               "ggrepel", "ggVennDiagram", 
               "patchwork", "shadowtext",
@@ -260,7 +260,7 @@ ggsave(prare1, file = "./Figures/rarecurve.svg", device="svg", width=7, height=3
 
 ### Calculation and different analysis of alpha diversity {#chapter2.3.2}
 
-Alpha diversity can evaluate the richness and evenness of microbial communities. *MicrobiotaProcess* provides *mp_cal_alpha* to calculate alpha index. Six common diversity measures (*Observe*, *Chao1*, *ACE*, *Shannon*, *Simpson*, *Pielou*) are supported. In addition *MicrobiotaProcess* also provided *mp_cal_pd_metric* to calculate some phylogenetic community structure metrics, such as PD (Faith's Phylogenetic Diversity), NRI (Nearest Relative Index), NTI (Nearest Taxon Index), IAC (Imbalance of abundances at the clade level), PAE (Phylogenetic-Abundance Evenness), HAED (Entropic measure of diversity of evolutionary distinctiveness among individuals), EAED (Equitability of HAED) [@PhylogeneticMetric2; @PhylogeneticMetric]. The PAE and HAED both provide the measures of the phylogenetic diversity incorporating the species abundance of community [@PhylogeneticMetric]. The result can be visualized by *mp_plot_alpha*. This following example shows how to use *mp_cal_alpha* and *mp_plot_alpha* of *MicrobiotaProcess* to analysis the alpha diversity of the community. The *RareAbundance* is rarefied (default), which will be used to calculate the alpha diversity index, users can specify the *force=TRUE* of *mp_cal_alpha* to calculated the alpha diversity if the abundance is not be rarefied (referring to session \ref{chapter3.3.1}).
+Alpha diversity can evaluate the richness and evenness of microbial communities. *MicrobiotaProcess* provides *mp_cal_alpha* to calculate alpha index. Six common diversity measures (*Observe*, *Chao1*, *ACE*, *Shannon*, *Simpson*, *Pielou*) are supported. In addition, *MicrobiotaProcess* also provided *mp_cal_pd_metric* to calculate some phylogenetic community structure metrics, such as PD (Faith's Phylogenetic Diversity), NRI (Nearest Relative Index), NTI (Nearest Taxon Index), IAC (Relative deviation from null expectation of phylogenetically balanced abundances), PAE (Phylogenetic evenness of the abundance distribution scaled by branch lengths), HAED (Entropic measure of diversity of evolutionary distinctiveness among individuals), EAED (Equitability of HAED) [@PhylogeneticMetric2; @PhylogeneticMetric]. These phylogenetic metrics can help us to explore the process of microbiotal community assembly [@PhylogeneticMetric]. The result can be visualized by *mp_plot_alpha*. This following example shows how to use *mp_cal_alpha* and *mp_plot_alpha* of *MicrobiotaProcess* to analysis the alpha diversity of the community. The *RareAbundance* is rarefied (default), which will be used to calculate the alpha diversity index, users can specify the *force=TRUE* of *mp_cal_alpha* to calculated the alpha diversity if the abundance is not be rarefied (referring to session \ref{chapter3.3.1}).
 
 (ref:AlphaBox) **The raincloud plot of alpha diversity index** The horizontal coordinate represents each group (by *.group* argument of *mp_plot_alpha*), the vertical coordinate represents the alpha diversity index. 
 
