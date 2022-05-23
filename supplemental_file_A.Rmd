@@ -114,11 +114,11 @@ for (i in Biocpkgs){
 
 # Analysis of 16s rDNA dataset about 43 pediatric CD stool samples from iHMP {#chapter2}
 
-Here, we use the 43 pediatric IBD stool samples as example, which were obtained from the Integrative Human Microbiome Project Consortium (iHMP) [@iHMP]. 
+Here, we re-analyzed the 16s rDNA dataset of 43 pediatric IBD stool samples, which were obtained from the Integrative Human Microbiome Project Consortium (iHMP) [@iHMP]. 
 
 ## Importing the output of dada2 {#chapter2.1}
 
-The datasets were downloaded from web^[<https://www.microbiomeanalyst.ca/MicrobiomeAnalyst/resources/data/ibd_data.zip>]. These datasets contain `ibd_asv_table.txt` (feature table (*row features* X *column samples*)), `ibd_meta.csv` (metadata file of samples), and `ibd_taxa.txt` (the taxonomic annotation of features). In the session, we use *mp_import_dada2* of *MicrobiotaProcess* to import the dataset, and return an *MPSE* object.
+The datasets were downloaded from the web^[<https://www.microbiomeanalyst.ca/MicrobiomeAnalyst/resources/data/ibd_data.zip>]. These datasets contain `ibd_asv_table.txt` (feature table (*row features* X *column samples*)), `ibd_meta.csv` (metadata file of samples), and `ibd_taxa.txt` (the taxonomic annotation of features). In the session, we used *mp_import_dada2* of *MicrobiotaProcess* to import the dataset, and returned an *MPSE* object.
 
 ```{r, message=FALSE, warning=FALSE, fold.plot=FALSE, fold.output=FALSE, LoadData}
 library(MicrobiotaProcess)
@@ -161,7 +161,7 @@ saveRDS(mpse, file="./TmpRef/mpse.rds")
 
 ## Other import functions {#chapter2.2}
 
-*MicrobiotaProcess* also presents some other import functions \ref{tab:importFuns} to parse the output of the upstream pipelines. In addition, some common object of R can also be converted to *MPSE* object, such as *phyloseq* [@phyloseq], *SummarizedExperiment* [@SE], *TreeSummarizedExperiment* [@TSE], *biom* [@biom] (output of *biomformat* by *read_biom*) referring to session \ref{chapter3.1}. 
+*MicrobiotaProcess* also presents some other functions \ref{tab:importFuns} to parse the output of the upstream pipelines. In addition, some common objects of R can also be converted to *MPSE* object, such as *phyloseq* [@phyloseq], *SummarizedExperiment* [@SE], *TreeSummarizedExperiment* [@TSE], *biom* [@biom] (output of *biomformat* by *read_biom*) referring to session \ref{chapter3.1}. 
 
 ```{r, echo=FALSE, results='asis', importFuns}
 
@@ -186,9 +186,9 @@ knitr::kable(y, caption = caption, booktabs = T) %>%
 
 ### rarefaction visualization {#chapter2.3.1}
 
-Rarefaction, based on sampling technique, was used to compensate for the effect of sample size on the number of units observed in a sample. *MicrobiotaProcess* provided *mp_cal_rarecurve* and *mp_plot_rarecurve* to calculate and plot the curves.
+Rarefaction based on the sampling technique was used to compensate for the effect of sample size on the number of units observed in a sample. *MicrobiotaProcess* provided *mp_cal_rarecurve* and *mp_plot_rarecurve* to calculate and plot the curves.
 
-(ref:rarecurve1) **This exampls show *MicrobiotaProcess* provided *mp_cal_rarecurve* and *mp_plot_rarecurve* to calculate and visualize the rarefaction curve.** The horizontal coordinate represents the sequencing depth of samples, the vertical coordinate shows the Alpha diversity index (such as Observe OTU, Chao1 and ACE). The *mp_plot_rarecurve* provides three types of visualization. (A) the rarefaction curve for each sample. (B) the rarefaction curve for each sample with colored group (specified *.group* argument in *mp_plot_rarecurve*). (C) the rarefaction curve for each group with standard error of the mean (specified *.group* argument and *plot.group=TRUE* in *mp_plot_rarecurve*)
+(ref:rarecurve1) **This example shows *mp_cal_rarecurve* and *mp_plot_rarecurve* provided by *MicrobiotaProcess* to calculate and visualize the rarefaction curve.** The horizontal coordinate represents the sequencing depth of samples, the vertical coordinate shows the Alpha diversity index (such as Observe OTU, Chao1 and ACE). The *mp_plot_rarecurve* provides three types of visualization. (A) the rarefaction curve for each sample. (B) the rarefaction curve for each sample with colored group (specified *.group* argument in *mp_plot_rarecurve*). (C) the rarefaction curve for each group with standard error of the mean (specified *.group* argument and *plot.group=TRUE* in *mp_plot_rarecurve*)
 
 ```{r class.source = 'fold-show', fold.output=FALSE, fold.plot=FALSE, fig.width=7, fig.height=6, fig.align="center",warning=FALSE, message=FALSE, fig.cap='(ref:rarecurve1)', rarecurve1}
 library(MicrobiotaProcess)
@@ -260,7 +260,7 @@ ggsave(prare1, file = "./Figures/rarecurve.svg", device="svg", width=7, height=3
 
 ### Calculation and different analysis of alpha diversity {#chapter2.3.2}
 
-Alpha diversity can evaluate the richness and evenness of microbial communities. *MicrobiotaProcess* provides *mp_cal_alpha* to calculate alpha index. Six common diversity measures (*Observe*, *Chao1*, *ACE*, *Shannon*, *Simpson*, *Pielou*) are supported. In addition, *MicrobiotaProcess* also provided *mp_cal_pd_metric* to calculate some phylogenetic community structure metrics, such as PD (Faith's Phylogenetic Diversity), NRI (Nearest Relative Index), NTI (Nearest Taxon Index), IAC (Relative deviation from null expectation of phylogenetically balanced abundances), PAE (Phylogenetic evenness of the abundance distribution scaled by branch lengths), HAED (Entropic measure of diversity of evolutionary distinctiveness among individuals), EAED (Equitability of HAED) [@PhylogeneticMetric2; @PhylogeneticMetric]. These phylogenetic metrics can help us to explore the process of microbiotal community assembly [@PhylogeneticMetric]. The result can be visualized by *mp_plot_alpha*. This following example shows how to use *mp_cal_alpha* and *mp_plot_alpha* of *MicrobiotaProcess* to analysis the alpha diversity of the community. The *RareAbundance* is rarefied (default), which will be used to calculate the alpha diversity index, users can specify the *force=TRUE* of *mp_cal_alpha* to calculated the alpha diversity if the abundance is not be rarefied (referring to session \ref{chapter3.3.1}).
+Alpha diversity can evaluate the richness and evenness of microbial communities. *MicrobiotaProcess* provides *mp_cal_alpha* to calculate alpha index. Six common diversity measures (*Observe*, *Chao1*, *ACE*, *Shannon*, *Simpson*, *Pielou*) are supported. In addition, *MicrobiotaProcess* also provided *mp_cal_pd_metric* to calculate some phylogenetic community structure metrics, such as PD (Faith's Phylogenetic Diversity), NRI (Nearest Relative Index), NTI (Nearest Taxon Index), IAC (Relative deviation from null expectation of phylogenetically balanced abundances), PAE (Phylogenetic evenness of the abundance distribution scaled by branch lengths), HAED (Entropic measure of diversity of evolutionary distinctiveness among individuals), EAED (Equitability of HAED) [@PhylogeneticMetric2; @PhylogeneticMetric]. These phylogenetic metrics can help us to explore the process of microbiota community assembly [@PhylogeneticMetric]. The result can be visualized by *mp_plot_alpha*. The following example shows how to use *mp_cal_alpha* and *mp_plot_alpha* of *MicrobiotaProcess* to analyze the alpha diversity of the community. The *RareAbundance* is rarefied (default), which will be used to calculate the alpha diversity index, users can specify the *force=TRUE* of *mp_cal_alpha* to calculated the alpha diversity if the abundance can not be rarefied (referring to session \ref{chapter3.3.1}).
 
 (ref:AlphaBox) **The raincloud plot of alpha diversity index** The horizontal coordinate represents each group (by *.group* argument of *mp_plot_alpha*), the vertical coordinate represents the alpha diversity index. 
 
@@ -351,7 +351,7 @@ pd.roc.p
 
 ### Statistics and visualization of specific levels {#chapter2.4.1}
 
-*MicrobiotaProcess* presents the *mp_cal_abundance* and *mp_plot_abundance* for the calculation and visualization of composition of microbial communities. After the *mp_cal_abundance* done, you can get the abundance of specific levels of class by *mp_extract_abundance* (referring to session \ref{chapter2.5.4}). 
+*MicrobiotaProcess* presents the *mp_cal_abundance* and *mp_plot_abundance* for the calculation and visualization of the composition of microbial communities. After the *mp_cal_abundance* is done, you can get the abundance of specific levels of the class by *mp_extract_abundance* (referring to session \ref{chapter2.5.4}). 
 
 (ref:Abundance1) **The relative abundance of each sample in *class* level**
 
@@ -390,7 +390,7 @@ pclass
 ggsave(pclass, filename = "./Figures/AbundanceBar.svg", device = "svg", height=4, width = 8.5)
 ```
 
-The relative abundance of groups also can be visualized by providing *.group* argument and setting *plot.group=TRUE* in the *mp_plot_abundance*. If you want to view the raw abundance (count or others) of taxa, you can set the *relative* parameter of *mp_plot_abundance* to *FALSE*.
+The relative abundance of different groups also can be visualized by providing *.group* argument and setting *plot.group=TRUE* in the *mp_plot_abundance*. If you want to view the raw abundance (count or others) of taxa, you can set the *relative* parameter of *mp_plot_abundance* to *FALSE*.
 
 (ref:Abundance2) **This example show how to displayed the abundance (count or other) of sample and the relative abundance of groups**. The Abundance (count by rarefied) of each sample (A) and the relative abundance of group (B), these results show the *Gammaproteobacteria* of *CD* group might be more abundant than the *control* group.
 
@@ -427,9 +427,9 @@ pclass2 <- mpse2 %>%
 aplot::plot_list(pclass2, fclass, widths=c(10, 1), tag_levels = "A")
 ```
 
-The abundance of features also can be visualized by `mp_plot_abundance` with heatmap plot by setting `geom="heatmap"`.
+The abundance of features also can be visualized by *mp_plot_abundance* with heatmap plot by setting `geom="heatmap"`.
 
-(ref:AbundanceHeatmap) **The heatmap of abundance for each sample in *class* level.** The color (continuous) of heatmap represents the abundance of taxon, the color of bar represents the group name of sample, the horizontal coordinate represents the sample, and the vertical coordinate represents the taxon.
+(ref:AbundanceHeatmap) **The heatmap of abundance for each sample at *class* level.** The color (continuous) of heatmap represents the abundance of different classes, the color of bar plot represents the group name of sample, the horizontal coordinate represents the sample, and the vertical coordinate represents the different classes.
 
 ```{r, fig.width = 12, fig.height = 4, fig.align = "center", fig.cap = '(ref:AbundanceHeatmap)', warning=FALSE, message=FALSE, AbundanceHeatmap}
 hclass1 <- mpse2 %>%
@@ -513,7 +513,7 @@ ggsave(hclass1, filename = "./Figures/Abunheat.svg", device = "svg", width = 7, 
 
 The Venn or UpSet plot can help us to obtain the difference between groups in overview. *MicrobiotaProcess* provides *mp_cal_venn* (*mp_plot_venn*) and *mp_cal_upset* (*mp_plot_upset*) to perform the Venn and Upset analysis.
 
-(ref:VennUpsetPlot) **The venn diagram and upset plot for groups in OTU/ASV level**
+(ref:VennUpsetPlot) **The Venn diagram and upset plot for groups in OTU/ASV level**
 
 ```{r, fig.width=5, fig.height=5, fig.align="center", warning=FALSE, message=FALSE, fig.cap="(ref:VennUpsetPlot)", VennUpsetPlot}
 mpse2 %<>% 
@@ -717,8 +717,7 @@ ggsave(pcoaplot1, filename="./Figures/pcoa.svg", width = 5, height = 4, device =
 
 The result of distance between the samples also can be visualized by `mp_plot_dist` with heatmap or boxplot.
 
-(ref:distplot) **The distance heatmap and the boxplot for each sample**. The size and color of the heatmap represent the distance of each sample, the color of bar represent the group of sample (A). The boxplot represent the distance pairs of sample among the group, it show the dissimilarity of sample between the *control* and *CD* is significant, which is consistent with the result of 
-Permutational Multivariate Analysis of Variance in session \ref{chapter2.5.3}.
+(ref:distplot) **The distance heatmap and the boxplot for each sample**. The size and color of the heatmap represent the distance of each sample, and color of bar plot represents the group of sample (A). The boxplot represents the distance pairs of sample among the group, it shows the dissimilarity of the sample between the *control* and *CD* is significant, which is consistent with the result of the Permutational Multivariate Analysis of Variance in session \ref{chapter2.5.3}.
 
 ```{r, fig.width = 10, fig.height = 6, fig.align="center", message = FALSE, fig.cap = '(ref:distplot)', distplot}
 pdist1 <- mpse2 %>%
@@ -780,7 +779,7 @@ From the result, we found the *pvalue* of the analysis of *adonis* is smaller th
 
 ### hierarchical cluster analysis of samples {#chapter2.5.4}
 
-`beta diversity` metrics can assess the differences between microbial communities. It can be visualized with `PCA` or `PCoA`, this can also be visualized with hierarchical clustering based on ggplot2 [@ggplot2], ggtree [@ggtree2017] and ggtreeExtra [@ggtreeExtra]
+`beta diversity` metrics can assess the differences between microbial communities. It can be visualized with `PCA` or `PCoA`, it also can be visualized with hierarchical clustering based on ggplot2 [@ggplot2], ggtree [@ggtree2017] and ggtreeExtra [@ggtreeExtra]
 
 (ref:HClustplot) **The hierarchical clustering plot of samples based on Bray-Curtis distance calculated with abundance of OTU/ASV and the relative Abundance of phyla for samples**
 
@@ -853,7 +852,7 @@ ggsave(cplot1, filename = "./Figures/sample.clust.svg", device = "svg", width = 
 
 This package provides `mp_diff_analysis` to detect the biomarker. And the result (with `action = "get"`) can be visualized by *ggdiffbox*, *ggdiffclade*, *ggeffectsize*, *ggdifftaxbar* and *mp_plot_diff_res* *mp_plot_diff_cladogram* (with `action = "add"`), or displayed manually using `ggtree` [@ggtree2017] and `ggtreeExtra` [@ggtreeExtra].
 
-(ref:DeCladogram) **The cladogram of significant differential taxa** The hight light represents the differential taxa is enriched in the corresponding group. We found the species from Proteobacteria were enriched in the CD group, the species (OTU_42) from Actinobacteria were enriched in Control group.
+(ref:DeCladogram) **The cladogram of significant differential taxa between CD group and Control group** The hight light clades represent the differential taxa is enriched in the corresponding group. We found the species from Proteobacteria were enriched in the CD group, the species (OTU_42) from Actinobacteria were enriched in Control group.
 
 ```{r warning=FALSE, message=FALSE, fig.width = 10, fig.height=10, fig.align='center', fig.cap='(ref:DeCladogram)', DeCladogram}
 # for the kruskal_test and wilcox_test
@@ -915,7 +914,7 @@ ggsave(p.clado, filename="./Figures/diff_cladogram.cd.svg", device="svg", width 
 
 ### visualization of different results by `ggdiffclade` {#chapter2.6.1}
 
-The color of discriminative taxa represent the taxa is more abundant in the corresponding group. The point size shows the negative logarithms (base 10) of pvalue. The bigger size of point shows more significant (lower pvalue), the *pvalue* was calculated in the first step test (default is *kruskal.test*).
+The color of discriminative taxa represents the taxa is more abundant in the corresponding group. The point size shows the negative logarithms (base 10) of the pvalue. The bigger size of the point shows more significant (lower pvalue), the *pvalue* was calculated in the first step test (default is *kruskal.test*).
 
 (ref:DiffClade) **The taxa tree clade plot of different analysis result (with action = 'get')**.
 
@@ -955,7 +954,7 @@ diffclade_p
 
 We also can visualized the result (default, with `action = 'add'`) via `ggtree` [@ggtree2017] and `ggtreeExtra` [@ggtreeExtra].
 
-(ref:DiffAllplot) **The taxa tree of the community with the relative abundance of each OTU/ASV on sample and the LDA of different OTU/ASV**. The taxa tree was built with the taxa of all samples. The high light color of taxa tree represents the phyla of the clade. The external point layer represents the relative abundance of each OTU on sample. The external bar layer represents the LDA of the different OTU. The colored points represent the different taxa, the size of colored point represents the *pvalue* or *fdr*.
+(ref:DiffAllplot) **The taxa tree of the community with the relative abundance of each OTU/ASV on sample and the LDA of different OTU/ASV**. The taxa tree was built with the taxa of all samples. The high light clades of taxa tree represents the phyla. The external point layer represents the relative abundance of each OTU on sample. The external bar plot represents the LDA of the different OTU. The colored points represent the different taxa, the size of colored point represents the *pvalue* or *fdr*.
 
 ```{r, fig.width = 10, fig.height=10, fig.align="center", fig.cap = '(ref:DiffAllplot)', DiffAllplot}
 taxa.tree <- mpse2 %>% mp_extract_tree(type='taxatree')
@@ -1048,7 +1047,7 @@ p6 <- p6 + theme(
 p6
 ```
 
-To decreases coding burden, we also developed *mp_plot_diff_res* to visualize the result of different analysis.
+To decreases coding burden, we also developed *mp_plot_diff_res* to visualize the result of different analysis (mp_diff_analysis).
 
 (ref:DiffAllplot2) seel also Fig. \ref{fig:DiffAllplot}
 
@@ -1089,7 +1088,7 @@ diffbox
 
 ### visualization of differential results (with action = "get") by `ggdifftaxbar` {#chapter2.6.3}
 
-`ggdifftaxbar` can visualize the abundance of biomarker in each samples of groups, the mean and median abundance of groups or subgroups are also showed. `output` parameter is the directory of output.
+`ggdifftaxbar` can visualize the abundance of the biomarker in each sample of groups, the mean and median abundance of groups or subgroups are also shown. `output` parameter is the directory of output.
 
 ```{r}
 ggdifftaxbar(obj=deres, xtextsize=1.5, 
@@ -1097,11 +1096,11 @@ ggdifftaxbar(obj=deres, xtextsize=1.5,
              coloslist=cols)
 ```
 
-## Significant differential balance nodes for the diagnosis of some related diseases {#chapter2.7}
+## Significant differential clades for the diagnosis of some related diseases {#chapter2.7}
 
 *MicrobiotaProcess* provided *mp_balance_clade* to calculate the balance of clades of phylogenetic tree with the abundance (geometric mean, mean or median) of tips. Then we can use *mp_diff_analysis* to identify the significantly differential clades.
 
-(ref:SignBalanceCladogram) The significant differential balance cladogram between the CD and Control group. The external heatmap represents the differential balance clades (up and down). The external point layer represents the relative abundance of each OTU on each sample. The external bar layer represents the mean LDA of the differential OTUs.
+(ref:SignBalanceCladogram) **The cladogram of significant differential clades between the CD and Control group.** The external heatmap represents the differential clades (up and down). The external point layer represents the relative abundance of each OTU on each sample. The external bar plot represents the mean LDA of the differential OTUs.
 
 ```{r, fig.width = 14, fig.height = 14, fig.align = 'center', fig.cap = '(ref:SignBalanceCladogram)', warning=FALSE, message=FALSE, SignBalanceCladogram}
 library(ggplot2)
@@ -1290,7 +1289,7 @@ saveRDS(mpse.balance.node, './TmpRef/balance_input_CD.rds')
 
 \newpage
 
-We found the some differential clades contains the species that were not detected the closely related species that were not detected on the previous differential analysis, such as OTU_454/OTU_97 (both belong to Clostridiaceae SMB53), OTU_152/OTU_233 (both belong to Lachnospira), which suggested the balance transform can improve the detection of differential signals by accumulating the small consilient differences at a broad resolution.
+We found some differential clades contain the closely related species that were not be detected in the previous differential analysis, such as OTU_454/OTU_97 (both belong to Clostridiaceae SMB53), OTU_152/OTU_233 (both belong to Lachnospira), which suggested the phylogenetic transform can improve the detection of differential signals by accumulating the small consistent differences at a broad resolution.
 
 (ref:SignalClades) **The balance scores of significantly differential clades and the relative abundance of their original OTUs** (A) the relative abundance, the taxonomy information and the compositional clades annotation of the original OTUs. (B) The balance scores of significantly differential clades.
 
@@ -1408,7 +1407,7 @@ aplot::plot_list(ff, f.box, tag_levels = "A", widths=c(4.5, 5))
 
 ## Performing differential analysis among multiple groups {#chapter2.8}
 
-It is the same to perform the differential analysis between two groups using mp_diff_analysis. For example, we perform the following example to show this. The dataset was from a colorectal cancer study [@Zeller_2014], which was obtained with curatedMetagenomicData. The samples were from stools of the CRC, the Adenoma and the Control individuals. Though the analysis of mp_diff_analysis, we found *Fusobacterium gonidiaformans*, *Porphyromonas asaccharolytica*, *Parvimonas micra*, *Peptostreptococcus stomatis* and *Escherichia coli* were significantly enriched in CRC (colorectal cancer), *Ruminococcus lactaris* was significantly enriched in Adenoma (colorectal adenoma), but *Bifidobacterium longum*, *Bifidobacterium catenulatum*, *Blautia wexlerae* and *Anaerostipes hadrus* was significantly decreased in CRC and Adenoma.
+It is the same to perform the differential analysis between two groups using mp_diff_analysis. For example, we perform the following example to show this. The dataset was from a colorectal cancer study [@Zeller_2014], which was obtained with curatedMetagenomicData. The samples were from stools of the CRC, the Adenoma and the Control individuals. Through the analysis of *mp_diff_analysis*, we found *Fusobacterium gonidiaformans*, *Porphyromonas asaccharolytica*, *Parvimonas micra*, *Peptostreptococcus stomatis* and *Escherichia coli* were significantly enriched in CRC (colorectal cancer), *Ruminococcus lactaris* was significantly enriched in Adenoma (colorectal adenoma), but *Bifidobacterium longum*, *Bifidobacterium catenulatum*, *Blautia wexlerae* and *Anaerostipes hadrus* were significantly decreased in CRC and Adenoma.
 
 (ref:MultipleGroupTree) **The cladogram of significant differential taxa** The hight light represents the differential taxa is enriched in the corresponding group.
 
@@ -1601,7 +1600,7 @@ px
 
 \newpage
 
-We compared the different result between the *edgeR* [@edgeR] and *MicrobiotaProcess*. We found the number of the different OTUs based on edgeR is more than the MicrobiotaProcess. We think this is because we didn't remove the low-abundance OTUs in the analysis using *tidybulk*. This operation is generally needed in standard whole-transcriptome workflows. However, if it is preformed in the microbiome analysis, many low-abundance OTUs will be removed. More different OTUs were identified by the operation using edgeR [@edgeR].
+We compared the different result between the *edgeR* [@edgeR] and *MicrobiotaProcess*. We found the number of the different OTUs based on edgeR is more than the MicrobiotaProcess. We think this is because we didn't remove the low-abundance OTUs in the analysis using *tidybulk*. This operation is generally needed in standard whole-transcriptome workflows. However, if it is performed in the microbiome analysis, many low-abundance OTUs will be removed. More different OTUs were identified by the operation using edgeR [@edgeR].
 
 (ref:CompareDEotus) **The comparison of the different analysis result between the edgeR and MicrobiotaProcess** 
 
@@ -1622,7 +1621,7 @@ ggVennDiagram(DE.method, edge_size = 3, set_size = 4) +
     scale_fill_viridis_c(option="C")
 ```
 
-Then we extract the same different OTUs, we found the abundance of same OTUs belonged to *Bifidobacterium*, *Faecalibacterium*, *Roseburia* and *Coprobacillus* were significantly decreased in CD group compared to the Control group, the abundance of several OTUs belonged to *Escherichia*, *Klebsiella* and *Haemophilus*, which belonged to Gammaproteobacteria, were significantly enriched in CD group.
+Then we extracted the same different OTUs, we found the abundance of the same OTUs belonging to *Bifidobacterium*, *Faecalibacterium*, *Roseburia* and *Coprobacillus* were significantly decreased in CD group compared to the Control group, the abundance of several OTUs belonged to *Escherichia*, *Klebsiella* and *Haemophilus*, which belonged to Gammaproteobacteria, were significantly enriched in CD group.
 
 ```{r}
 mpse2 %>% 
@@ -1645,7 +1644,7 @@ ggsave("./Figures/OTU.tree.svg", p, device = "svg", width = 7, height = 7)
 
 # the analysis of the other published pediatric CD stool samples {#chapter3} 
 
-In the previous session, we described how to use *MicrobiotaProcess* to do the analysis of the 16s rDNA data. However, it also can be applied to metagenome or metatranscriptome species community data and the function data analysis. In this session, we used the example datasets about the other published pediatric CD stool microbial study [@Douglas2018CD] to show how to used *MicrobiotaProcess* to do the related analysis. The datasets were obtained from the github^[<https://github.com/LangilleLab/CD_RF_microbiome>]. To avoid duplication, we only show how to import the 16s dataset, we focused on the analysis of metagenomics and KEGG gene datasets.
+In the previous session, we described how to use *MicrobiotaProcess* to analyze the 16s rDNA data. However, it also can be applied to metagenome or metatranscriptome species community data and functional data analysis. In this session, we used the example datasets about the other published pediatric CD stool microbial study [@Douglas2018CD] to show how to use *MicrobiotaProcess* to do the related analysis. The datasets were obtained from the github^[<https://github.com/LangilleLab/CD_RF_microbiome>]. To avoid duplication, we only show how to import the 16s dataset, we focused on the analysis of metagenomics and KEGG gene datasets.
 
 ## The parsing of the 16s data and construction of MPSE class {#chapter3.1}
 
@@ -1665,7 +1664,7 @@ mpse16s
 
 ## Functional characterization using the KEGG dataset {#chapter3.2}
 
-The KEGG gene abundances were annotated based on the MGS data. It can also be imported as MPSE, and further analyzed using *MicrobiotaProcess*. Here, we only show how to identify the different gene using the *mp_diff_analysis* of *MicrobiotaProcess* (refer to session \ref{chapter2.6}). Other operations are similar with the analysis of 16s rDNA data (refer to session \ref{chapter2}).
+The KEGG gene abundances were annotated based on the MGS data. It can also be imported as MPSE, and further analyzed using *MicrobiotaProcess*. Here, we only show how to identify the different genes using the *mp_diff_analysis* of *MicrobiotaProcess* (refer to session \ref{chapter2.6}). Other operations are similar with the analysis of 16s rDNA data (refer to session \ref{chapter2}).
 
 ```{r}
 KO.da <- read.table("./data/CD_RF_microbiome/biscuit_mgs_KOs.tsv", 
@@ -1734,13 +1733,13 @@ saveRDS(mpseKO, "./data/CD_RF_microbiome/mpse_KO.rds")
 
 \newpage
 
-The KEGG enrichment results showed that the KEGG pathways of the CD stool group were significantly enriched in the Biosynthesis of amino acids and Glycine, serine, and threonine metabolism, and Pyruvate metabolism (Fig. \ref{fig:enrichKEGG}). This result is not revealed in the original paper [@Douglas2018CD], but it is consistent with a recent some other related studies, which found that Crohn’s Disease microbiomes had an increased potential to synthesize amino acids and Pyruvate metabolism [@Heinken2021IBD; @Bjerrum2017; @Polunin2013]. In addition, we used some other differential abundance methods (ANCOMBC, edgeR, LEfSe, Limma, metagenomSeq) to identify the differential KEGG genes, but the two pathways were not found simultaneously in the enrichment results based on the differential genes identified by other methods (refer to the second session of supplemental file B). We think this is because the *mp_diff_analysis* of *MicrobiotaProcess* achieves a better false positive rate (refer to the third session of supplemental file B).
+The KEGG enrichment results showed that the KEGG pathways of the CD stool group were significantly enriched in the Biosynthesis of amino acids and Glycine, serine, and threonine metabolism, and Pyruvate metabolism (Fig. \ref{fig:enrichKEGG}). This result is not revealed in the original paper [@Douglas2018CD], but it is consistent with recent some other related studies, which found that Crohn’s Disease microbiomes had an increased potential to synthesize amino acids and Pyruvate metabolism [@Heinken2021IBD; @Bjerrum2017; @Polunin2013]. In addition, we used some other differential abundance methods to identify the differential KEGG genes, but the two pathways were not found simultaneously in the enrichment results of CD based on the differential genes identified by other methods (refer to the second session of supplemental file B). We think this is because the *mp_diff_analysis* of *MicrobiotaProcess* achieves a better false positive rate (refer to the third session of supplemental file B)
 
 \newpage
 
 ## The species characterization of the metagenomics data {#chapter3.3}
 
-The taxa abundance data from metagenomics study also can be analyzed by *MicrobiotaProcess*, Here we used the example data from output of *MetaPhlAn* [@MetaPhlAn] to show how to perform the related analysis using *MicrobiotaProcess*. The output of other taxa abundance can also be imported and converted to the *MPSE* object, and further analyzed by *MicrobiotaProcess*, which can refer to session\ref{chapter3.2} and session\ref{chapter4}.
+The taxa abundance data from the metagenomics study also can be analyzed by *MicrobiotaProcess*, Here we used the example data from the output of *MetaPhlAn* [@MetaPhlAn] to show how to perform the related analysis using *MicrobiotaProcess*. The output of other taxa abundance can also be imported and converted to the *MPSE* object, and further analyzed by *MicrobiotaProcess*, which can refer to session\ref{chapter3.2} and session\ref{chapter4}.
 
 ```{r}
 # This is the output of MetaPhlAn2, which might need to specific the 'linenum'
@@ -1752,9 +1751,9 @@ mpseMGS %<>% left_join(sample.da, by=c("Sample"="sample_id"))
 mpseMGS
 ```
 
-### Alpha diversity analysis in MGS level {#chapter3.3.1}
+### Alpha diversity analysis in MGS (metagenomics sequencing) level {#chapter3.3.1}
 
-The metric of Metagenomics data usually is relative abundance. But the some functions of `MicrobiotaProcess` need to require the abundance is count (in default). To process the relative abundance (not integer), We can specific 'force = TRUE', which meaning the corresponding functions will be calculated directly without rarefied.
+The metric of metagenomics data usually is relative abundance. But some functions of `MicrobiotaProcess` need to require the abundance is count (in default). To process the relative abundance (not integer), We can specific 'force = TRUE', which means the corresponding functions will be calculated directly without rarefied.
 
 (ref:MGSalpha) **The alpha diversity boxplot based on MGS data**
 
@@ -1974,7 +1973,7 @@ p3
 
 \newpage
 
-Next, we extract the abundance of the different species, then using ggplot2 [@ggplot2] to visualize them (Fig.\ref{fig:DiffBoxMGS}).
+Next, we extracted the abundance of the different species, then using ggplot2 [@ggplot2] to visualize them (Fig.\ref{fig:DiffBoxMGS}).
 
 (ref:DiffBoxMGS) **The abundance boxplot of the differential species between the CD and control group**
 
@@ -2004,7 +2003,7 @@ MicrobiotaProcess also can be used to perform the other related ecology data ana
 
 ## Loading data and Construction of MPSE object {#chapter4.1}
 
-The 1 to 14 columns are the sample metadata including the study site, and habitat, etc. and the others columns represent the abundance of mosquito species the in each sample.
+The 1 to 14 columns are the sample metadata including the study site, and habitat, etc. and the other columns represent the abundance of mosquito species the in each sample.
 
 ```{r}
 data <- read.csv("./data/Mosquito_ecology/data.csv", row.names=1)
@@ -2090,7 +2089,7 @@ mpse %<>%
 mpse
 ```
 
-The raw result of pCCA was added the *internal_attr*, which can be extract by *mp_extract_internal_attr* with specific *name=cca*. Then it can be performed the significance test using the functions of *vegan* [@vegan], such as *anova.cca*, *permutest*.
+The raw result of pCCA was added the *internal_attr*, which can be extracted by *mp_extract_internal_attr* with specific *name=cca*. Then it can be performed the significance test using the functions of *vegan* [@vegan], such as *anova.cca*, *permutest*.
 
 ```{r, message = FALSE, warning = FALSE}
 # Extract the raw result of cca analysis
@@ -2194,7 +2193,7 @@ ff
 
 ## The distribution of Mosquito species in the study. {#chapter4.4}
 
-We used *mp_cal_abundance* and *mp_plot_abundance* to calculated and visualized the abundance of the Mosquito species in the study (Fig.\ref{fig:mosquitoHeatmap}).
+We used *mp_cal_abundance* and *mp_plot_abundance* to calculate and visualize the abundance of the Mosquito species in the study (Fig.\ref{fig:mosquitoHeatmap}).
 
 (ref:mosquitoHeatmap) **The heatmap of the abundance (A) and relative abundance (B) of the Mosquito species.**
 
@@ -2292,7 +2291,7 @@ ff <- aplot::plot_list(p.count, p.rel, tag_levels="A")
 ff
 ```
 
-Then We can use *mp_diff_analysis* to identify the species that have significant differential abundance between the **field** and **forest**. We found the Cx.sal (*Culex salinarius*) and Ps.col (*Psorophora columbiae*) were significantly enriched in **field**, However, the Ae.albo (*Aedes albopicta*), Ae.cin (*Aedes cinereus*), Ps.fer (*Psorophora ferox*), Ae.tris (*Aedes triseriatus*), Ae.can (*Aedes canadensis*), Ae.hen (*Aedes hendersoni*), Ae.atl (*Aedes atlanticus*) and Ae.dup (*Aedes dupreei*) were significantly enriched in the **forest**
+Then We can use *mp_diff_analysis* to identify the significant differential species between the **field** and **forest**. We found the Cx.sal (*Culex salinarius*) and Ps.col (*Psorophora columbiae*) were significantly enriched in **field**, However, the Ae.albo (*Aedes albopicta*), Ae.cin (*Aedes cinereus*), Ps.fer (*Psorophora ferox*), Ae.tris (*Aedes triseriatus*), Ae.can (*Aedes canadensis*), Ae.hen (*Aedes hendersoni*), Ae.atl (*Aedes atlanticus*) and Ae.dup (*Aedes dupreei*) were significantly enriched in the **forest**
 
 ```{r}
 mpse %>% 
