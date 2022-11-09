@@ -93,7 +93,8 @@ cranpkgs <- c("aplot", "ggpp", "igraph",
               "broom", "forcats", 'pROC',
               "ggrepel", "ggVennDiagram", 
               "patchwork", "shadowtext",
-              "ggupset", "ggnewscale")
+              "ggupset", "ggnewscale", 
+              "GUniFrac", "matrixStats")
 
 for (i in cranpkgs){
     if (!requireNamespace(i, quietly = TRUE)){
@@ -1386,10 +1387,10 @@ f.box <- mpse.balance.node %>%
     ggplot(aes(y = Group, x = Abundance, fill = Group)) +
     geom_boxplot(orientation = 'y') +
     geom_jitter(color = 'grey', height = .2) +
-    facet_wrap(pseudolabel~., ncol = 1, strip.position = 't', scales = 'free') +
+    facet_wrap(pseudolabel~., ncol = 1, strip.position = 'top', scales = 'free') +
     scale_fill_manual(values = c('orange', 'deepskyblue')) +
     ggsignif::geom_signif(comparisons = list(c('CD', 'Control')), orientation = 'y') +
-    scale_y_discrete(position = 'r') +
+    scale_y_discrete(position = 'right') +
     ylab(NULL) +
     xlab('Balance Score') +
     theme_bw() +
@@ -1638,6 +1639,99 @@ p$layer[[4]]$aes_params$segment.size <- .4
 ggsave("./Figures/OTU_heatmap.svg", pp, device = "svg", width = 6, height = 7)
 ggsave("./Figures/sample.tree.svg", sample.tree, device = "svg", width = 6, height = 5.6)
 ggsave("./Figures/OTU.tree.svg", p, device = "svg", width = 7, height = 7)
+```
+
+\newpage
+
+## Integrating the results of other tools
+
+In addtion, because the *MPSE* used `treedata` class to store the taxonomy, phylogenetic and related information, the related results of other tools also can be integrated to it easily, we also developed *left_join* to cooperate. Then the new *MPSE* class can be further analyzed and visualized. 
+
+## Integrating the results of other distance methods
+
+The *mp_cal_dist* of *MicrobiotaProcess* had provided many distance methods, such as "bray", "aitchison", "jaccard", "gower", "altGower" etc. But if users want to use other methods that are not provided in *MicrobiotaProcess*. They can use *left_join* to add the result to *MPSE* class.
+
+(ref:LeftJoinDist) **Integrating the other distance with left_join**
+
+```{r, warning = FALSE, message = FALSE, fig.width = 6.8, fig.height=4.5, fig.align='center', fig.cap='(ref:LeftJoinDist)', LeftJoinDist}
+otu.da <- mpse2 %>% mp_extract_assays(.abundance=Abundance)
+Aitchison.dist <- robCompositions::aDist(t(otu.da+1))
+p1 <- mpse2 %>%
+       left_join(y=list(Aitchison=Aitchison.dist)) %>%
+       mp_plot_dist(.distmethod=Aitchison, .group=Group, group.test=T) +
+       scale_fill_manual(values=c("orange", "#00A08A", "deepskyblue")) +
+       scale_color_manual(values=c("orange", "#00A08A", "deepskyblue"))
+p2 <- mpse2 %>%
+      left_join(y=list(Aitchison=Aitchison.dist)) %>%
+      mp_cal_pcoa(distmethod="Aitchison") %>%
+      mp_plot_ord(.group=Group) +
+      scale_fill_manual(values=c("orange", "deepskyblue"))
+aplot::plot_list(p1, p2, widths = c(0.5, 2))
+```
+
+### Integrating the results of other DAA tools
+
+(ref:ZiCoSeqRun) **Integrating the different analysis results of ZiCoSeq and visualizing using MicrobiotaProcess**
+
+```{r, warning = FALSE, message = FALSE, fig.width = 10, fig.height = 10, fig.align = "center", fig.cap='(ref:ZiCoSeqRun)', ZiCoSeqRun}
+library(GUniFrac)
+library(matrixStats)
+# obtain the abundance on all taxonomy levels
+all.abun <- mpse2 %>% mp_extract_abundance() %>%
+  dplyr::select(label, RareAbundanceBySample)
+
+# build the matrix input (longer format to wider format) of ZicoSeq
+All.features <- all.abun %>%
+  tidyr::unnest(RareAbundanceBySample) %>%
+  dplyr::select(label, Sample, RelRareAbundanceBySample) %>%
+  tidyr::pivot_wider(
+    id_cols = label,
+    names_from = 'Sample',
+    values_from = RelRareAbundanceBySample
+  ) %>%
+  tibble::column_to_rownames(var='label') %>% as.matrix()
+
+All.features <- All.features[!rowSds(All.features)==0, ]
+
+sample.da <- mpse2 %>%
+             mp_extract_sample() %>%
+             dplyr::select(Sample,Group) %>%
+             tibble::column_to_rownames(var='Sample')
+set.seed(123)
+zicoseq.res <- ZicoSeq(meta.dat=sample.da, feature.dat=All.features/100, grp.name='Group',
+                       prev.filter=.1, perm.no=999, feature.dat.type='proportion')
+
+zicoseq.res$p.adj.fdr[zicoseq.res$p.adj.fdr <= .05] %>% data.frame() -> res.df
+colnames(res.df) <- 'FDR.zicoseq'
+
+# build the enrich group information of the significant features.
+res.sign <- all.abun %>% dplyr::filter(label %in% rownames(res.df)) %>%
+    tidyr::unnest(RareAbundanceBySample) %>%
+    dplyr::group_by(label, Group) %>%
+    dplyr::summarize(MeanAbu=mean(RareAbundance)) %>%
+    dplyr::slice_max(MeanAbu) %>%
+    dplyr::ungroup() %>%
+    dplyr::rename(Sign_Group=Group) %>%
+    dplyr::select(label, Sign_Group)
+
+res.df %<>% as_tibble(rownames='label') %>% dplyr::inner_join(res.sign)
+
+# remove the results of other DAA methods.
+taxa.tree <- mpse2 %>% mp_extract_taxatree() %>%
+  dplyr::select(-c('LDAupper', 'LDAmean', 'LDAlower', 'pvalue', 'fdr', 'Sign_Group'), keep.td=T)
+
+# add the results of ZicoSeq to taxatree slot in MPSE
+taxa.tree %<>% dplyr::left_join(res.df, by='label')
+mpse4 <- mpse2
+taxatree(mpse4) <- taxa.tree
+p.zicoseq <- mpse4 %>% mp_plot_diff_cladogram(
+                .group = Sign_Group,
+                .size = FDR.zicoseq,
+                removeUnknown = T,
+                as.tiplab = F
+             ) +
+             scale_fill_diff_cladogram(values=c('orange', 'deepskyblue'))
+p.zicoseq
 ```
 
 \newpage

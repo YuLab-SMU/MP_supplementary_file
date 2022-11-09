@@ -684,7 +684,6 @@ library(ANCOMBC)
 psKO <- mpseKO %>% as.phyloseq()
 ANCOMBC.xx <- ancombc(psKO, formula = 'disease',
                       p_adj_method = "holm",
-                      zero_cut = 0.90,
                       lib_cut = 0,
                       group = "disease",
                       struc_zero = FALSE,
@@ -742,14 +741,32 @@ To estimate the performance of *mp_diff_analysis* and other tools for microbiome
 
 ## Simulation datasets from lognormal distribution
 
-The datasets were generated using *rlnorm* of *R*. **(1)** Negative features of first collections have the same *meanlog* = 10 and *sdlog* = 1, whereas the positive features of one class have the *meanlog* = 10 - *i* (*sdlog* = 1) and the other *meanlog* = 10 + *i* (*sdlog* = 1), where *i* is a parameter ranging from 0.01 to 3 (*step* = 0.01, each *step* will generate a dataset). **(2)** All features of second collections have the same *sdlog* = *s*, where *s* is also a parameter ranging from 1 to 3 (*step* = 0.01, each *step* will generate a dataset), whereas the *meanlog* of negative features is 10, positive features of one class is 8, the other is 12. **(3)** The subclass distribution of negative class is different in the third collection. In details, the *meanlog* of features is equal between the second subclass of first class and the first subclass of the second class. However, the *meanlog* of features is different in other two subclasses (*meanlog* = 10 - *i* and *meanlog* = 10 + *i*, *i* = 2, *step* = 0.01, each *step* also will generate a dataset). But the features should be considered the negative features, since the difference is inconsistent between the subclass. And the way of positive features defined is the same with second collections (*meanlog* = 10 - *i* and *meanlog* = 10 + *i*, *i* = 2, and *sdlog* = *s*, where *s* is parameter ranging from 1 to 3 (*step* = 0.01, each *step* will generate a dataset)). The defined methods of the other three collections containing 10 samples are similar to the methods of 100 samples.
+The datasets were generated using *rlnorm* of *R*. **(1)** Negative features of first collections have the same *meanlog* = 10 and *sdlog* = 1, whereas the positive features of one class have the *meanlog* = 10 - *i* (*sdlog* = 1) and the other *meanlog* = 10 + *i* (*sdlog* = 1), where *i* is a parameter ranging from 0.01 to 3 (*step* = 0.01, each *step* will generate a dataset). **(2)** All features of second collections have the same *sdlog* = *s*, where *s* is also a parameter ranging from 1 to 3 (*step* = 0.01, each *step* will generate a dataset), whereas the *meanlog* of negative features is 10, positive features of one class is 8, the other is 12. **(3)** The subclass distribution of negative class is different in the third collection. In details, the *meanlog* of features is equal between the second subclass of first class and the first subclass of the second class. However, the *meanlog* of features is different in other two subclasses (*meanlog* = 10 - *i* and *meanlog* = 10 + *i*, *i* = 2, *step* = 0.01, each *step* also will generate a dataset). But the features should be considered the negative features, since the difference is inconsistent between the subclass. And the way of positive features defined is the same with second collections (*meanlog* = 10 - *i* and *meanlog* = 10 + *i*, *i* = 2, and *sdlog* = *s*, where *s* is parameter ranging from 1 to 3 (*step* = 0.01, each *step* will generate a dataset)). The defined methods of the other three collections containing 20, 40, 60, 80 samples are similar to the methods of 100 samples.
 
-(ref:LogDistResLarge) **Comparison between MicrobiotaProcess and other common methods for false positive and negative rates in simulation datasets (100 samples (50 cases vs 50 controls)) based on lognormal distribution.** (A and a) the false negative rates of *ANCOM*, *mp_diff_analysis*, *Kruskal-Wallis rank sum test* and *LEfSe* was decreased with the increasing values of difference between classes mean (log scale). Whereas *mp_diff_analysis* and *LEfSe* has better control of false positive rate. (B and b) the *mp_diff_analysis* had better false positive and negative rate. *ANCOM* and *Kruskal-Wallis rank sum test* had higher false positive rate with increasing values of standard deviation (log scale) between classes. (C and c) the *mp_diff_analysis* also had better control of false positive and negative rate with increasing of standard deviation within inconsistent subclasses.
+(ref:LogDistResLarge) **Comparison between MicrobiotaProcess and other common methods for false positive and negative rates in simulation datasets (100 samples) based on lognormal distribution.** (A and a) the false negative rates of *ANCOM*, *mp_diff_analysis*, *Kruskal-Wallis rank sum test* and *LEfSe* was decreased with the increasing values of difference between classes mean (log scale). Whereas *mp_diff_analysis* and *LEfSe* has better control of false positive rate. (B and b) the *mp_diff_analysis* had better false positive and negative rate. *ANCOM* and *Kruskal-Wallis rank sum test* had higher false positive rate with increasing values of standard deviation (log scale) between classes. (C and c) the *mp_diff_analysis* also had better control of false positive and negative rate with increasing of standard deviation within inconsistent subclasses.
 
-(ref:LogDistResSS) **Comparison between MicrobiotaProcess and other common methods for false positive and negative rates in simulation datasets (20 samples (10 cases vs 10 controls)) based on log normal distribution.** The *mp_diff_analysis* had better false positive rate at the price of power decrease of test, it was robust at different condition. (A and a) at different mean of log scale. (B and b) at different standard deviation of log scale in different group. (C and c) at different standard deviation of log scale in different subgroup. Although *LEfSe* had better false negative rate than *mp_diff_analysis*, *mp_diff_analysis* achieved better false positive rate.
+(ref:LogDistRes80) **Comparison between MicrobiotaProcess and other common methods for false positive and negative rates in simulation datasets (80 samples) based on lognormal distribution.**
+
+(ref:LogDistRes60) **Comparison between MicrobiotaProcess and other common methods for false positive and negative rates in simulation datasets (60 samples) based on lognormal distribution.**
+
+(ref:LogDistRes40) **Comparison between MicrobiotaProcess and other common methods for false positive and negative rates in simulation datasets (40 samples) based on lognormal distribution.**
+
+(ref:LogDistResSS) **Comparison between MicrobiotaProcess and other common methods for false positive and negative rates in simulation datasets (20 samples) based on log normal distribution.** The *mp_diff_analysis* had better false positive rate at the price of power decrease of test, it was robust at different condition. (A and a) at different mean of log scale. (B and b) at different standard deviation of log scale in different group. (C and c) at different standard deviation of log scale in different subgroup. Although *LEfSe* had better false negative rate than *mp_diff_analysis*, *mp_diff_analysis* achieved better false positive rate.
 
 ```{r, echo=FALSE, fig.width=8, fig.height=7.6, fig.align='center', fig.cap='(ref:LogDistResLarge)', LogDistResLarge}
 knitr::include_graphics('./supplemental_fileB_codes/simulation_lognormal/figures/rlnorm_compare_large_sample.pdf')
+```
+
+```{r, echo=FALSE, fig.width=8, fig.height=7.6, fig.align='center', fig.cap='(ref:LogDistRes80)', LogDistRes80}
+knitr::include_graphics('./supplemental_fileB_codes/simulation_lognormal/figures/rlnorm_compare_80_sample.pdf')
+```
+
+```{r, echo=FALSE, fig.width=8, fig.height=7.6, fig.align='center', fig.cap='(ref:LogDistRes60)', LogDistRes60}
+knitr::include_graphics('./supplemental_fileB_codes/simulation_lognormal/figures/rlnorm_compare_60_sample.pdf')
+```
+
+```{r, echo=FALSE, fig.width=8, fig.height=7.6, fig.align='center', fig.cap='(ref:LogDistRes40)', LogDistRes40}
+knitr::include_graphics('./supplemental_fileB_codes/simulation_lognormal/figures/rlnorm_compare_40_sample.pdf')
 ```
 
 ```{r, echo=FALSE, fig.width=8, fig.height=7.6, fig.align='center', fig.cap='(ref:LogDistResSS)', LogDistResSS}
@@ -760,9 +777,15 @@ knitr::include_graphics('./supplemental_fileB_codes/simulation_lognormal/figures
 
 ## Simulation datasets from normal distribution
 
-The datasets were simulated using *norm* of *R*. **(1)** Negative features of first collections have the same *mean* = 10000 and *sd* = 100, whereas the positive features of one class have the *mean* = 10000 - *i* (*sd* = 100) and the other *mean* = 10000 + i (sd = 100), where *i* is a parameter ranging from 1 to 150 (*step*=1, each *step* will generate a dataset). **(2)** All features of second collections have the same *sd* = *s*, where *s* is also a parameter ranging from 100 to 2050 (*step*=10, each *step* will generate a dataset), whereas the mean of negative features is 10000, positive features of one class are 9000, the other is 11000. **(3)** The subclass distribution of the negative class is different in the third collection. In detail, the mean of features is equal between the second subclass of first class and the first subclass of the second class. However, the mean of features is different in other two subclasses (*mean* = 10000 - *i* and *mean* = 10000 + *i*, *i* =1000). But the features should be considered the negative features, since the difference is inconsistent between the subclass. And the way of positive features defined is the same with second collections (*mean* = 10000 - *i* and *meanlog* = 10000 + *i*, *i* = 1000, and *sd* = *s*, where *s* is parameter ranging from 100 to 2050 (*step* = 10, each *step* will generate a dataset)). The defined methods of the other three collections containing 10 samples are similar to the methods of 100 samples
+The datasets were simulated using *norm* of *R*. **(1)** Negative features of first collections have the same *mean* = 10000 and *sd* = 100, whereas the positive features of one class have the *mean* = 10000 - *i* (*sd* = 100) and the other *mean* = 10000 + i (sd = 100), where *i* is a parameter ranging from 1 to 150 (*step*=1, each *step* will generate a dataset). **(2)** All features of second collections have the same *sd* = *s*, where *s* is also a parameter ranging from 100 to 2050 (*step*=10, each *step* will generate a dataset), whereas the mean of negative features is 10000, positive features of one class are 9000, the other is 11000. **(3)** The subclass distribution of the negative class is different in the third collection. In detail, the mean of features is equal between the second subclass of first class and the first subclass of the second class. However, the mean of features is different in other two subclasses (*mean* = 10000 - *i* and *mean* = 10000 + *i*, *i* =1000). But the features should be considered the negative features, since the difference is inconsistent between the subclass. And the way of positive features defined is the same with second collections (*mean* = 10000 - *i* and *meanlog* = 10000 + *i*, *i* = 1000, and *sd* = *s*, where *s* is parameter ranging from 100 to 2050 (*step* = 10, each *step* will generate a dataset)). The defined methods of the other three collections containing 20, 40, 60, 80 samples are similar to the methods of 100 samples
 
 (ref:NormDistResLarge) **Comparison between MicrobiotaProcess and other common methods for false positive and negative rates in simulation datasets (100 samples) based on normal distribution**. We found the *mp_diff_analysis* also had better false positive rate at the price of some detection capabilities. (A and a) at different mean. (B and b) at different standard deviation in different group. (C and c) at different standard deviation in different subgroup.
+
+(ref:NormDistRes80) **Comparison between MicrobiotaProcess and other common methods for false positive and negative rates in simulation datasets (80 samples) based on normal distribution**.
+
+(ref:NormDistRes60) **Comparison between MicrobiotaProcess and other common methods for false positive and negative rates in simulation datasets (60 samples) based on normal distribution**.
+
+(ref:NormDistRes40) **Comparison between MicrobiotaProcess and other common methods for false positive and negative rates in simulation datasets (40 samples) based on normal distribution**.
 
 (ref:NormDistResSS) **Comparison between MicrobiotaProcess and others common methods for false positive and negative rates in simulation datasets (20 samples) based on normal distribution**. Although the false negative rate of *mp_diff_analysis* is larger than the 100 samples, it also had better false positive rate.
 
@@ -770,8 +793,45 @@ The datasets were simulated using *norm* of *R*. **(1)** Negative features of fi
 knitr::include_graphics('./supplemental_fileB_codes/simulation_normal/figures/norm_compare_large_sample.pdf')
 ```
 
+```{r, echo=FALSE, fig.width=8, fig.height=7.6, fig.align='center', fig.cap='(ref:NormDistRes80)', NormDistRes80}
+knitr::include_graphics('./supplemental_fileB_codes/simulation_normal/figures/norm_compare_80_sample.pdf')
+```
+
+```{r, echo=FALSE, fig.width=8, fig.height=7.6, fig.align='center', fig.cap='(ref:NormDistRes60)', NormDistRes60}
+knitr::include_graphics('./supplemental_fileB_codes/simulation_normal/figures/norm_compare_60_sample.pdf')
+```
+
+```{r, echo=FALSE, fig.width=8, fig.height=7.6, fig.align='center', fig.cap='(ref:NormDistRes40)', NormDistRes40}
+knitr::include_graphics('./supplemental_fileB_codes/simulation_normal/figures/norm_compare_40_sample.pdf')
+```
+
 ```{r, echo=FALSE, fig.width=8, fig.height=7.6, fig.align='center', fig.cap='(ref:NormDistResSS)', NormDistResSS}
 knitr::include_graphics('./supplemental_fileB_codes/simulation_normal/figures/norm_compare_small_sample.pdf')
 ```
 
 The *mp_diff_analysis* of *MicrobiotaProcess* achieved a better false positive rate compared with other methods. It was more robust at different distribution and different condition (different mean and different standard deviation).
+
+\newpage
+
+# The comparison between the MicrobiotaProcess and other DAA (differential abundance analysis) tools on real data.
+
+We had performed the additional evaluations of the *mp_diff_analysis* in *MicrobiotaProcess* and other DAA tools (using pvalue or correction pvalue to identify significant features) across 10 two-group 16S rRNA datasets [@Diarrheal; @Blueberry; @arthritis; @Smoker; @MarinePlastics; @Obese; @IBD; @Baxter2016; @Douglas2018CD], which were from soil, marine plastic and human stool environment collected in the article [@Zhou2022; @Nearing2022]. As expected, the results used pvalue and correction pvalue to identify were separated among all the methods. We found that significant ASV (OTU) detected by our methods tended to be also detected by other tools (Fig. \ref{fig:DiffNumHeatmap}). Our method tended to identify a relatively small number of significant ASV (Fig. \ref{fig:DiffNumHeatmap}, \ref{fig:DiffNumUpset1} and \ref{fig:DiffNumUpset2}). In addition, we also found our method (using pvalue correction and pvalue modes) is similar to the p-value correction result of LEfSe output (Fig. \ref{fig:DiffNumHeatmap}) (pvalue * input features number, which might be stricter than the FDR method, but we can not obtain the pvalue of all features to correct with FDR correction method owing to the design of the tool). This hint our method might be more conservative and better precision but with a possible loss of sensitivity. This also was consistent with result of simulation.
+
+(ref:DiffNumHeatmap) **The heatmap of significant features number detected by different DAA tools across the 10 datasets.**
+
+(ref:DiffNumUpset1) **The upset plot of significant features detected by different DAA tools across the sample from soil or marine plastic.**
+
+(ref:DiffNumUpset2) **The upset plot of significant features detected by different DAA tools across the sample from human stool.**
+
+```{r, echo=FALSE, fig.width=5, fig.height=6, fig.align='center', fig.cap='(ref:DiffNumHeatmap)', DiffNumHeatmap}
+knitr::include_graphics('./supplemental_fileB_codes/real_data/result/num_plot.pdf')
+```
+
+```{r, echo=FALSE, fig.width=16, fig.height=10, fig.align='center', fig.cap='(ref:DiffNumUpset1)', DiffNumUpset1}
+knitr::include_graphics('./supplemental_fileB_codes/real_data/result/soil_root_env_upset.pdf')
+```
+
+```{r, echo=FALSE, fig.width=14, fig.height=18, fig.align='center', fig.cap='(ref:DiffNumUpset2)', DiffNumUpset2}
+knitr::include_graphics('./supplemental_fileB_codes/real_data/result/human_gut.pdf')
+```
+

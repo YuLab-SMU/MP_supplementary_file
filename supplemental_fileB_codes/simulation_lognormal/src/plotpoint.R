@@ -1,4 +1,7 @@
 library(ggplot2)
+colors <- c("#af2934","#ffe327","#2f4e87",
+  "#b0b9b8","#f18e0c", "#aed4e9",
+  "#f4a69a","#3ba889")
 plotpoint <- function(data,
                       x,
                       y,

@@ -51,7 +51,15 @@ lefsemean <- read.table("../result/lefsefprfnr_1024_rlnorm_mean.txt", header=T, 
 lefsemean$methods <- "LEfSe"
 lefsemean <- lefsemean %>% select(c("t","FPR","FNR","methods"))
 
-data <- rbind(data, dat, dt, meseq, anmean, lefsemean)
+lindamean <- read.table('../result/lindafprfnr_1024_rlnorm_mean.txt', header=T, sep='\t')
+lindamean$methods <- 'LinDA'
+lindamean <- lindamean %>% select(c('t', 'FPR', 'FNR', 'methods'))
+
+ziconseqmean <- read.table('../result/zicoseqfprfnr_1024_rlnorm_mean.txt', header=T, sep='\t')
+ziconseqmean$methods <- 'ZicoSeq'
+ziconseqmean <- ziconseqmean %>% select(t, FPR, FNR, methods)
+
+data <- rbind(data, dat, dt, meseq, anmean, lefsemean, lindamean, ziconseqmean)
 data$t <- data$t * 2
 
 dat <- data[,c("FPR", "FNR")]
@@ -66,6 +74,7 @@ p1 <- plotpoint(data=data,x="t",y="value",
       xlab("Different Mean (log scale)") +
       scale_linetype_manual(values=c("solid", "dashed"))+
       scale_shape_manual(values=c(21, 4))+
+      scale_color_manual(values = colors) +
       guides(color = guide_legend(keywidth = 0.8, keyheight = 0.8),
              shape = guide_legend(keywidth = 0.8, keyheight = 0.8))+ 
       theme(legend.position="bottom",
@@ -79,6 +88,7 @@ p1 <- plotpoint(data=data,x="t",y="value",
 p1_box <- ggbox(obj=dat, sampleda=sampletmp, p_textsize = 1.4,
                 indexNames=c("FPR", "FNR"), factorNames="methods", testmethod=NULL) +
            ggtitle("different mean (log scale)")+
+           scale_fill_manual(values = colors) +
            guides(fill=guide_legend(keywidth = 0.8, keyheight = 0.8)) +
            theme(axis.text.x=element_blank(), axis.ticks.x=element_blank(),
                  strip.background=element_rect(colour = NA,fill = "grey"),
@@ -134,7 +144,15 @@ lefsesd <- read.table("../result/lefsefprfnr_1024_rlnorm_sd.txt", header=T, sep=
 lefsesd$methods <- "LEfSe"
 lefsesd <- lefsesd %>% select(c("t", "FPR", "FNR", "methods"))
 
-dasd <- rbind(dasd, datsd, dtsd, meseqsd, ansd, lefsesd)
+lindasd <- read.table('../result/lindafprfnr_1024_rlnorm_sd.txt', header=T, sep='\t')
+lindasd$methods <- 'LinDA'
+lindasd <- lindasd %>% select(c('t', 'FPR', 'FNR', 'methods'))
+
+ziconseqsd <- read.table('../result/zicoseqfprfnr_1024_rlnorm_sd.txt', header=T, sep='\t')
+ziconseqsd$methods <- 'ZicoSeq'
+ziconseqsd <- ziconseqsd %>% select(t, FPR, FNR, methods)
+
+dasd <- rbind(dasd, datsd, dtsd, meseqsd, ansd, lefsesd, lindasd, ziconseqsd)
 
 datsd <- dasd[,c("FPR", "FNR")]
 sampletmpsd <- dasd[,c("methods"), drop=FALSE]
@@ -145,6 +163,7 @@ p2 <- plotpoint(data=dasd,x="t",y="value",
                 pointsize=0.8) +
        scale_linetype_manual(values=c("solid", "dashed"))+
        scale_shape_manual(values=c(21, 4))+
+       scale_color_manual(values = colors) +
        ylab(NULL)+
        xlab("Standard Deviation (log scale)")+
        #scale_color_manual(values=c("#E69F00", "#56B4E9", "#009E73", "#0072B2", "#D55E00", "#CC79A7"))+ #c("#1B9E77", "#D95F02", "#7570B3"))+
@@ -154,6 +173,7 @@ p2 <- plotpoint(data=dasd,x="t",y="value",
 p2_box <- ggbox(obj=datsd, sampleda=sampletmpsd, p_textsize = 1.4,
                 indexNames=c("FPR", "FNR"), factorNames="methods", testmethod=NULL) +
            ggtitle("different standard deviation (log scale) in class")+
+           scale_fill_manual(values = colors) +
            guides(fill=guide_legend(keywidth = 0.8, keyheight = 0.8)) +
                   theme(axis.text.x=element_blank(), axis.ticks.x=element_blank(),
                   strip.background=element_rect(colour = NA,fill = "grey"),
@@ -208,7 +228,15 @@ lefsemsd <- read.table("../result/lefsefprfnr_1024_rlnorm_mean_sd.txt", header=T
 lefsemsd$methods <- "LEfSe"
 lefsemsd <- lefsemsd %>% select(c("t", "FPR", "FNR", "methods"))
 
-damsd <- rbind(damsd, datmsd, dtmsd, meseqmsd, anmsd, lefsemsd)
+lindamsd <- read.table('../result/lindafprfnr_1024_rlnorm_mean_sd.txt', header=T, sep='\t')
+lindamsd$methods <- 'LinDA'
+lindamsd <- lindamsd %>% select(c('t', 'FPR', 'FNR', 'methods'))
+
+ziconseqmsd <- read.table('../result/zicoseqfprfnr_1024_rlnorm_mean_sd.txt', header=T, sep='\t')
+ziconseqmsd$methods <- 'ZicoSeq'
+ziconseqmsd <- ziconseqmsd %>% select(t, FPR, FNR, methods)
+
+damsd <- rbind(damsd, datmsd, dtmsd, meseqmsd, anmsd, lefsemsd, lindamsd, ziconseqmsd)
 
 datmsd <- damsd[,c("FPR", "FNR")]
 sampletmpmsd <- damsd[,c("methods"), drop=FALSE]
@@ -220,6 +248,7 @@ p3 <- plotpoint(data=damsd,x="t",y="value",
                 pointsize=0.8) +
       scale_linetype_manual(values=c("solid", "dashed"))+
       scale_shape_manual(values=c(21, 4)) +
+      scale_color_manual(values = colors) +
       ylab(NULL) + 
       xlab("Standard Deviation (log scale)") + 
       #scale_color_manual(values=c("#E69F00", "#56B4E9", "#009E73", "#0072B2", "#D55E00", "#CC79A7"))+#c("#1B9E77", "#D95F02", "#7570B3"))+
@@ -228,7 +257,8 @@ p3 <- plotpoint(data=damsd,x="t",y="value",
 
 p3_box <- ggbox(obj=datmsd, sampleda=sampletmpmsd, p_textsize=1.5,
                 indexNames=c("FPR", "FNR"), factorNames="methods", testmethod=NULL) +
-           ggtitle("different standard deviation (log scale) in subclass")+
+           ggtitle("different standard deviation (log scale) in subclass") +
+           scale_fill_manual(values = colors) +
            guides(fill=guide_legend(keywidth = 0.8, keyheight = 0.8)) +
            theme(axis.text.x=element_blank(), axis.ticks.x=element_blank(),
                  strip.background=element_rect(colour = NA,fill = "grey"),
