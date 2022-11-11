@@ -24,9 +24,9 @@ dat <- apply(dat, 1, function(x){x - mean(x) / sd(x)}) %>% t() %>% data.frame()
 dat %>% dist() %>% hclust(method='ave') %>% ape::as.phylo() -> tr1
 dat %>% t() %>% dist() %>% hclust(method='ave') %>% ape::as.phylo() -> tr2
 
-df <- data.frame(method=tr2$tip.label, default=ifelse(grepl(".adj$", tr2$tip.label), 'Yes', "No"))
-df[df$method %in% c('LEfSe', 'metagenomSeq'), 'default'] <- 'Yes'
-df[df$method %in% c('LEfSe.adj', 'metagenomeSeq.adj'), 'default'] <- 'No'
+df <- data.frame(method=tr2$tip.label, adj.method=ifelse(grepl(".adj$", tr2$tip.label), 'bonferroni', "raw pvalue"))
+#df[df$method %in% c('LEfSe', 'metagenomSeq'), 'default'] <- 'Yes'
+#df[df$method %in% c('LEfSe.adj', 'metagenomeSeq.adj'), 'default'] <- 'No'
 
 p1 <- ggtree(tr1)
 
@@ -68,7 +68,7 @@ p3 <- ggplot(data=num.dat, aes(x=method, y=study)) +
         legend.box.margin=ggplot2::margin()       
       )
 
-p4 <- ggplot(df, aes(y='default', x=method, fill=default)) +
+p4 <- ggplot(df, aes(y='adj.method', x=method, fill=adj.method)) +
       geom_tile() +
       theme_bw() +
       scale_fill_manual(values=c("#CC79A7", "#0072B2")) +

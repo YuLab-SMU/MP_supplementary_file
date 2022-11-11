@@ -8,7 +8,7 @@ library(matrixStats)
 
 
 ## MicrobiotaProcess
-run_mpse_daa <- function(mpse, p.adj = TRUE){
+run_mpse_daa <- function(mpse, p.adj = TRUE, method = 'bonferroni'){
     if (p.adj){
         filter.p <- 'fdr'
     }else{
@@ -30,6 +30,7 @@ run_mpse_daa <- function(mpse, p.adj = TRUE){
           .group = !!as.symbol(group),
           .sec.group = {{adj.group}},
           normalization = 1e8,
+          p.adjust = method,
           filter.p = filter.p
         ),
         error=function(e)NULL
@@ -47,7 +48,7 @@ run_mpse_daa <- function(mpse, p.adj = TRUE){
 
 
 ## linda
-obtain_linda_out <- function(mpse){
+obtain_linda_out <- function(mpse, method = 'bonferroni'){
     ps <- mpse |> as.phyloseq(.abundance = 'Abundance')
     sample.da <- mpse |> mp_extract_sample() |> tibble::column_to_rownames(var='Sample')
     if (ncol(sample.da) > 1){
@@ -59,7 +60,8 @@ obtain_linda_out <- function(mpse){
     }    
     linda.diff <- tryCatch(linda(phyloseq.obj=ps, 
                         formula=paste0("~", paste0(c(group, adj.group), collapse='+')),
-                        prev.filter=0.1),
+                        prev.filter=0.1,
+                        p.adj.method = method),
                         error = function(e)NULL)
     if (is.null(linda.diff)){
         return(NULL)
@@ -82,7 +84,7 @@ run_linda <- function(linda.diff, p.adj = TRUE){
 }
 
 ## ZicoSeq
-obtain_zicoseq_out <- function(mpse){
+obtain_zicoseq_out <- function(mpse, method='bonferroni'){
     otu.da <- mpse |> mp_extract_assays(.abundance = "total") %>% as.matrix()
     sample.da <- mpse |> mp_extract_sample() |> tibble::column_to_rownames(var='Sample')
     if (ncol(sample.da) > 1){
@@ -102,11 +104,11 @@ obtain_zicoseq_out <- function(mpse){
                                       perm.no = 999,
                                       feature.dat.type = feature.dat.type
                     )
+    zicoseq.diff$p.adj.df <- p.adjust(zicoseq.diff$p.raw, method)
     return(zicoseq.diff)
 }
 
 run_zicoseq <- function(zicoseq.diff, p.adj = TRUE){
-    #zicoseq.diff <- obtain_zicoseq_out(mpse)
     if (p.adj){
         p.adj <- 'p.adj.fdr'
     }else{
@@ -117,7 +119,7 @@ run_zicoseq <- function(zicoseq.diff, p.adj = TRUE){
 }
 
 ## ANCOMBC
-obtain_ancombc_out <- function(mpse){
+obtain_ancombc_out <- function(mpse, method='bonferroni'){
     ps <- mpse %>% as.phyloseq(.abundance='total')
     sample.da <- mpse |> mp_extract_sample() |> tibble::column_to_rownames(var='Sample')
     if (ncol(sample.da) > 1){
@@ -129,7 +131,7 @@ obtain_ancombc_out <- function(mpse){
     }    
     ancombc.diff <- ANCOMBC::ancombc(ps,
                                  formula = paste0(c(group, adj.group), collapse="+"),
-                                 p_adj_method='fdr',
+                                 p_adj_method= method,
                                  prv_cut = 0.1)
     return(list(xx=ancombc.diff$res, group = group))
 }
@@ -148,7 +150,7 @@ run_ancombc <- function(res, p.adj = TRUE){
 }             
 
 ## metagenomeSeq
-obtain_metaseq_out <- function(mpse){
+obtain_metaseq_out <- function(mpse, method='bonferroni'){
     otu.da <- mpse |> mp_extract_assays(.abundance = "Abundance")
     sample.da <- mpse |> mp_extract_sample() |> tibble::column_to_rownames(var='Sample')
     if (ncol(sample.da) > 1){
@@ -163,13 +165,16 @@ obtain_metaseq_out <- function(mpse){
     data <- cumNorm(data, p = cumNormStatFast(data))
     res <- fitFeatureModel(data, design, coef = 2)
     pval <- res@pvalues
-    return(pval)
+    res <- list(pval=pval, fdr=p.adjust(pval, method = method))
+    return(res)
 }
 
 run_metaseq <- function(pval, p.adj = TRUE){
     #pval <- obtain_metaseq_out(mpse)
     if (p.adj){
-        pval <- p.adjust(pval, 'fdr')
+        pval <- pval$fdr
+    }else{
+        pval <-pval$pval 
     }
     res <- names(pval[pval <= 0.05])
     res <- res[!is.na(res)]
@@ -214,7 +219,6 @@ run_lefse <- function(lefse.out, p.adj = TRUE){
     res <- gsub("^f_", "", res)
     return(res)
 }
-
 
 cal_sparsity <- function(mpse){
     xx <- mpse %>% mp_extract_assays(.abundance = 'Abundance')
