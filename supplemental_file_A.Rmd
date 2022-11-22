@@ -1643,11 +1643,11 @@ ggsave("./Figures/OTU.tree.svg", p, device = "svg", width = 7, height = 7)
 
 \newpage
 
-## Integrating the results of other tools
+## Interface to integrate external data
 
 In addtion, because the *MPSE* used `treedata` class to store the taxonomy, phylogenetic and related information, the related results of other tools also can be integrated to it easily, we also developed *left_join* to cooperate. Then the new *MPSE* class can be further analyzed and visualized. 
 
-## Integrating the results of other distance methods
+### Integrating the results of other distance methods
 
 The *mp_cal_dist* of *MicrobiotaProcess* had provided many distance methods, such as "bray", "aitchison", "jaccard", "gower", "altGower" etc. But if users want to use other methods that are not provided in *MicrobiotaProcess*. They can use *left_join* to add the result to *MPSE* class.
 
@@ -1671,9 +1671,12 @@ aplot::plot_list(p1, p2, widths = c(0.5, 2))
 
 ### Integrating the results of other DAA tools
 
-(ref:ZiCoSeqRun) **Integrating the different analysis results of ZiCoSeq and visualizing using MicrobiotaProcess**
+If your want to integrate the results of differential OTU and taxa. You can provided a data frame that contains a column of OTU and taxa names, a column of enriched group and other statistical results such like pvalue or FDR value, then using *left_join* to integrate them to *taxatree* slot in *MPSE* class.
 
-```{r, warning = FALSE, message = FALSE, fig.width = 10, fig.height = 10, fig.align = "center", fig.cap='(ref:ZiCoSeqRun)', ZiCoSeqRun}
+(ref:ZiCoSeqRun1) **Integrating the different analysis results (contains differential OTU and taxa) of ZiCoSeq and visualizing using mp_plot_diff_cladogram**
+(ref:ZiCoSeqRun2) **Integrating the different analysis results (contains differential OTU and taxa) of ZiCoSeq and visualizing using mp_plot_diff_manhattan**
+
+```{r, warning = FALSE, message = FALSE, fig.width = 10, fig.height = 10, fig.align = "center", fig.cap='(ref:ZiCoSeqRun1)', ZiCoSeqRun1}
 library(GUniFrac)
 library(matrixStats)
 # obtain the abundance on all taxonomy levels
@@ -1695,17 +1698,17 @@ All.features <- All.features[!rowSds(All.features)==0, ]
 
 sample.da <- mpse2 %>%
              mp_extract_sample() %>%
-             dplyr::select(Sample,Group) %>%
+             dplyr::select(Sample, Group) %>%
              tibble::column_to_rownames(var='Sample')
 set.seed(123)
 zicoseq.res <- ZicoSeq(meta.dat=sample.da, feature.dat=All.features/100, grp.name='Group',
-                       prev.filter=.1, perm.no=999, feature.dat.type='proportion')
+                      prev.filter=.1, perm.no=999, feature.dat.type='proportion', verbose=F)
 
-zicoseq.res$p.adj.fdr[zicoseq.res$p.adj.fdr <= .05] %>% data.frame() -> res.df
+res.df <- data.frame(zicoseq.res$p.adj.fdr) 
 colnames(res.df) <- 'FDR.zicoseq'
 
 # build the enrich group information of the significant features.
-res.sign <- all.abun %>% dplyr::filter(label %in% rownames(res.df)) %>%
+res.sign <- all.abun %>% dplyr::filter(label %in% rownames(res.df[res.df$FDR.zicoseq <=0.05,,drop=FALSE])) %>%
     tidyr::unnest(RareAbundanceBySample) %>%
     dplyr::group_by(label, Group) %>%
     dplyr::summarize(MeanAbu=mean(RareAbundance)) %>%
@@ -1714,7 +1717,7 @@ res.sign <- all.abun %>% dplyr::filter(label %in% rownames(res.df)) %>%
     dplyr::rename(Sign_Group=Group) %>%
     dplyr::select(label, Sign_Group)
 
-res.df %<>% as_tibble(rownames='label') %>% dplyr::inner_join(res.sign)
+res.df %<>% as_tibble(rownames='label') %>% dplyr::left_join(res.sign)
 
 # remove the results of other DAA methods.
 taxa.tree <- mpse2 %>% mp_extract_taxatree() %>%
@@ -1724,15 +1727,85 @@ taxa.tree <- mpse2 %>% mp_extract_taxatree() %>%
 taxa.tree %<>% dplyr::left_join(res.df, by='label')
 mpse4 <- mpse2
 taxatree(mpse4) <- taxa.tree
-p.zicoseq <- mpse4 %>% mp_plot_diff_cladogram(
+zicoseq.p1 <- mpse4 %>% mp_plot_diff_cladogram(
                 .group = Sign_Group,
                 .size = FDR.zicoseq,
                 removeUnknown = T,
                 as.tiplab = F
              ) +
              scale_fill_diff_cladogram(values=c('orange', 'deepskyblue'))
-p.zicoseq
+zicoseq.p1
 ```
+
+```{r, warning = FALSE, message = FALSE, fig.width = 8, fig.height = 4.5, fig.align = "center", fig.cap='(ref:ZiCoSeqRun2)', ZiCoSeqRun2}
+zicoseq.p2 <- mpse4 %>% mp_plot_diff_manhattan(
+                 .group = Sign_Group,
+                 .y=-log10(FDR.zicoseq), 
+                 taxa.class = OTU, 
+                 anno.taxa.class=Phylum)
+zicoseq.p2
+```
+
+But if you want integrate the results of differential OTU only, you can use *left_join* to integrate the result to *MPSE* class directly.
+
+(ref:LinDARun1) **Integrating the different analysis results (only differential OTU) of LinDA and visualizing using mp_plot_diff_res**
+(ref:LinDARun2) **Integrating the different analysis results (only differential OTU) of LinDA and visualizing using mp_plot_diff_boxplot**
+
+```{r, warning = FALSE, message = FALSE, fig.width = 10, fig.height = 10, fig.align = "center", fig.cap='(ref:LinDARun1)', LinDARun1}
+ps2 <- mpse2 %>% as.phyloseq(.abundance=RareAbundance)
+library(MicrobiomeStat)
+library(dplyr)
+res.linda <- linda(phyloseq.obj=ps2, formula='~Group', p.adj.method='fdr', prev.filter=.1)
+
+tbl.res <- res.linda$output$GroupControl
+
+tbl.res %<>% tibble::as_tibble(rownames='OTU') %>%
+            dplyr::mutate(Sign_Group = case_when(
+                            log2FoldChange < 0 & reject ~ "CD",
+                            log2FoldChange > 0 & reject ~ 'Control',
+                            TRUE ~ as.character(NA))
+            )
+
+
+mpse5 <- ps2 %>%
+         as.mpse() %>%
+         mp_rrarefy() %>%
+         mp_cal_abundance(.abundance=RareAbundance)
+mpse5 %<>% left_join(tbl.res, by='OTU')
+
+# visualizing the results with mp_plot_diff_boxplot
+# and mp_plot_diff_res
+
+linda.p1 <- mpse5 %>%
+      mp_plot_diff_res(
+        .group = Sign_Group,
+        point.size = padj, 
+        barplot.x = lfcSE
+      ) + 
+      scale_fill_manual(
+        aesthetics = "fill_new",
+        values = cols
+      ) +
+      scale_fill_manual(
+        values = cols
+      )
+linda.p1
+```
+
+```{r, warning = FALSE, message = FALSE, fig.width = 5, fig.height = 6, fig.align = "center", fig.cap='(ref:LinDARun2)', LinDARun2}
+linda.p2 <- mpse5 %>%
+      mp_plot_diff_boxplot(
+          .group = Sign_Group,
+          .size=-log10(padj),
+          point.x = lfcSE
+      ) %>%
+      set_diff_boxplot_color(
+          values = cols,
+          guide = guide_legend(title=NULL)
+      )
+linda.p2
+```
+
 
 \newpage
 
@@ -2401,6 +2474,12 @@ mpse %>%
 saveRDS(mpse, "./TmpRef/mosquito_mpse.rds")
 pp <- aplot::plot_list(p.alpha, p, widths = c(2.5, 3), nrow = 1)
 ggsave(filename="./Figures/Fig8.svg", pp, device="svg", width = 10, height = 5)
+```
+
+(ref:CompareWithOthers) **The comparison of features among the common tools developed for microbiome study**
+
+```{r, echo=FALSE, fig.width=6.5, fig.height=4, fig.align='center', fig.cap='(ref:CompareWithOthers)', CompareWithOthers}
+knitr::include_graphics('./supplemental_fileB_codes/compare_plot.pdf')
 ```
 
 # Session information {#chapter5}
