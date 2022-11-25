@@ -20,7 +20,7 @@ link-citations: yes
 **MicrobiotaProcess: A comprehensive R package for managing and analyzing microbiome and other ecological data within the tidy framework**
 \endgroup
 
-**Shuangbin Xu, Li Zhan, Wenli Tang, Qianwen Wang, Zehan Dai, Lang Zhou, Tingze Feng, Meijun Chen, Shanshan Liu, Xiaocong Fu, Tianzhi Wu, Erqiang Hu and Guangchuang Yu\* **
+**Shuangbin Xu, Li Zhan, Wenli Tang, Qianwen Wang, Zehan Dai, Lang Zhou, Tingze Feng, Meijun Chen, Tianzhi Wu, Erqiang Hu and Guangchuang Yu\* **
 
 ^\*^correspondence: Guangchuang Yu \<gcyu1@smu.edu.cn\>
 
