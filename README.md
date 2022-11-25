@@ -4,11 +4,11 @@
 
 If you use this work in published research, please cite:
 
-S Xu, L Zhan, W Tang, Z Dai, L Zhou, T Feng, M Chen, S Liu, X Fu, T Wu,
-E Hu, G Yu. MicrobiotaProcess: A comprehensive R package for managing
-and analyzing microbiome and other ecological data within the tidy
-framework. 04 February 2022, [PREPRINT (Version 1) available at Research
-Square](https://doi.org/10.21203/rs.3.rs-1284357/v1).
+S Xu, L Zhan, W Tang, Q Wang, Z Dai, L Zhou, T Feng, M Chen, S Liu, X
+Fu, T Wu, E Hu, G Yu. MicrobiotaProcess: A comprehensive R package for
+managing and analyzing microbiome and other ecological data within the
+tidy framework. 04 February 2022, [PREPRINT (Version 1) available at
+Research Square](https://doi.org/10.21203/rs.3.rs-1284357/v1).
 
 This repo contains source code and data to produce Supplementary
 Material of the above paper.
@@ -24,7 +24,7 @@ please run the following command in R:
 
 Here is the output of `sessioninfo::session_info()` on the system on
 which [this
-document](https://github.com/YuLab-SMU/MP_supplementary_file/blob/main/supplemental_file.pdf)
+document](https://github.com/YuLab-SMU/MP_supplementary_file/blob/main/supplemental_file_A.pdf)
 was compiled:
 
     ## ─ Session info ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -37,7 +37,7 @@ was compiled:
     ##  collate  en_US.UTF-8
     ##  ctype    en_US.UTF-8
     ##  tz       Asia/Shanghai
-    ##  date     2022-11-11
+    ##  date     2022-11-25
     ##  pandoc   2.9.2 @ /usr/bin/ (via rmarkdown)
     ## 
     ## ─ Packages ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -47,7 +47,7 @@ was compiled:
     ##  AnnotationDbi              1.58.0     2022-04-26 [1] Bioconductor
     ##  AnnotationHub              3.4.0      2022-04-26 [1] Bioconductor
     ##  ape                        5.6-3      2022-10-30 [1] Github (emmanuelparadis/ape@090e82c)
-    ##  aplot                    * 0.1.6.001  2022-08-26 [1] local
+    ##  aplot                    * 0.1.8      2022-11-17 [1] local
     ##  assertthat                 0.2.1      2019-03-21 [1] CRAN (R 4.2.0)
     ##  attempt                    0.3.1      2020-05-03 [1] CRAN (R 4.2.0)
     ##  backports                  1.4.1      2021-12-13 [1] CRAN (R 4.2.0)
@@ -143,7 +143,7 @@ was compiled:
     ##  ggsignif                   0.6.3      2021-09-09 [1] CRAN (R 4.2.0)
     ##  ggstar                     1.0.3      2021-12-03 [1] CRAN (R 4.2.0)
     ##  ggtree                   * 3.7.1      2022-11-10 [1] Bioconductor
-    ##  ggtreeExtra              * 1.8.0      2022-11-04 [1] Bioconductor
+    ##  ggtreeExtra              * 1.9.1.990  2022-11-24 [1] Bioconductor
     ##  ggupset                  * 0.3.0      2020-05-05 [1] CRAN (R 4.2.0)
     ##  ggVennDiagram            * 1.2.0      2021-10-22 [1] CRAN (R 4.2.0)
     ##  gld                        2.6.5      2022-06-29 [1] CRAN (R 4.2.0)
@@ -203,7 +203,7 @@ was compiled:
     ##  microbiome                 1.18.0     2022-04-26 [1] Bioconductor
     ##  MicrobiomeProfiler       * 1.1.0      2022-11-08 [1] Bioconductor
     ##  MicrobiomeStat           * 1.1        2022-01-24 [1] CRAN (R 4.2.0)
-    ##  MicrobiotaProcess        * 1.11.2     2022-11-09 [1] Bioconductor
+    ##  MicrobiotaProcess        * 1.11.3     2022-11-25 [1] Bioconductor
     ##  mime                       0.12       2021-09-28 [1] CRAN (R 4.2.0)
     ##  minqa                      1.2.4      2014-10-09 [1] CRAN (R 4.2.0)
     ##  modeest                    2.4.0      2019-11-18 [1] CRAN (R 4.2.0)
