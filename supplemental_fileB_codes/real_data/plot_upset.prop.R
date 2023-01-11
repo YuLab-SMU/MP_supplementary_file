@@ -174,7 +174,7 @@ design <- "
 
 f <- aplot::plot_list(p1, p3, p9, design = design, widths = c(1, 1.6), heights=c(1, .7))
 
-svg('./result/soil_root_env_upset.svg', width=16, height=10)
+svg('./result/soil_root_env_upset.svg', width=16, height=12)
 f
 dev.off()
 
@@ -187,6 +187,6 @@ design2 <- '
 
 f2 <- aplot::plot_list(p2, p4, p5, p6, p7, p8, p10, ncol=2)
 
-svg('./result/human_gut.svg', width = 14, height = 18)
+svg('./result/human_gut.svg', width = 14, height = 20)
 f2
 dev.off()

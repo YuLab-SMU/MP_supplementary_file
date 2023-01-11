@@ -180,6 +180,6 @@ pp <- p3 %>%
       insert_top(p4, height = .022) %>% 
       insert_top(p2, height = .08)
 
-svg('./result/num_plot.svg', width=5.2, height = 5.5)
+svg('./result/num_plot.svg', width=6, height = 5.5)
 pp
 dev.off()

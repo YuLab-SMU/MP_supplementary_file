@@ -35,7 +35,7 @@ run_mpse_daa <- function(mpse, p.adj = TRUE, method = 'bonferroni'){
         ),
         error=function(e)NULL
     )
-    if (is.null(mpse.diff)){
+    if (is.null(mpse.diff) || !paste0("Sign_", group) %in% colnames(mp_extract_feature(mpse.diff))){
         return(NA)
     }else{
        mpse.diff |>
@@ -114,9 +114,59 @@ run_zicoseq <- function(zicoseq.diff, p.adj = TRUE){
     }else{
         p.adj <- 'p.raw'
     }
-    names(zicoseq.diff[[p.adj]][zicoseq.diff[[p.adj]] < .05]) -> zicoseq.diff
+    names(zicoseq.diff[[p.adj]][zicoseq.diff[[p.adj]] <= .05]) -> zicoseq.diff
     return(zicoseq.diff)
 }
+
+## kruskal.test
+obtain_kruskal_out <- function(mpse, method = 'bonferroni'){
+    total.da <- mpse |> mp_extract_assays(.abundance = 'total', byRow=FALSE)
+    sample.da <- mpse |> mp_extract_sample() |> tibble::column_to_rownames(var='Sample')
+    group <- colnames(sample.da)[1]
+    kwres <- multi_compare(
+                 fun = "kruskal.test", data = merge(total.da, sample.da, by=0),
+                 feature = colnames(total.da), factorNames = group
+             )
+    resp <- unlist(lapply(kwres,function(x)x$p.value))
+    names(resp) <- colnames(total.da)
+    resp <- list(pval=resp, fdr=p.adjust(resp, method = method))
+    return(resp)
+}
+
+run_kruskal <- function(kruskal.diff, p.adj = TRUE){
+    if (p.adj){
+        x <- kruskal.diff$fdr
+    }else{
+        x <- kruskal.diff$pval
+    }
+    return( names(x[x <= .05]) )
+}
+
+
+## wilcox.test
+obtain_wilcox_out <- function(mpse, method = 'bonferroni'){
+    total.da <- mpse |> mp_extract_assays(.abundance = 'total', byRow=FALSE)
+    sample.da <- mpse |> mp_extract_sample() |> tibble::column_to_rownames(var='Sample')
+    group <- colnames(sample.da)[1]
+    kwres <- multi_compare(
+                 fun = "wilcox.test", data = merge(total.da, sample.da, by=0),
+                 feature = colnames(total.da), factorNames = group
+             )
+    resp <- unlist(lapply(kwres,function(x)x$p.value))
+    names(resp) <- colnames(total.da)
+    resp <- list(pval=resp, fdr=p.adjust(resp, method = method))
+    return(resp)
+}
+
+run_wilcox <- function(wilcox.diff, p.adj = TRUE){
+    if (p.adj){
+        x <- wilcox.diff$fdr
+    }else{
+        x <- wilcox.diff$pval
+    }
+    return( names(x[x <= .05]) )
+}
+
 
 ## ANCOMBC
 obtain_ancombc_out <- function(mpse, method='bonferroni'){
@@ -220,6 +270,7 @@ run_lefse <- function(lefse.out, p.adj = TRUE){
     return(res)
 }
 
+
 cal_sparsity <- function(mpse){
     xx <- mpse %>% mp_extract_assays(.abundance = 'Abundance')
     xx <- sum(xx==0)/prod(dim(xx))
@@ -262,6 +313,17 @@ for (file in list.files(path='./dataset/', pattern='*_mpse.rds')){
     zicoseq.diff1 <- run_zicoseq(zicoseq.out, p.adj = FALSE)
     print ('Running ZicoSeq (default, p.adjust) .............................')
     zicoseq.diff2 <- run_zicoseq(zicoseq.out, p.adj = TRUE)
+    print ('Running kruskal.test (No p.adjust) .........................')
+    kruskal.out <- obtain_kruskal_out(mpse)
+    kruskal.diff1 <- run_kruskal(kruskal.out, p.adj = FALSE)
+    print ('Running kruskal.test (Yes, p.adjust) .............................')
+    kruskal.diff2 <- run_kruskal(kruskal.out, p.adj = TRUE)
+    print ('Running wilcox.test (No p.adjust) ...........................')
+    wilcox.out <- obtain_wilcox_out(mpse)
+    wilcox.diff1 <- run_wilcox(wilcox.out, p.adj = FALSE)
+    print ('Running wilcox.test (Yes p.adjust) ...........................')
+    wilcox.diff2 <- run_wilcox(wilcox.out, p.adj = TRUE)
+
     res <- list(LEfSe = lefse1,
                 LEfSe.adj = lefse2, 
                 mp_diff_analysis = mp.diff1,
@@ -273,7 +335,11 @@ for (file in list.files(path='./dataset/', pattern='*_mpse.rds')){
                 metagenomSeq = metaseq.diff1,
                 metagenomeSeq.adj = metaseq.diff2,
                 ZicoSeq = zicoseq.diff1,
-                ZicoSeq.adj = zicoseq.diff2
+                ZicoSeq.adj = zicoseq.diff2,
+                kruskal.test = kruskal.diff1,
+                kruskal.test.adj = kruskal.diff2,
+                wilcox.test = wilcox.diff1,
+                wilcox.test.adj = wilcox.diff2
     ) 
     res <- list(Diff=res, sample=ncol(mpse), features=nrow(mpse), sparsity=cal_sparsity(mpse))
     saveRDS(res, paste0("./result/", prefix, "_common.diff.res.prop.adj.noadj.rds"))

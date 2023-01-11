@@ -187,7 +187,7 @@ knitr::kable(y, caption = caption, booktabs = T) %>%
 
 ### rarefaction visualization {#chapter2.3.1}
 
-Rarefaction based on the sampling technique was used to compensate for the effect of sample size on the number of units observed in a sample. *MicrobiotaProcess* provided *mp_cal_rarecurve* and *mp_plot_rarecurve* to calculate and plot the curves.
+Rarefaction based on the sampling technique was used to compensate for the effect of sample size on the number of units observed in a sample. *MicrobiotaProcess* provides *mp_cal_rarecurve* and *mp_plot_rarecurve* to calculate and plot the curves.
 
 (ref:rarecurve1) **This example shows *mp_cal_rarecurve* and *mp_plot_rarecurve* provided by *MicrobiotaProcess* to calculate and visualize the rarefaction curve.** The horizontal coordinate represents the sequencing depth of samples, the vertical coordinate shows the Alpha diversity index (such as Observe OTU, Chao1 and ACE). The *mp_plot_rarecurve* provides three types of visualization. (A) the rarefaction curve for each sample. (B) the rarefaction curve for each sample with colored group (specified *.group* argument in *mp_plot_rarecurve*). (C) the rarefaction curve for each group with standard error of the mean (specified *.group* argument and *plot.group=TRUE* in *mp_plot_rarecurve*)
 
@@ -261,7 +261,7 @@ ggsave(prare1, file = "./Figures/rarecurve.svg", device="svg", width=7, height=3
 
 ### Calculation and different analysis of alpha diversity {#chapter2.3.2}
 
-Alpha diversity can evaluate the richness and evenness of microbial communities. *MicrobiotaProcess* provides *mp_cal_alpha* to calculate alpha index. Six common diversity measures (*Observe*, *Chao1*, *ACE*, *Shannon*, *Simpson*, *Pielou*) are supported. In addition, *MicrobiotaProcess* also provided *mp_cal_pd_metric* to calculate some phylogenetic community structure metrics, such as PD (Faith's Phylogenetic Diversity), NRI (Nearest Relative Index), NTI (Nearest Taxon Index), IAC (Relative deviation from null expectation of phylogenetically balanced abundances), PAE (Phylogenetic evenness of the abundance distribution scaled by branch lengths), HAED (Entropic measure of diversity of evolutionary distinctiveness among individuals), EAED (Equitability of HAED) [@PhylogeneticMetric2; @PhylogeneticMetric]. These phylogenetic metrics can help us to explore the process of microbiota community assembly [@PhylogeneticMetric]. The result can be visualized by *mp_plot_alpha*. The following example shows how to use *mp_cal_alpha* and *mp_plot_alpha* of *MicrobiotaProcess* to analyze the alpha diversity of the community. The *RareAbundance* is rarefied (default), which will be used to calculate the alpha diversity index, users can specify the *force=TRUE* of *mp_cal_alpha* to calculated the alpha diversity if the abundance can not be rarefied (referring to session \ref{chapter3.3.1}).
+Alpha diversity can evaluate the richness and evenness of microbial communities. *MicrobiotaProcess* provides *mp_cal_alpha* to calculate alpha index. Six common diversity measures (*Observe*, *Chao1*, *ACE*, *Shannon*, *Simpson*, *Pielou*) are supported. In addition, *MicrobiotaProcess* also provided *mp_cal_pd_metric* to calculate some phylogenetic community structure metrics, such as PD (Faith's Phylogenetic Diversity), NRI (Nearest Relative Index), NTI (Nearest Taxon Index), IAC (Relative deviation from null expectation of phylogenetically balanced abundances), PAE (Phylogenetic evenness of the abundance distribution scaled by branch lengths), HAED (Entropic measure of diversity of evolutionary distinctiveness among individuals), EAED (Equitability of HAED) [@PhylogeneticMetric2; @PhylogeneticMetric]. These phylogenetic metrics can help us to explore the process of microbiota community assembly [@PhylogeneticMetric]. The result can be visualized by *mp_plot_alpha*. The following example showed how to use *mp_cal_alpha* and *mp_plot_alpha* of *MicrobiotaProcess* to analyze the alpha diversity of the community. The *RareAbundance* is rarefied (default), which will be used to calculate the alpha diversity index, users can specify the *force=TRUE* of *mp_cal_alpha* to calculated the alpha diversity if the abundance can not be rarefied (referring to session \ref{chapter3.3.1}).
 
 (ref:AlphaBox) **The raincloud plot of alpha diversity index** The horizontal coordinate represents each group (by *.group* argument of *mp_plot_alpha*), the vertical coordinate represents the alpha diversity index. 
 
@@ -286,7 +286,7 @@ p_alpha
 ggsave(p_alpha, file = "./Figures/alpha.svg", device = "svg", width = 7, height = 3.8)
 ```
 
-(ref:AlphaBox2) The raincloud plot of phylogenetic diversity index. The horizontal coordinate represents each group (by .group argument of mp_plot_alpha), the vertical coordinate represents the phylogenetic diversity index.
+(ref:AlphaBox2) The raincloud plot of phylogenetic diversity index. The horizontal coordinate represents each group (by *.group* argument of *mp_plot_alpha*), the vertical coordinate represents the phylogenetic diversity index.
 
 ```{r, fig.width=8, fig.height=3, fig.align="center", warning=FALSE, message=FALSE, fig.cap='(ref:AlphaBox2)', AlphaBox2}
 mpse2 %<>% mp_cal_pd_metric(.abundance = RareAbundance, metric = all)
@@ -300,6 +300,28 @@ p.pd_alpha <- mpse2 %>%
         theme(legend.position="none",
               strip.background = element_rect(colour=NA, fill="grey"))
 p.pd_alpha    
+```
+
+```{r echo = FALSE}
+p.alpha2 <- mpse2 %>%
+            mp_plot_alpha(
+              .alpha = c(Observe, Shannon, Pielou, NRI, PD, HAED),
+              .group = Group,
+            ) +
+            scale_fill_manual(values = cols) +
+            scale_color_manual(values = cols) +
+            theme(
+              legend.position = "none", 
+              strip.background = element_rect(colour=NA, fill="grey"),
+              panel.border=element_rect(linewidth=.2), 
+              axis.ticks=element_line(linewidth=.2)
+            )
+
+p.alpha2$layers[[2]]$aes_params$size <- .8
+p.alpha2$layers[[2]]$aes_params$stroke <- .1
+p.alpha2$layers[[3]]$aes_params$size <- .4
+p.alpha2$layers[[4]]$aes_params$size <- .2
+ggsave(p.alpha2, file = './Figures/alpha2.svg', device = 'svg', width = 7, height = 3.8)
 ```
 
 \newpage
@@ -393,7 +415,7 @@ ggsave(pclass, filename = "./Figures/AbundanceBar.svg", device = "svg", height=4
 
 The relative abundance of different groups also can be visualized by providing *.group* argument and setting *plot.group=TRUE* in the *mp_plot_abundance*. If you want to view the raw abundance (count or others) of taxa, you can set the *relative* parameter of *mp_plot_abundance* to *FALSE*.
 
-(ref:Abundance2) **This example show how to displayed the abundance (count or other) of sample and the relative abundance of groups**. The Abundance (count by rarefied) of each sample (A) and the relative abundance of group (B), these results show the *Gammaproteobacteria* of *CD* group might be more abundant than the *control* group.
+(ref:Abundance2) **This example show how to displayed the abundance (count or other) of sample and the relative abundance of groups**. The relative abundance of group (A) and the abundance (count by rarefied) of each sample (B), these results show the *Gammaproteobacteria* of *CD* group might be more abundant than the *control* group.
 
 ```{r fig.width=12, fig.height=6, fig.cap='(ref:Abundance2)', warning=FALSE, message=FALSE, fig.align="center", Abundance2}
 # Show the abundance in different groups.
@@ -428,7 +450,7 @@ pclass2 <- mpse2 %>%
 aplot::plot_list(pclass2, fclass, widths=c(10, 1), tag_levels = "A")
 ```
 
-The abundance of features also can be visualized by *mp_plot_abundance* with heatmap plot by setting `geom="heatmap"`.
+The abundance of features also can be visualized using *mp_plot_abundance* with heatmap plot by setting `geom="heatmap"`.
 
 (ref:AbundanceHeatmap) **The heatmap of abundance for each sample at *class* level.** The color (continuous) of heatmap represents the abundance of different classes, the color of bar plot represents the group name of sample, the horizontal coordinate represents the sample, and the vertical coordinate represents the different classes.
 
@@ -512,7 +534,7 @@ ggsave(hclass1, filename = "./Figures/Abunheat.svg", device = "svg", width = 7, 
 
 ### Venn or Upset plot {#chapter2.4.2}
 
-The Venn or UpSet plot can help us to obtain the difference between groups in overview. *MicrobiotaProcess* provides *mp_cal_venn* (*mp_plot_venn*) and *mp_cal_upset* (*mp_plot_upset*) to perform the Venn and Upset analysis.
+The Venn or UpSet plot can help us to obtain the difference between groups in the overview. *MicrobiotaProcess* provides *mp_cal_venn* (*mp_plot_venn*) and *mp_cal_upset* (*mp_plot_upset*) to perform the analysis.
 
 (ref:VennUpsetPlot) **The Venn diagram and upset plot for groups in OTU/ASV level**
 
@@ -580,7 +602,7 @@ ggsave(p.up.venn, filename = "./Figures/upset.svg", device = "svg", width = 5, h
 
 ### PCA analysis {#chapter2.5.1}
 
-`PCA` (Principal component analysis) and `PCoA` (Principal Coordinate Analysis) are general statistical procedures to compare dissimilarity of samples. And `PCoA` can based on the phylogenetic or count-based distance metrics, such as `Bray-Curtis`, `Jaccard`, `Unweighted-UniFrac` and `weighted-UniFrac`. *MicrobiotaProcess* presents the *mp_cal_dist*, *mp_cal_pca*, *mp_cal_pcoa*, *mp_cal_dca*, *mp_cal_nmds*, *mp_cal_cca*, *mp_cal_rda*, *mp_adonis*, *mp_anosim*, *mp_mrpp*, *mp_envfit* and *mp_mantel* for the analysis.
+`PCA` (Principal Component Analysis) and `PCoA` (Principal Coordinate Analysis) are general statistical procedures to compare dissimilarity of samples. And `PCoA` can based on the phylogenetic or count-based distance metrics, such as `Bray-Curtis`, `Jaccard`, `Unweighted-UniFrac` and `weighted-UniFrac`. *MicrobiotaProcess* presents the *mp_cal_dist*, *mp_cal_pca*, *mp_cal_pcoa*, *mp_cal_dca*, *mp_cal_nmds*, *mp_cal_cca*, *mp_cal_rda*, *mp_adonis*, *mp_anosim*, *mp_mrpp*, *mp_envfit* and *mp_mantel* for the related analysis.
 
 (ref:PCAplot) **The PCA plot of the community**. Each point represents one sample, the size of point represents the observe OTU of the sample. The color of point represents the group name of the sample, based on the first and second component (A), based on the first and third component (B).
 
@@ -955,7 +977,7 @@ diffclade_p
 
 We also can visualized the result (default, with `action = 'add'`) via `ggtree` [@ggtree2017] and `ggtreeExtra` [@ggtreeExtra].
 
-(ref:DiffAllplot) **The taxa tree of the community with the relative abundance of each OTU/ASV on sample and the LDA of different OTU/ASV**. The taxa tree was built with the taxa of all samples. The high light clades of taxa tree represents the phyla. The external point layer represents the relative abundance of each OTU on sample. The external bar plot represents the LDA of the different OTU. The colored points represent the different taxa, the size of colored point represents the *pvalue* or *fdr*.
+(ref:DiffAllplot) **The taxa tree of the community with the relative abundance of each OTU/ASV on sample and the LDA of different OTU/ASV**. The taxa tree was built with the taxa of all samples. The high light clades of taxa tree represented the phyla. The external point layer represented the relative abundance of each OTU on sample. The external bar plot represented the LDA of the different OTU. The colored points represented the different taxa, the size of colored point represented the *pvalue* or *fdr*.
 
 ```{r, fig.width = 10, fig.height=10, fig.align="center", fig.cap = '(ref:DiffAllplot)', DiffAllplot}
 taxa.tree <- mpse2 %>% mp_extract_tree(type='taxatree')
@@ -1074,10 +1096,10 @@ ggsave(p6, filename="./Figures/Diffres.svg", device="svg", width = 12, height = 
 
 ### visualization of differential results (with action = "get") by `ggdiffbox` {#chapter2.6.2}
 
-The left panel represents the relative abundance or abundance (according the standard_method) of biomarker, the right panel represents the confident interval of effect size (LDA or MDA) of biomarker.
-The bigger confident interval shows that the biomarker is more fluctuant, owing to the influence of samples number.
+The left panel represented the relative abundance or abundance (according the standard_method) of biomarker, the right panel represented the confident interval of effect size (LDA or MDA) of biomarker.
+The bigger confident interval shows that the biomarker is more fluctuant, owing to the influence of sampling times.
 
-(ref:DiffBoxplot) **The boxplot and the LDA score of different taxa.** The left panel represents the relative abundance of the different taxa, the right panel represents the LDA effect size (95% confidence interval) of different taxa.
+(ref:DiffBoxplot) **The boxplot and the LDA score of different taxa.** The left panel represented the relative abundance of the different taxa, the right panel represented the LDA effect size (95% confidence interval) of different taxa.
 
 ```{r fig.width=6, fig.height=8, fig.align="center", warning=FALSE, message=FALSE, fig.cap="(ref:DiffBoxplot)", DiffBoxplot}
 diffbox <- ggdiffbox(obj=deres, box_notch=FALSE, 
@@ -1410,9 +1432,10 @@ aplot::plot_list(ff, f.box, tag_levels = "A", widths=c(4.5, 5))
 
 It is the same to perform the differential analysis between two groups using mp_diff_analysis. For example, we perform the following example to show this. The dataset was from a colorectal cancer study [@Zeller_2014], which was obtained with curatedMetagenomicData. The samples were from stools of the CRC, the Adenoma and the Control individuals. Through the analysis of *mp_diff_analysis*, we found *Fusobacterium gonidiaformans*, *Porphyromonas asaccharolytica*, *Parvimonas micra*, *Peptostreptococcus stomatis* and *Escherichia coli* were significantly enriched in CRC (colorectal cancer), *Ruminococcus lactaris* was significantly enriched in Adenoma (colorectal adenoma), but *Bifidobacterium longum*, *Bifidobacterium catenulatum*, *Blautia wexlerae* and *Anaerostipes hadrus* were significantly decreased in CRC and Adenoma.
 
-(ref:MultipleGroupTree) **The cladogram of significant differential taxa** The hight light represents the differential taxa is enriched in the corresponding group.
+(ref:MultipleGroupTree) **The cladogram of significant differential taxa** The hight light represented the differential taxa enriched in the corresponding group.
 
 ```{r, message = FALSE, warnings = FALSE, fig.width = 10, fig.height = 10, fig.align = "center", fig.cap='(ref:MultipleGroupTree)', MultipleGroupTree}
+ExperimentHub::setExperimentHubOption('LOCAL', TRUE)
 xx <- curatedMetagenomicData('ZellerG_2014.relative_abundance', dryrun=F)
 xx[[1]] %>% as.mpse -> mpse.crc.ZellerG_2014
 
@@ -1456,7 +1479,7 @@ Because the *MPSE* object of *MicrobiotaProcess* inherits the *SummarizedExperim
 
 (ref:tidybulkPlot) **The results of different OTUs based on the edgeR_quasi_likelihood with tidybulk** (A). The relative abundance heatmap of the different OTUs. (B). The hierarchical cluster of samples based on the relative abundance of the different OTUs. (C). The hierarchical cluster of OTUs based on the relative abundance of total OTUs, the different OTUs were labeled with their names. We found the cluster of different OTUs in the heatmap is consistent with the different OTUs in the background of total OTUs (C).
 
-```{r message=FALSE, warning = FALSE, fig.width = 14.5, fig.height = 9, fig.cap='(ref:tidybulkPlot)', tidybulkPlot}
+```{r message=FALSE, warning = FALSE, fig.width = 14.5, fig.height = 7, fig.cap='(ref:tidybulkPlot)', tidybulkPlot}
 library(tidybulk)
 library(edgeR)
 library(aplot)
@@ -1474,32 +1497,38 @@ pp <- res %>%
         geom = "heatmap",
         topn = "all",
         .group = Group
-      ) %>%
-      set_scale_theme(
-        x = list(scale_fill_viridis_c(option = "H"),
-                 theme(
-                   axis.text.x = element_text(size = 6),
-                   axis.text.y = element_text(size = 6),
-                   legend.title = element_text(size = 7),
-                   legend.text = element_text(size = 5),
-                   legend.key.width = unit(0.3, "cm"),
-                   legend.key.height = unit(0.3, "cm")
-                 )
-            ),
-        aes_var = RelRareAbundance
-      ) %>%
-      set_scale_theme(
-        x = list(scale_fill_manual(values = cols),
-                 theme(
-                   legend.key.height = unit(0.3, "cm"),
-                   legend.key.width = unit(0.3, "cm"),
-                   legend.spacing.y = unit(0.02, "cm"),
-                   legend.text = element_text(size = 7),
-                   legend.title = element_text(size = 9)
-                 )
-            ),
-        aes_var = Group
-      )
+      ) 
+pp[[1]] <- pp[[1]] +
+           scale_fill_viridis_c(
+             option='A', 
+             na.value = 0, 
+             trans = 'log10'
+           ) +
+           guides(
+             fill = guide_colorbar(
+               title = expression(log[10]("relative abundance")),
+               title.position = "right",
+               title.theme = element_text(angle=-90, size=9, vjust=.5, hjust=.5),
+               label.theme = element_text(angle=-90, size=7, vjust=.5, hjust=.5),
+               barwidth = unit(.3, 'cm'),  
+               barheight = unit(5, 'cm')
+             )
+           ) +
+           theme(
+             axis.text.x = element_blank(),
+             axis.text.y = element_text(size = 6),
+           )
+
+pp[[2]] <- pp[[2]] +
+           scale_fill_manual(values = cols) +
+           theme(
+             legend.key.height = unit(0.3, "cm"),
+             legend.key.width = unit(0.3, "cm"),
+             legend.spacing.y = unit(0.02, "cm"),
+             legend.text = element_text(size = 7),
+             legend.title = element_text(size = 9)
+           )
+
 f <- res %>%
      mp_extract_taxonomy() %>%
      ggplot() +
@@ -1636,7 +1665,11 @@ sample.tree$layers[[3]]$aes_params$size <- 6
 sample.tree$layer[[4]]$aes_params$size <- 3.5
 p$layer[[4]]$aes_params$size <- 2.8
 p$layer[[4]]$aes_params$segment.size <- .4
-ggsave("./Figures/OTU_heatmap.svg", pp, device = "svg", width = 6, height = 7)
+pp[[1]] <- pp[[1]] + 
+      theme(panel.border=element_rect(linewidth=.2), 
+            axis.ticks.y=element_line(linewidth=.2), 
+            )
+ggsave("./Figures/OTU_heatmap.svg", pp, device = "svg", width = 6, height = 6.2)
 ggsave("./Figures/sample.tree.svg", sample.tree, device = "svg", width = 6, height = 5.6)
 ggsave("./Figures/OTU.tree.svg", p, device = "svg", width = 7, height = 7)
 ```
@@ -1847,7 +1880,7 @@ mpseKO %<>% left_join(sample.da, by=c("Sample"="sample_id"))
 
 ### Differential analysis of KEGG genes abundance {#chapter3.2.1}
 
-The metrics of the KEGG genes is the relative abundance, here we used *mp_diff_analysis* to identify the difference KEGG genes with 'force = TRUE and relative = FALSE', meaning the relative abundance will be used directly.
+The metric of the KEGG genes was the relative abundance, here we used *mp_diff_analysis* to identify the difference KEGG genes with 'force = TRUE and relative = FALSE', meaning the relative abundance will be used directly.
 
 ```{r, message = FALSE, warning = FALSE}
 mpseKO %<>% mp_diff_analysis(
@@ -1903,7 +1936,7 @@ saveRDS(mpseKO, "./data/CD_RF_microbiome/mpse_KO.rds")
 
 \newpage
 
-The KEGG enrichment results showed that the KEGG pathways of the CD stool group were significantly enriched in the Biosynthesis of amino acids and Glycine, serine, and threonine metabolism, and Pyruvate metabolism (Fig. \ref{fig:enrichKEGG}). This result is not revealed in the original paper [@Douglas2018CD], but it is consistent with recent some other related studies, which found that Crohn’s Disease microbiomes had an increased potential to synthesize amino acids and Pyruvate metabolism [@Heinken2021IBD; @Bjerrum2017; @Polunin2013]. In addition, we used some other differential abundance methods to identify the differential KEGG genes, but the two pathways were not found simultaneously in the enrichment results of CD based on the differential genes identified by other methods (refer to the second session of supplemental file B). We think this is because the *mp_diff_analysis* of *MicrobiotaProcess* achieves a better false positive rate (refer to the third session of supplemental file B)
+The KEGG enrichment results showed that the KEGG pathways of the CD stool group were significantly enriched in the Biosynthesis of amino acids and Glycine, serine, and threonine metabolism, and Pyruvate metabolism (Fig. \ref{fig:enrichKEGG}). This result was not revealed in the original paper [@Douglas2018CD], but it was consistent with recent some other related studies, which found that Crohn’s Disease microbiomes had an increased potential to synthesize amino acids and Pyruvate metabolism [@Heinken2021IBD; @Bjerrum2017; @Polunin2013]. In addition, we used some other differential abundance methods to identify the differential KEGG genes, but the two pathways were not found simultaneously in the enrichment results of CD based on the differential genes identified by other methods (refer to the second session of supplemental file B). We think this is because the *mp_diff_analysis* of *MicrobiotaProcess* achieves a better false positive rate (refer to the third session of supplemental file B)
 
 \newpage
 
@@ -2169,7 +2202,7 @@ saveRDS(mpseMGS, "./TmpRef/mpse_MGS.rds")
 
 # The analysis of the mosquito ecology data using MicrobiotaProcess {#chapter4}
 
-MicrobiotaProcess also can be used to perform the other related ecology data analysis, besides the microbial community data. Here, we used an example data about a Mosquito ecology study [@mosquito] to show how to use MicrobiotaProcess to perform the analysis of the related ecology study. The data was obtained from the github^[<https://github.com/rgriff23/Mosquito_ecology>].
+*MicrobiotaProcess* also can be used to perform the other related ecology data analysis, besides the microbial community data. Here, we used an example data about a Mosquito ecology study [@mosquito] to show how to use *MicrobiotaProcess* to perform the analysis of the related ecology study. The data was obtained from the github^[<https://github.com/rgriff23/Mosquito_ecology>].
 
 ## Loading data and Construction of MPSE object {#chapter4.1}
 
@@ -2475,6 +2508,8 @@ mpse %>%
 
 ```{r, echo = FALSE}
 saveRDS(mpse, "./TmpRef/mosquito_mpse.rds")
+p.alpha$layers[[2]]$aes_params$size <- 1
+p.alpha$layers[[2]]$aes_params$stroke <- .1
 pp <- aplot::plot_list(p.alpha, p, widths = c(2.5, 3), nrow = 1)
 ggsave(filename="./Figures/Fig8.svg", pp, device="svg", width = 10, height = 5)
 ```
