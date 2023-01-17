@@ -194,7 +194,7 @@ Rarefaction based on the sampling technique was used to compensate for the effec
 ```{r class.source = 'fold-show', fold.output=FALSE, fold.plot=FALSE, fig.width=7, fig.height=6, fig.align="center",warning=FALSE, message=FALSE, fig.cap='(ref:rarecurve1)', rarecurve1}
 library(MicrobiotaProcess)
 library(patchwork)
-cols <- c("orange", "deepskyblue")
+cols <- c('#fcc751ff', '#00c7bfff')
 mpse2 %<>% 
     mp_rrarefy(.abundance=Abundance) %>%
     mp_cal_rarecurve(.abundance=RareAbundance, chunks=500)
@@ -921,9 +921,9 @@ p.clado <- mpse2 %>%
    mp_plot_diff_cladogram(
      taxa.class = Order, 
      removeUnknown = TRUE,
-     as.tiplab = FALSE, 
+     as.tiplab = TRUE, 
      tip.annot = TRUE, 
-     label.size=2.6
+     label.size = 2.2
    ) + 
    scale_fill_diff_cladogram(values=cols)
 p.clado
@@ -1376,7 +1376,7 @@ mpse2 %>%
     mp_extract_sample() %>%
     ggplot(aes(y=Sample, fill=Group, x="Group")) +
     geom_tile() +
-    scale_fill_manual(values = c('orange', 'deepskyblue')) +
+    scale_fill_manual(values = cols) +
     theme_annot() +
     labs(x=NULL, y=NULL) -> f2
 
@@ -1410,7 +1410,7 @@ f.box <- mpse.balance.node %>%
     geom_boxplot(orientation = 'y') +
     geom_jitter(color = 'grey', height = .2) +
     facet_wrap(pseudolabel~., ncol = 1, strip.position = 'top', scales = 'free') +
-    scale_fill_manual(values = c('orange', 'deepskyblue')) +
+    scale_fill_manual(values = cols) +
     ggsignif::geom_signif(comparisons = list(c('CD', 'Control')), orientation = 'y') +
     scale_y_discrete(position = 'right') +
     ylab(NULL) +
@@ -1698,7 +1698,7 @@ p2 <- mpse2 %>%
       left_join(y=list(Aitchison=Aitchison.dist)) %>%
       mp_cal_pcoa(distmethod="Aitchison") %>%
       mp_plot_ord(.group=Group) +
-      scale_fill_manual(values=c("orange", "deepskyblue"))
+      scale_fill_manual(values=cols)
 aplot::plot_list(p1, p2, widths = c(0.5, 2))
 ```
 
@@ -1766,7 +1766,7 @@ zicoseq.p1 <- mpse4 %>% mp_plot_diff_cladogram(
                 removeUnknown = T,
                 as.tiplab = F
              ) +
-             scale_fill_diff_cladogram(values=c('orange', 'deepskyblue'))
+             scale_fill_diff_cladogram(values=cols)
 zicoseq.p1
 ```
 
@@ -1854,7 +1854,7 @@ In the previous session, we described how to use *MicrobiotaProcess* to analyze 
 The session is similar with the session \ref{chapter2}, some operations can refer to the previous session \ref{chapter2}.
 
 ```{r}
-cols <- c("orange", "deepskyblue")
+cols <- c('#fcc751ff', '#00c7bfff')
 cols2 <- c("deepskyblue", "yellow", "#FF9933")
 sample.da <- read.table("./data/CD_RF_microbiome/biscuit_metadata.txt", header=TRUE, check.names=FALSE, sep="\t")
 sample.da %<>% dplyr::select(1:5)
@@ -2520,7 +2520,69 @@ ggsave(filename="./Figures/Fig8.svg", pp, device="svg", width = 10, height = 5)
 knitr::include_graphics('./supplemental_fileB_codes/compare_plot.pdf')
 ```
 
-# Session information {#chapter5}
+# METHODS {#chapter5}
+
+## The MPSE class {#chapter5.1}
+
+To better store the input data (abundance data, sequence data, phylogenetic tree data) and the result of downstream analysis, *MPSE* class was implemented in the *MicrobiotaProcess* package. This class inherits the *SummarizedExperiment* [@SE] class. In which, the assays slot was designed to store the rectangular abundance matrices of features (microbiota profiling or function profiling) for microbiome experiment results. The *colData* slot was designed to store the meta-data of features and results about the features generated in the downstream analysis. Compared to the *SummarizedExperiment* [@SE] class, *MPSE* introduces the following additional slots, 1) the *otutree* slot is a *treedata* object and was designed to store the phylogenetic tree and the associated data, including the results of the features in the downstream analysis and the evolutionary statistics inferred by the software building the tree; 2) the *taxatree* slot is also a *treedata* [@tidytree; @treeio] object and was designed to store hierarchical taxonomy relationships and the associated data, such as the relative abundances and the results from different analysis; 3) the *refseq* slot is a *XStringSet* [@Biostrings] object and was designed to store the reference sequences, with names corresponding to the rows of the *assays* slot. In addition, *an internal attribute internal_attr* (a *list* object) was introduced to store the raw results of pca (Principal Components Analysis), pcoa (Principal Coordinate Analysis), and hierarchical cluster analysis.
+
+## Overview of the design of the MicrobiotaProcess package {#chapter5.2}
+
+The overall design of the *MicrobiotaProcess* package was illustrated in **Figure 2**. It presents multiple parser functions to read the outputs of upstream analysis tools, such as qiime or qiime2 [@Qiime2019] , dada2 [@DADA2016], and MetaPhlAn [@MetaPhlAn2]. After parsing, the abundance of microbiota (or other features), the metadata of the sample (optional), and the phylogenetic tree information (optional) are extracted from the outputs and stored as an *MPSE* object. Other objects designed to store microbiome data, such as phyloseq [@phyloseq], TreeSummarizedExperiment [@TSE], and SummarizedExperiment [@SE] can be converted to an *MPSE* object. This enables *MPSE* to serve as a standardized entry point for downstream analysis while being compatible with existing analysis software and pipelines. *MicrobiotaProcess* provides a wide variety of microbiome analysis procedures to work with *MPSE* objects. These procedures were designed to follow the tidy data principles and thus are human-friendly, consistent, and composable to solve complicated problems. The results of the analysis can be returned in three modes via the action argument. The (intermediate) result can be stored in the *MPSE* object if the action is ‘add’. If the action is ‘only’, it returns a tidy data frame with non-redundant sample or OTU (features) information with the result. While the action is ‘get’ returns the analysis result only. *MicrobiotaProcess* also extends the *dplyr* package to offer dplyr-verbs for data operation. 
+
+## Parser functions and the MPSE constructor {#chapter5.3}
+
+The *MicrobiotaProcess* package provides *mp_import_qiime2* to load the output of *qiime2* [@Qiime2019], which is a common tool for the analysis of amplicon data. The feature abundance table of the output (i.e., a qza format file) of qiime2 is required while the taxonomy information, phylogenetic tree, and representative sequences are optional. The *mp_import_dada2* function was designed to parse the output of dada2 [@DADA2016]. The output of *removeBimeraDenovo* of *dada2* is required, while the taxonomy information, representation phylogenetic tree, and representative sequences are optional. The *mp_import_metaphlan* function was designed to parse the output of *MetaPhlAn* [@MetaPhlAn2], which is a common tool for profiling the composition of microbial communities. The microbiota abundance output of *MetaPhlAn* [@MetaPhlAn2] is required, while the phylogenetic tree and metadata are also optional. In addition, An *MPSE* object can be constructed from scratch by calling the *MPSE* function with the following key parameters: 
+1) *assays* (required): A list or *SimpleList* of matrix-like objects or a matrix-like object (rows represent the features and columns represent the samples) providing abundance data for all samples.
+2) *colData* (optional): A *DataFrame* object storing the characteristics of the samples.
+3) *otutree* (optional): A *treedata* object storing a phylogenetic tree with/without associated data. Any tree file formats as well as commonly used software outputs that can be parsed by treeio15 are supported.
+4) *taxatree* (optional): A *treedata* object storing the taxonomy information (or other hierarchical data). *MicrobiotaProcess* provides the *convert_to_treedata* function to convert taxonomy data (a data.frame object) to a treedata object.
+5) *refseq* (optional): A *XStingSet* object storing the representative sequences. Both nucleic acid sequences and amino acid sequences are supported via the *readDNAStringSet* or *readAAStringSet* functions provided by the *Biostrings* packages.
+
+## Process MPSE object using dplyr-verbs {#chapter5.4}
+
+To facilitate data manipulation and exploration of the microbiome data, *MicrobiotaProcess* defined a tidy-like formatted output for the *MPSE* object and extended a subset of the dplyr-verbs to support the *MPSE* object. The extended dplyr-verbs include:
+1) *filter* function: subset *MPSE* class, retaining the data that satisfy the provided conditions. 
+2) *select* function: select the data according to the provided variables. 
+3) *group_by* function: return a grouped tbl_df-like data frame according to groups defined by the provided variables, then some data operations can be done on the groups.
+4) *mutate* function: create new columns according to the provided variables and conditions. 
+5) *left_join* function: add columns from ‘y’ (a data.frame object) to ‘x’ (an *MPSE* object), by matching all rows of ‘x’ based on the keys. The keys only should be one or all of the Sample or OTU. 
+6) *rename* function: rename the column names of an *MPSE* object, except the OTU, Sample, and Abundance column names which cannot be renamed.
+
+## Data preprocessing {#chapter5.5}
+
+The microbiome features (OTU or ASV) with very low abundance and rare occurrence (exits in few samples) are difficult to distinguish from the sequencing error or other experimental technical errors and are usually uninformative. It is better to improve the statistical power of multiple testing in the downstream analysis by filtering these features. *MicrobiotaProcess* presents *mp_filter_taxa* to filter the features based on their abundance (default Abundance count) and sample prevalence. By default, this function will screen out the features with zeros counts in 0.05% sample prevalence and users can reset the criteria via the parameters of *min.abun* (minimum abundance in a sample) and *min.prop* (the minimum sample prevalence). To make the data more meaningful for the downstream analysis after filtering, *MicrobiotaProcess* provides the *mp_decostand* and *mp_rrarefy* functions for the standardization of community data by inheriting the *decostand* and *rrarefy* functions from vegan [@vegan]. The *mp_rrarefy* function allows users to estimate expected diversity (e.g., taxonomic richness) for a reduced sampling size, while the *mp_decostand* function provides several standardization methods for community data, such as total (divide by total abundance of each sample (relative abundance)), max (divide by the max abundance of the feature in all samples), frequency (divide by total abundance of each sample and multiply the number of non-zero features), hellinger (square root for the result of total) [@Legendre2001], log (logarithmic transformation log_b(x > 0) + 1) [@PMID:16706913]. More importantly, we developed the mp_balance_clade method to convert the abundance of species to the balances of internal nodes with the geometric mean, mean or median abundance of the offspring tips in the same clade of the phylogenetic tree. This will convert the compositional microbiota data to an unconstrained coordinate system effectively and may improve the identification of differential clades by accumulating the small consilient differences at a higher resolution on the phylogenetic tree [@gnesis2017; @Egozcue2003]. These functions are developed to follow the tidiness concept and the results will be added to the assays slot of the MPSE object automatically to enhance reproducibility and reuse in the follow-up analysis.
+
+## Alpha diversity {#chapter5.6}
+
+Alpha diversity measures the species richness and evenness within a community. *MicrobiotaProcess* provides the *mp_cal_alpha* function to calculate the community diversity. There are six commonly used methods to calculate alpha diversity, including Observe (calculates the total species per sample), Chao1, ACE (estimate species richness by considering the low abundance of species). Pielou (measures the species' evenness), Shannon and Simpson (take both the richness and evenness of species into account). By default, the *mp_cal_alpha* will rarefy the abundance before calculating the alpha diversity. Users can specify the force argument to TRUE to calculate the diversity directly without performing rarefaction. This will be useful for taxonomic profiling data since they are usually in relative abundance and cannot be rarefied. By default, the results are added to the *colData* slot that stored the metadata information of samples and returns an updated *MPSE* object. *MicrobiotaProcess* also provides the *mp_cal_pd*_metric function to calculate several phylogenetic community structure metrics, such as PD (Faith's Phylogenetic Diversity), NRI (Nearest Relative Index), NTI (Nearest Taxon Index), IAC (Relative deviation from the null expectation of phylogenetically balanced abundances), PAE (Phylogenetic evenness of the abundance distribution scaled by branch lengths), HAED (Entropic measure of the diversity of evolutionary distinctiveness among individuals), EAED (Equitability of HAED). These metrics provide the measures of the phylogenetic diversity incorporating the species abundance of community, which can help users to understand the impact of phylogenetic history on the corresponding microbiota ecological interactions [@PhylogeneticMetric2; @PhylogeneticMetric]. PAE, HAED, EAED, and IAC can be used to evaluate the structure of a phylogeny of assemblage communities by incorporating the species abundance of the community, NRI and NTI can be used to examine whether an observed assembly of communities is a phylogenetically biased subset of the species that could coexist in that assemblage [@PhylogeneticMetric2]. The *mp_plot_alpha* function is implemented to visualize alpha diversity and it allows comparing different communities that were specified via the *.group* parameter.
+
+## Taxonomy composition {#chapter5.7}
+
+To compare the difference in OTUs (features) composition between different communities, *MicrobiotaProcess* provides the *mp_cal_upset* and *mp_cal_venn* to calculate the conjunct OTUs (features) or specific OTUs (features) of different groups (specified by the *.group* parameter). The result can be visualized by the *mp_plot_upset* and *mp_plot_venn* functions respectively. The microbiome OTUs (features) are often annotated to different taxonomy levels in upstream analyses, and to survey the species profile of different samples, it is often necessary to calculate the abundances of different taxonomy levels. *MicrobiotaProcess* implements the *mp_cal_abundance* function to calculate the abundances of all taxonomy levels. Similar to the calculation of alpha diversity, the *mp_cal_abundance* will rarefy the raw abundance and then calculate the relative abundance by default. Users can specify the *force* argument to *TRUE* to disable rarefaction. And the relative argument controls whether to calculate the relative abundance (total is 100% for the same taxonomy level). The results will be added to the associated data of the *taxatree* (*treedata* object) slot by default. The abundance of a selected taxonomy level can be extracted by the *mp_extract_abundance* function with the *taxa.class* parameter specified. The results of the *mp_cal_abundance* can be visualized by the *mp_plot_abundance* function. 
+
+## Beta diversity {#chapter5.8}
+
+The beta diversity has been applied in a broad sense to measure variation or changes in community composition. It can assess how microbiota composition changes across spatial and temporal scales. Some distance indexes, such as the Bray-Curtis index, Jaccard index, and UniFrac (weighted or unweighted) index, are useful and popular to measure the degree of community differentiation. These distances can be further subjected to ordination which aims to capture essential information in a lower-dimensional representation and is commonly used to visualize sample dissimilarities. *MicrobiotaProcess* implements the *mp_cal_dist* function to compute the common distances (dissimilarity) and provides the mp_plot_dist function to visualize the result. It also provides several commonly-used ordination methods, such as Principal Components Analysis (PCA: *mp_cal_pca*), Principal Coordinate Analysis (PCoA: *mp_cal_pcoa*), Nonmetric Multidimensional Scaling (NMDS: *mp_cal_nmds*), Detrended Correspondence Analysis (DCA: *mp_cal_dca*), Redundancy Analysis (RDA: *mp_cal_rda*), and (Constrained) Correspondence Analysis (CCA: *mp_cal_cca*). To fit environmental vectors or factors onto an ordination, this package provides the *mp_envfit* function to perform this analysis. All the ordination results can be visualized by the *mp_plot_ord* function. In addition, it also wraps several statistical analyses for the distance matrices, such as permutational multivariate analysis of variance (*mp_adonis*), analysis of similarities (*mp_anosim*), and multi-response permutation procedure (*mp_mrpp*), and mantel tests for dissimilarity matrices (*mp_mantel*). All these functions are developed based on a tidy-like framework. These functions can be assembled into linear workflows with the pipe operator (%>% or |>).
+
+## Differential analysis and biomarker discovery {#chapter5.9}
+
+*MicrobiotaProcess* implements the *mp_diff_analysis* function for identifying differentially abundant genera as biomarkers based on the tidy-like framework. Similar to LEfSe[@Segata2011], there are three steps to perform this analysis. First, all features are tested to determine whether values (e.g., abundance) in different groups of samples are differentially distributed via the Kruskal-Wallis rank-sum test (default, other option is oneway.test, glm or glm.nb). Then, the resulting features infringing the null hypothesis (using the FDR to filter by default which is different with LEfSe) are further tested by the second round of the test using Wilcoxon rank-sum test (default, another option is t.test, glm or glm.nb) to keep the features that in all pairwise comparisons between the sub-groups are significantly consistent with the group level trend. Finally, the linear discriminant analysis (LDA) or random forest model was built to rank all the features based on the relative difference among different groups. Compare to LEfSe, *mp_diff_analysis* is more flexible. Not only the test method but also the test value (using generalized fold change [@Wirbel2019] by default, another option is comparing the median or mean value of different groups by using *compare_median* or *compare_mean*) can be set to return which group has more abundant the significant features by users. The result is integrated into the *taxatree* component (default) or *rowData* component depending on whether the taxonomy is provided or not. The result can be extracted via the *mp_extract_tree* or *mp_extract_feature* respectively. Then it can be processed and displayed via treeio [@treeio], tidytree [@tidytree], ggtree [@ggtree2017], ggtreeExtra [@ggtreeExtra], and ggplot2 (Figure 4A and Figure 7). To decrease the coding burden, we also developed *mp_plot_diff_boxplot*, *mp_plot_diff_manhattan*, *mp_plot_diff_res*, and *mp_plot_diff_cladogram* to visualize the result of differential analysis (Figure 3F ). The evaluation of simulation dataset and real datasets between the *mp_diff_analysis* and other tools are available in the supplemental B.
+
+## Accessors to fetch internal data {#chapter5.10}
+
+The *MPSE* object is composed of several objects to store different data including primary data and analysis results. To extract the components of the data, *MicrobiotaProcess* provides several accessors starting with *mp_extract_*, including: 
+1) *mp_extract_sample* function: to return the sample characteristics in a tidy data table, similar to the *colData* function for the *SummarizedExperiment* class. 
+2) *mp_extract_assays* function: to extract the assays from an *MPSE* object, similar to the *assay* function for the *SummarizedExperiment* class.
+3) *mp_extract_feature* function: to extract the features characteristics (optional with taxonomy information by setting *addtaxa* argument to *TRUE*) and return tidy data, similar to the *rowData* function for the *SummarizedExperiment* class.
+4) *mp_extract_tree* function: to extract the *taxatree* (by default) or *otutree* (by specifying the type argument to *otutree*) from an *MPSE* object.
+5) *mp_extract_taxonomy* function: to extract the taxonomy information from an *MPSE* object.
+6) *mp_extract_refseq* function: to extract the representative sequences from an *MPSE* object.
+7) *mp_extract_dist* function: to extract distances in a matrix (as a dist object, by default) or a tidy data frame with comparison among the groups (by specifying the *.group* argument).
+8) *mp_extract_rarecurve* function: to extract rarefaction in a *rarecurve* object, which can be visualized by *ggrarecurve* function.
+9) *mp_extract_internal_attr* function: to extract the raw result of *mp_cal_pca*, *mp_cal_pcoa*, *mp_cal_rda*, *mp_cal_cca*, *mp_cal_clust*, *mp_envfit*, *mp_adonis*, *mp_anosim*, *mp_mrpp* and *mp_mantel*.
+
+# Session information {#chapter6}
 
 Here is the output of sessionInfo() on the system on which this document was compiled:
 
@@ -2529,4 +2591,4 @@ options(width = 200)
 sessioninfo::session_info()
 ```
 
-# References {#chapter6}
+# References {#chapter7}
