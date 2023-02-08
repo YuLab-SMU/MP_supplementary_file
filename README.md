@@ -1,14 +1,26 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# MicrobiotaProcess: A comprehensive R package for managing and analyzing microbiome and other ecological data within the tidy framework
+# MicrobiotaProcess: A comprehensive R package for deep mining microbiome
+
+<div class="figure" style="text-align: center">
+
+<img src="./GA.png" alt="The graphical abstract" width="541" />
+
+<p class="caption">
+
+The graphical abstract
+
+</p>
+
+</div>
 
 If you use this work in published research, please cite:
 
-S Xu, L Zhan, W Tang, Q Wang, Z Dai, L Zhou, T Feng, M Chen, T Wu, E Hu,
-G Yu. MicrobiotaProcess: A comprehensive R package for managing and
-analyzing microbiome and other ecological data within the tidy
-framework. 04 February 2022, [PREPRINT (Version 1) available at Research
-Square](https://doi.org/10.21203/rs.3.rs-1284357/v1).
+**Shuangbin Xu**, Li Zhan, Wenli Tang, Qianwen Wang, Zehan Dai, Land
+Zhou, Tingze Feng, Meijun Chen, Tianzhi Wu, Erqiang Hu, **Guangchuang
+Yu**<sup>\*</sup>. MicrobiotaProcess: A comprehensive R package for deep
+mining microbiome. *The Innovation*. 2023, 100388. doi:
+[10.1016/j.xinn.2023.100388](https://www.sciencedirect.com/science/article/pii/S2666675823000164).
 
 This repo contains source code and data to produce Supplementary
 Material of the above paper.
@@ -27,7 +39,7 @@ which [this
 document](https://github.com/YuLab-SMU/MP_supplementary_file/blob/main/supplemental_file_A.pdf)
 was compiled:
 
-    ## ─ Session info ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+    ## ─ Session info ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
     ##  setting  value
     ##  version  R version 4.2.0 (2022-04-22)
     ##  os       Ubuntu 18.04.4 LTS
@@ -37,10 +49,10 @@ was compiled:
     ##  collate  en_US.UTF-8
     ##  ctype    en_US.UTF-8
     ##  tz       Asia/Shanghai
-    ##  date     2022-11-25
+    ##  date     2023-02-08
     ##  pandoc   2.9.2 @ /usr/bin/ (via rmarkdown)
     ## 
-    ## ─ Packages ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+    ## ─ Packages ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
     ##  package                  * version    date (UTC) lib source
     ##  ade4                       1.7-19     2022-04-19 [1] CRAN (R 4.2.0)
     ##  ANCOMBC                  * 1.6.2      2022-06-26 [1] Bioconductor
@@ -161,6 +173,7 @@ was compiled:
     ##  gtable                     0.3.1      2022-09-01 [1] CRAN (R 4.2.0)
     ##  gtools                     3.9.3      2022-07-11 [1] CRAN (R 4.2.0)
     ##  GUniFrac                 * 1.7        2022-10-23 [1] CRAN (R 4.2.0)
+    ##  highr                      0.9        2021-04-16 [1] CRAN (R 4.2.0)
     ##  Hmisc                      4.7-0      2022-04-19 [1] CRAN (R 4.2.0)
     ##  hms                        1.1.1      2021-09-26 [1] CRAN (R 4.2.0)
     ##  htmlTable                  2.4.1      2022-07-07 [1] CRAN (R 4.2.0)
@@ -203,7 +216,7 @@ was compiled:
     ##  microbiome                 1.18.0     2022-04-26 [1] Bioconductor
     ##  MicrobiomeProfiler       * 1.1.0      2022-11-08 [1] Bioconductor
     ##  MicrobiomeStat           * 1.1        2022-01-24 [1] CRAN (R 4.2.0)
-    ##  MicrobiotaProcess        * 1.11.3     2022-11-25 [1] Bioconductor
+    ##  MicrobiotaProcess        * 1.11.4     2023-01-30 [1] Bioconductor
     ##  mime                       0.12       2021-09-28 [1] CRAN (R 4.2.0)
     ##  minqa                      1.2.4      2014-10-09 [1] CRAN (R 4.2.0)
     ##  modeest                    2.4.0      2019-11-18 [1] CRAN (R 4.2.0)
@@ -290,7 +303,7 @@ was compiled:
     ##  tidygraph                  1.2.2      2022-08-22 [1] CRAN (R 4.2.0)
     ##  tidyr                      1.2.1      2022-09-08 [1] CRAN (R 4.2.0)
     ##  tidyselect                 1.2.0      2022-10-10 [1] CRAN (R 4.2.0)
-    ##  tidytree                   0.3.9      2022-09-19 [1] local
+    ##  tidytree                   0.4.2      2022-12-18 [1] CRAN (R 4.2.0)
     ##  timeDate                   4021.104   2022-07-19 [1] CRAN (R 4.2.0)
     ##  timeSeries                 4021.104   2022-07-17 [1] CRAN (R 4.2.0)
     ##  treeio                     1.21.3     2022-10-30 [1] Bioconductor
@@ -317,4 +330,4 @@ was compiled:
     ## 
     ##  [1] /mnt/d/UbuntuApps/R/4.2.0/lib/R/library
     ## 
-    ## ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+    ## ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
