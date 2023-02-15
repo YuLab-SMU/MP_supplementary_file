@@ -16,7 +16,7 @@ The graphical abstract
 
 If you use this work in published research, please cite:
 
-**Shuangbin Xu**, Li Zhan, Wenli Tang, Qianwen Wang, Zehan Dai, Land
+**Shuangbin Xu**, Li Zhan, Wenli Tang, Qianwen Wang, Zehan Dai, Lang
 Zhou, Tingze Feng, Meijun Chen, Tianzhi Wu, Erqiang Hu, **Guangchuang
 Yu**<sup>\*</sup>. MicrobiotaProcess: A comprehensive R package for deep
 mining microbiome. __*The Innovation*__. 2023, 4(2):100388. doi:
